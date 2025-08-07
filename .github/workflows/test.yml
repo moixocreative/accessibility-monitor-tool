@@ -1,37 +1,64 @@
 name: Test Suite
 
 on:
-  push:
-    branches: [ master, development ]
   pull_request:
-    branches: [ master, development ]
+    branches: [ development, master ]
+  push:
+    branches: [ development, master ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
+
+    env:
+      PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+      PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium-browser
+      NODE_ENV: test
+      CI: true
+      SEND_EMAILS: false
+      # SMTP Configuration via Secrets
+      SMTP_HOST: ${{ secrets.SMTP_HOST }}
+      SMTP_PORT: ${{ secrets.SMTP_PORT }}
+      SMTP_USER: ${{ secrets.SMTP_USER }}
+      SMTP_PASS: ${{ secrets.SMTP_PASS }}
+      SMTP_FROM: ${{ secrets.SMTP_FROM }}
+      # Email Configuration via Secrets
+      ALERT_EMAIL: ${{ secrets.ALERT_EMAIL }}
+      EMERGENCY_EMAIL: ${{ secrets.EMERGENCY_EMAIL }}
+      AUTHORITY_EMAIL: ${{ secrets.AUTHORITY_EMAIL }}
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     - name: Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: 20.x
+        node-version: '20.x'
+        cache: 'yarn'
 
     - name: Setup module dependencies cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
-        path: node_modules
-        key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+        path: |
+          node_modules
+          ~/.cache/puppeteer
+        key: Linux-node-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
-          ${{ runner.os }}-node-
+          Linux-node-
+
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y chromium-browser
 
     - name: Install module dependencies
-      run: yarn install --frozen-lockfile
+      run: |
+        export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+        yarn install --network-timeout 100000
 
     - name: Lint
       run: yarn lint
@@ -40,6 +67,8 @@ jobs:
       uses: wagoid/commitlint-github-action@v5
       with:
         configFile: .commitlintrc.js
+        failOnWarnings: false
+        failOnErrors: true
 
     - name: Accessibility Tests
       run: yarn audit:wcag
@@ -52,7 +81,6 @@ jobs:
 
     - name: Generate Test Report
       run: yarn report --test
-      if: always()
 
     - name: Upload Test Results
       uses: actions/upload-artifact@v4
