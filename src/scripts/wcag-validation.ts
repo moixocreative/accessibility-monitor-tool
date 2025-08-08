@@ -3,6 +3,7 @@
 import { WCAGValidator } from '../validation/wcag-validator';
 import { getCriticalCriteria, PRIORITY_WCAG_CRITERIA } from '../core/wcag-criteria';
 import { logger } from '../utils/logger';
+import { ReportGenerator } from '../reports/report-generator';
 
 async function main() {
   logger.info('Iniciando validação WCAG 2.1 AA');
@@ -16,18 +17,24 @@ async function main() {
     console.log('📊 Resultados serão simulados para teste');
   }
 
-  // Obter URL e tipo de auditoria dos parâmetros da linha de comando
+  // Obter URL, tipo de auditoria e formato do relatório dos parâmetros da linha de comando
   const url = process.argv[2];
   const auditType = process.argv[3]?.toLowerCase();
+  const reportFormat = process.argv[4]?.toLowerCase() || 'console';
   
   if (!url) {
     console.log('\n📝 URL não fornecida - usando URL padrão');
     console.log('==========================================');
-    console.log('Uso: yarn audit:wcag <URL> [tipo]');
+    console.log('Uso: yarn audit:wcag <URL> [tipo] [formato]');
     console.log('Tipos disponíveis:');
     console.log('  simple  - Apenas 15 critérios prioritários (padrão)');
     console.log('  complete - Todos os critérios WCAG 2.1 AA');
-    console.log('Exemplo: yarn audit:wcag https://example.com complete');
+    console.log('Formatos disponíveis:');
+    console.log('  console - Relatório no terminal (padrão)');
+    console.log('  json    - Exportar como JSON');
+    console.log('  html    - Exportar como HTML');
+    console.log('  markdown- Exportar como Markdown');
+    console.log('Exemplo: yarn audit:wcag https://example.com complete json');
     console.log('\n🔍 Testando com URL padrão: https://www.untile.pt');
     console.log('💡 Para testar um site específico, forneça a URL como parâmetro');
   }
@@ -38,6 +45,16 @@ async function main() {
   // Determinar tipo de auditoria
   const isCompleteAudit = auditType === 'complete';
   const auditTypeDisplay = isCompleteAudit ? 'COMPLETA' : 'SIMPLES';
+
+  // Validar formato do relatório
+  const validFormats = ['console', 'json', 'html', 'markdown'];
+  if (!validFormats.includes(reportFormat)) {
+    console.log('\n❌ ERRO: Formato de relatório inválido');
+    console.log('================================');
+    console.log(`Formato fornecido: ${reportFormat}`);
+    console.log(`Formatos válidos: ${validFormats.join(', ')}`);
+    process.exit(1);
+  }
 
   // Validar formato da URL
   try {
@@ -77,118 +94,64 @@ async function main() {
     // Executar auditoria real
     const auditResult = await validator.auditSite(targetUrl, siteId, isCompleteAudit);
 
-    console.log('\n📊 RESULTADOS DA AUDITORIA');
-    console.log('============================');
-    
-    if (auditResult.wcagScore === -1) {
-      console.log(`Score WCAG: ❌ NÃO CALCULADO (Browser não disponível)`);
-      console.log(`⚠️  Auditoria limitada - Browser não pôde ser inicializado`);
-      console.log(`💡 Para auditoria completa, verifique a configuração do Puppeteer`);
-    } else {
-      console.log(`Score WCAG: ${auditResult.wcagScore}%`);
-    }
-    
-    console.log(`Total de violações: ${auditResult.violations.length}`);
-    console.log(`Violações críticas: ${auditResult.violations.filter(v => v.severity === 'critical').length}`);
-    
-    // Separar violações por tipo de auditoria
-    const priorityViolations = auditResult.violations.filter(v => 
-      PRIORITY_WCAG_CRITERIA.some(criteria => criteria.id === v.criteria.id)
-    );
-    const otherViolations = auditResult.violations.filter(v => 
-      !PRIORITY_WCAG_CRITERIA.some(criteria => criteria.id === v.criteria.id)
-    );
-
-    if (isCompleteAudit) {
-      console.log('\n📋 VIOLAÇÕES DOS 15 CRITÉRIOS PRIORITÁRIOS');
-      console.log('=============================================');
-      console.log(`Violações prioritárias: ${priorityViolations.length}`);
-      if (priorityViolations.length > 0) {
-        priorityViolations.forEach((violation, index) => {
-          console.log(`${index + 1}. ${violation.criteria.id} - ${violation.criteria.name}`);
-          console.log(`   Severidade: ${violation.severity}`);
-          console.log(`   Descrição: ${violation.description}`);
-        });
-      } else {
-        console.log('✅ Nenhuma violação encontrada nos critérios prioritários');
-      }
-
-      console.log('\n📋 VIOLAÇÕES DOS CRITÉRIOS ADICIONAIS');
-      console.log('========================================');
-      console.log(`Violações adicionais: ${otherViolations.length}`);
-      if (otherViolations.length > 0) {
-        otherViolations.forEach((violation, index) => {
-          console.log(`${index + 1}. ${violation.criteria.id} - ${violation.criteria.name}`);
-          console.log(`   Severidade: ${violation.severity}`);
-          console.log(`   Descrição: ${violation.description}`);
-        });
-      } else {
-        console.log('✅ Nenhuma violação encontrada nos critérios adicionais');
-      }
-    } else {
-      console.log('\n📋 VIOLAÇÕES DOS CRITÉRIOS PRIORITÁRIOS');
-      console.log('=========================================');
-      if (auditResult.violations.length > 0) {
-        auditResult.violations.forEach((violation, index) => {
-          console.log(`${index + 1}. ${violation.criteria.id} - ${violation.criteria.name}`);
-          console.log(`   Severidade: ${violation.severity}`);
-          console.log(`   Descrição: ${violation.description}`);
-        });
-      } else {
-        console.log('✅ Nenhuma violação encontrada');
-      }
-    }
-    
-    console.log('\n📈 SCORES LIGHTHOUSE');
-    console.log(`  Acessibilidade: ${auditResult.lighthouseScore.accessibility}%`);
-    console.log(`  Performance: ${auditResult.lighthouseScore.performance}%`);
-    console.log(`  SEO: ${auditResult.lighthouseScore.seo}%`);
-    console.log(`  Boas Práticas: ${auditResult.lighthouseScore.bestPractices}%`);
-
-    // MÉTRICAS DE RISCO LEGAL (ALINHADAS COM PORTFOLIO UNTILE)
-    console.log('\n⚖️  MÉTRICAS DE RISCO LEGAL');
-    console.log('==============================');
-    const legalRiskMetrics = (auditResult as any).legalRiskMetrics || {
-      legalRiskScore: 0,
-      exposureScore: 0,
-      riskLevel: 'BAIXO',
-      criticalViolations: 0,
-      seriousViolations: 0,
-      priorityViolations: 0
+    // Gerar relatório melhorado
+    const reportGenerator = new ReportGenerator();
+    const reportOptions = {
+      format: reportFormat as 'console' | 'json' | 'html' | 'markdown',
+      detailed: true,
+      includeRecommendations: true,
+      includeLegalRisk: true
     };
-    
-    console.log(`Risco Legal: ${legalRiskMetrics.legalRiskScore}/100`);
-    console.log(`Exposição Legal: ${legalRiskMetrics.exposureScore}/100`);
-    console.log(`Nível de Risco: ${legalRiskMetrics.riskLevel}`);
-    console.log(`Violações Críticas: ${legalRiskMetrics.criticalViolations}`);
-    console.log(`Violações Sérias: ${legalRiskMetrics.seriousViolations}`);
-    console.log(`Violações Prioritárias: ${legalRiskMetrics.priorityViolations}`);
 
-    // Mostrar recomendações baseadas no tipo de auditoria
-    console.log('\n💡 RECOMENDAÇÕES');
-    console.log('==================');
-    
-    if (auditResult.wcagScore === -1) {
-      console.log('❌ Não foi possível executar a auditoria completa');
-      console.log('🔧 Verifique a configuração do browser e tente novamente');
-    } else if (auditResult.wcagScore >= 90) {
-      console.log('✅ Excelente conformidade WCAG 2.1 AA');
-      console.log('🎉 O site está muito bem otimizado para acessibilidade');
-    } else if (auditResult.wcagScore >= 70) {
-      console.log('⚠️  Boa conformidade, mas há espaço para melhorias');
-      console.log('🔧 Considere corrigir as violações identificadas');
-    } else if (auditResult.wcagScore >= 50) {
-      console.log('⚠️  Conformidade moderada - melhorias necessárias');
-      console.log('🚨 Priorize a correção das violações críticas');
+    const report = reportGenerator.generateReport(auditResult, reportOptions);
+
+    if (reportFormat === 'console') {
+      console.log(report);
     } else {
-      console.log('❌ Baixa conformidade WCAG 2.1 AA');
-      console.log('🚨 Correções urgentes necessárias para acessibilidade');
-    }
-
-    if (isCompleteAudit && otherViolations.length > 0) {
-      console.log('\n📝 Para auditoria mais detalhada dos critérios adicionais:');
-      console.log('   - Consulte a documentação WCAG 2.1 AA completa');
-      console.log('   - Considere implementar correções progressivas');
+      // Salvar relatório em arquivo
+      const fs = await import('fs');
+      const path = await import('path');
+      
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').split('T')[0];
+      const domainName = new URL(targetUrl).hostname.replace(/[^a-zA-Z0-9]/g, '-');
+      const auditTypeShort = isCompleteAudit ? 'complete' : 'simple';
+      
+      const fileExtension = {
+        json: 'json',
+        html: 'html',
+        markdown: 'md'
+      }[reportFormat];
+      
+      const fileName = `accessibility-report-${domainName}-${auditTypeShort}-${timestamp}.${fileExtension}`;
+      const filePath = path.join(process.cwd(), 'reports', fileName);
+      
+      // Criar diretório de relatórios se não existir
+      const reportsDir = path.join(process.cwd(), 'reports');
+      if (!fs.existsSync(reportsDir)) {
+        fs.mkdirSync(reportsDir, { recursive: true });
+      }
+      
+      fs.writeFileSync(filePath, report, 'utf8');
+      
+      console.log('\n✅ RELATÓRIO EXPORTADO COM SUCESSO');
+      console.log('==================================');
+      console.log(`📄 Formato: ${reportFormat.toUpperCase()}`);
+      console.log(`📁 Arquivo: ${fileName}`);
+      console.log(`📍 Localização: ${filePath}`);
+      console.log(`📊 Score WCAG: ${auditResult.wcagScore}%`);
+      console.log(`🔍 Violações encontradas: ${auditResult.violations.length}`);
+      
+      if (reportFormat === 'html') {
+        console.log('\n💡 Para visualizar o relatório HTML:');
+        console.log(`   Abra o arquivo no seu navegador ou execute:`);
+        console.log(`   open "${filePath}"`);
+      } else if (reportFormat === 'json') {
+        console.log('\n💡 Para processar o relatório JSON:');
+        console.log(`   Use ferramentas como jq ou importe em suas aplicações`);
+      } else if (reportFormat === 'markdown') {
+        console.log('\n💡 Para visualizar o relatório Markdown:');
+        console.log(`   Abra em qualquer editor que suporte Markdown`);
+      }
     }
 
   } catch (error) {
