@@ -19,10 +19,10 @@ async function main() {
 
   // Obter parâmetros da linha de comando
   const baseUrl = process.argv[2];
-  const strategy = (process.argv[3]?.toLowerCase() as 'auto' | 'sitemap' | 'manual') || 'auto';
+  const strategy = (process.argv[3]?.toLowerCase() as 'auto' | 'sitemap' | 'manual' | 'comprehensive') || 'comprehensive';
   const auditType = (process.argv[4]?.toLowerCase() as 'simple' | 'complete') || 'simple';
   const reportFormat = (process.argv[5]?.toLowerCase() as 'console' | 'json' | 'html' | 'markdown') || 'console';
-  const maxPages = parseInt(process.argv[6] || '10') || 10;
+  const maxPages = parseInt(process.argv[6] || '20') || 20;
 
   if (!baseUrl) {
     console.log('\n📝 AUDITORIA MULTI-PÁGINA - WCAG 2.1 AA');
@@ -33,7 +33,8 @@ async function main() {
     console.log('  URL         - URL base do site para auditar');
     console.log('');
     console.log('Estratégias disponíveis:');
-    console.log('  auto        - Descoberta automática de páginas (padrão)');
+    console.log('  comprehensive - Descoberta máxima usando todos os métodos (padrão)');
+    console.log('  auto        - Descoberta automática de páginas');
     console.log('  sitemap     - Usar sitemap.xml do site');
     console.log('  manual      - Auditar apenas a URL fornecida');
     console.log('');
@@ -48,12 +49,13 @@ async function main() {
     console.log('  markdown    - Exportar como Markdown');
     console.log('');
     console.log('Max páginas:');
-    console.log('  número      - Máximo de páginas para auditar (padrão: 10)');
+    console.log('  número      - Máximo de páginas para auditar (padrão: 20)');
     console.log('');
     console.log('Exemplos:');
     console.log('  yarn audit:multi https://example.com');
-    console.log('  yarn audit:multi https://example.com auto complete html 20');
-    console.log('  yarn audit:multi https://example.com sitemap simple json 15');
+    console.log('  yarn audit:multi https://example.com comprehensive complete html 50');
+    console.log('  yarn audit:multi https://example.com auto simple json 15');
+    console.log('  yarn audit:multi https://example.com sitemap simple console 10');
     console.log('');
     console.log('💡 A auditoria multi-página pode demorar vários minutos dependendo');
     console.log('   do número de páginas e da estratégia escolhida.');
@@ -72,7 +74,7 @@ async function main() {
   }
 
   // Validar parâmetros
-  const validStrategies = ['auto', 'sitemap', 'manual'];
+  const validStrategies = ['auto', 'sitemap', 'manual', 'comprehensive'];
   if (!validStrategies.includes(strategy)) {
     console.log('\n❌ ERRO: Estratégia inválida');
     console.log('================================');
@@ -120,7 +122,13 @@ async function main() {
     console.log(`📊 Máx. Páginas: ${maxPages}`);
     console.log('');
 
-    if (strategy === 'auto') {
+    if (strategy === 'comprehensive') {
+      console.log('🚀 A descoberta abrangente irá usar TODOS os métodos:');
+      console.log('   • Sitemap.xml e robots.txt');
+      console.log('   • Crawling automático aprofundado');
+      console.log('   • Padrões comuns (/sobre, /contacto, etc.)');
+      console.log('   • Filtros automáticos para páginas protegidas');
+    } else if (strategy === 'auto') {
       console.log('🤖 A descoberta automática pode encontrar:');
       console.log('   • Links na homepage');
       console.log('   • Páginas de navegação principal');
@@ -146,30 +154,72 @@ async function main() {
       crawlStrategy: strategy,
       crawlOptions: {
         maxPages,
-        maxDepth: strategy === 'auto' ? 2 : 1,
+        maxDepth: strategy === 'comprehensive' ? 3 : strategy === 'auto' ? 2 : 1,
         includeExternal: false,
         excludePatterns: [
           '/admin', '/login', '/logout', '/api/', 
           '.pdf', '.jpg', '.png', '.gif', '.zip',
           '/wp-admin', '/wp-content', '#', '/search',
-          '/cart', '/checkout', '/account'
+          '/cart', '/checkout', '/account', '/password',
+          '/signin', '/signup', '/register', '/auth'
         ]
       },
       auditType,
-      maxConcurrent: 2, // Máximo 2 páginas em paralelo para evitar sobrecarga
-      delayBetweenPages: 2000 // 2 segundos entre páginas
+      maxConcurrent: 1, // Sequencial para máxima compatibilidade
+      delayBetweenPages: strategy === 'comprehensive' ? 8000 : 5000, // Delays maiores
+      retryFailedPages: true,
+      maxRetries: 2,
+      useSharedSession: false // Browser novo para cada página para evitar problemas de estado
     });
 
     // Gerar relatório
     const reportGenerator = new MultiPageReportGenerator();
-    const reportOptions = {
-      format: reportFormat,
-      detailed: true,
-      includeRecommendations: true,
-      includeLegalRisk: true
+    
+    // Converter resultado para formato esperado pelo report generator
+    const reportData = {
+      baseUrl: auditResult.baseUrl,
+      totalPages: auditResult.pagesDiscovered,
+      auditedPages: auditResult.pagesAudited,
+      timestamp: auditResult.endTime,
+      overallScore: auditResult.summary.averageScore,
+      pages: auditResult.pageResults.map(page => ({
+        url: page.url,
+        wcagScore: page.auditResult.wcagScore,
+        violationCount: page.auditResult.violations.length,
+        violations: page.auditResult.violations,
+        axeResults: page.auditResult.axeResults,
+        lighthouseScore: page.auditResult.lighthouseScore?.accessibility || 0,
+        timestamp: page.auditResult.timestamp,
+        ...(page.auditResult.wcagScore < 0 && { error: 'Erro durante auditoria' })
+      })),
+      summary: {
+        averageScore: auditResult.summary.averageScore,
+        bestPerformingPage: auditResult.summary.bestPage,
+        worstPerformingPage: auditResult.summary.worstPage,
+        totalViolations: auditResult.summary.totalViolations,
+        criticalViolations: auditResult.summary.violationsBySeverity.critical,
+        pagesWithIssues: auditResult.pageResults.filter(p => p.auditResult.violations.length > 0).length,
+        compliance: {
+          percentage: auditResult.summary.averageScore,
+          status: (auditResult.summary.averageScore >= 80 ? 'compliant' : 
+                  auditResult.summary.averageScore >= 60 ? 'partial' : 'non-compliant') as 'compliant' | 'partial' | 'non-compliant'
+        }
+      },
+      commonIssues: auditResult.summary.commonIssues.map(issue => ({
+        criteria: issue.criteria,
+        count: issue.count,
+        pages: issue.pages,
+        severity: 'moderate' as const,
+        recommendation: `Corrigir ${issue.criteria} em ${issue.count} páginas`
+      })),
+      recommendations: [
+        'Revisar problemas críticos identificados',
+        'Implementar testes automatizados de acessibilidade',
+        'Treinar equipa em princípios WCAG 2.1 AA'
+      ]
     };
 
-    const report = reportGenerator.generateMultiPageReport(auditResult, reportOptions);
+    const report = reportGenerator.generateReport(reportData, reportFormat);
 
     if (reportFormat === 'console') {
       console.log(report);

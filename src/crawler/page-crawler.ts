@@ -30,7 +30,7 @@ export class PageCrawler {
    */
   async discoverPages(
     baseUrl: string, 
-    strategy: 'auto' | 'sitemap' | 'manual',
+    strategy: 'auto' | 'sitemap' | 'manual' | 'comprehensive',
     options: Partial<CrawlOptions> = {}
   ): Promise<CrawlResult[]> {
     const defaultOptions: CrawlOptions = {
@@ -63,6 +63,8 @@ export class PageCrawler {
           return await this.crawlAutomatically(defaultOptions);
         case 'sitemap':
           return await this.crawlFromSitemap(defaultOptions);
+        case 'comprehensive':
+          return await this.crawlComprehensively(defaultOptions);
         case 'manual':
           // Para estratégia manual, apenas retorna a URL base
           return [{
@@ -332,6 +334,283 @@ export class PageCrawler {
     } finally {
       await browser.close();
     }
+  }
+
+  /**
+   * Crawling abrangente - combina múltiplas estratégias para descobrir TODAS as páginas
+   */
+  private async crawlComprehensively(options: CrawlOptions): Promise<CrawlResult[]> {
+    logger.info('🚀 Iniciando crawling abrangente com múltiplas estratégias...');
+    
+    const allUrls = new Set<string>();
+    const allResults: CrawlResult[] = [];
+    
+    // Estratégia 1: Sitemap XML
+    logger.info('🗺️ Tentando descoberta via sitemap...');
+    try {
+      const sitemapUrls = await this.discoverFromSitemap(options);
+      sitemapUrls.forEach(result => {
+        if (!allUrls.has(result.url)) {
+          allUrls.add(result.url);
+          allResults.push({ ...result, depth: 0 });
+        }
+      });
+      logger.info(`📋 Sitemap: ${sitemapUrls.length} URLs descobertas`);
+    } catch (error) {
+      logger.warn('Erro na descoberta via sitemap:', error);
+    }
+
+    // Estratégia 2: Robots.txt
+    logger.info('🤖 Tentando descoberta via robots.txt...');
+    try {
+      const robotsUrls = await this.discoverFromRobots(options);
+      robotsUrls.forEach(result => {
+        if (!allUrls.has(result.url)) {
+          allUrls.add(result.url);
+          allResults.push({ ...result, depth: 0 });
+        }
+      });
+      logger.info(`🤖 Robots.txt: ${robotsUrls.length} URLs descobertas`);
+    } catch (error) {
+      logger.warn('Erro na descoberta via robots.txt:', error);
+    }
+
+    // Estratégia 3: Crawling automático aprofundado
+    logger.info('🕷️ Iniciando crawling automático aprofundado...');
+    try {
+      const crawlOptions = { ...options, maxDepth: 3, maxPages: Math.max(50, options.maxPages) };
+      const crawledUrls = await this.crawlAutomatically(crawlOptions);
+      crawledUrls.forEach(result => {
+        if (!allUrls.has(result.url)) {
+          allUrls.add(result.url);
+          allResults.push(result);
+        }
+      });
+      logger.info(`🕷️ Crawling: ${crawledUrls.length} URLs descobertas`);
+    } catch (error) {
+      logger.warn('Erro no crawling automático:', error);
+    }
+
+    // Estratégia 4: Descoberta de padrões comuns
+    logger.info('🔍 Tentando descoberta por padrões comuns...');
+    try {
+      const patternUrls = await this.discoverCommonPatterns(options);
+      patternUrls.forEach(result => {
+        if (!allUrls.has(result.url)) {
+          allUrls.add(result.url);
+          allResults.push({ ...result, depth: 0 });
+        }
+      });
+      logger.info(`🔍 Padrões: ${patternUrls.length} URLs descobertas`);
+    } catch (error) {
+      logger.warn('Erro na descoberta por padrões:', error);
+    }
+
+    // Filtrar URLs protegidas por login
+    const filteredResults = await this.filterLoginProtectedPages(allResults);
+    
+    logger.info(`✅ Crawling abrangente concluído: ${filteredResults.length} páginas válidas de ${allResults.length} descobertas`);
+    
+    return filteredResults.slice(0, options.maxPages);
+  }
+
+  /**
+   * Descobrir URLs via sitemap (versão dedicada)
+   */
+  private async discoverFromSitemap(options: CrawlOptions): Promise<CrawlResult[]> {
+    const browser = await chromium.launch({ headless: true });
+    
+    try {
+      const context = await browser.newContext();
+      const page = await context.newPage();
+      
+      const sitemapUrls = [
+        `${this.baseUrl}/sitemap.xml`,
+        `${this.baseUrl}/sitemap_index.xml`,
+        `${this.baseUrl}/sitemap-index.xml`,
+        `${this.baseUrl}/sitemaps.xml`,
+        `${this.baseUrl}/site-map.xml`
+      ];
+
+      for (const sitemapUrl of sitemapUrls) {
+        try {
+          const response = await page.goto(sitemapUrl, { 
+            waitUntil: 'domcontentloaded',
+            timeout: options.timeout 
+          });
+
+          if (response && response.ok()) {
+            const content = await page.content();
+            const urls = this.parseSitemap(content);
+            
+            if (urls.length > 0) {
+              await context.close();
+              return urls.map((url, index) => ({
+                url,
+                title: `Sitemap URL ${index + 1}`,
+                depth: 0,
+                crawlTime: new Date(),
+                isValid: true
+              }));
+            }
+          }
+        } catch (error) {
+          continue;
+        }
+      }
+
+      await context.close();
+      return [];
+    } finally {
+      await browser.close();
+    }
+  }
+
+  /**
+   * Descobrir URLs via robots.txt
+   */
+  private async discoverFromRobots(options: CrawlOptions): Promise<CrawlResult[]> {
+    const browser = await chromium.launch({ headless: true });
+    
+    try {
+      const context = await browser.newContext();
+      const page = await context.newPage();
+      
+      const robotsUrl = `${this.baseUrl}/robots.txt`;
+      const response = await page.goto(robotsUrl, { 
+        waitUntil: 'domcontentloaded',
+        timeout: options.timeout 
+      });
+
+      if (response && response.ok()) {
+        const content = await page.content();
+        const urls = this.parseRobotsTxt(content);
+        
+        await context.close();
+        return urls.map((url, index) => ({
+          url,
+          title: `Robots.txt URL ${index + 1}`,
+          depth: 0,
+          crawlTime: new Date(),
+          isValid: true
+        }));
+      }
+
+      await context.close();
+      return [];
+    } finally {
+      await browser.close();
+    }
+  }
+
+  /**
+   * Descobrir páginas por padrões comuns
+   */
+  private async discoverCommonPatterns(options: CrawlOptions): Promise<CrawlResult[]> {
+    const commonPaths = [
+      '/about', '/sobre', '/quem-somos', '/empresa', '/historia',
+      '/contact', '/contacto', '/contactos', '/contato', '/contatos',
+      '/services', '/servicos', '/produtos', '/products',
+      '/portfolio', '/trabalhos', '/projetos', '/projects',
+      '/team', '/equipa', '/equipe', '/staff',
+      '/news', '/noticias', '/blog', '/artigos',
+      '/faq', '/perguntas', '/ajuda', '/help',
+      '/privacy', '/privacidade', '/termos', '/terms',
+      '/legal', '/juridico', '/politica'
+    ];
+
+    const results: CrawlResult[] = [];
+    const browser = await chromium.launch({ headless: true });
+    
+    try {
+      const context = await browser.newContext();
+      const page = await context.newPage();
+      
+      for (const path of commonPaths) {
+        try {
+          const url = `${options.baseUrl}${path}`;
+          const response = await page.goto(url, { 
+            waitUntil: 'domcontentloaded',
+            timeout: 10000 // Timeout menor para testar rapidamente
+          });
+
+          if (response && response.ok() && response.status() === 200) {
+            const title = await page.title();
+            results.push({
+              url,
+              title: title || `Página ${path}`,
+              depth: 0,
+              crawlTime: new Date(),
+              isValid: true
+            });
+          }
+        } catch (error) {
+          // Página não existe ou não acessível, continuar
+          continue;
+        }
+      }
+
+      await context.close();
+    } finally {
+      await browser.close();
+    }
+
+    return results;
+  }
+
+  /**
+   * Filtrar páginas protegidas por login
+   */
+  private async filterLoginProtectedPages(pages: CrawlResult[]): Promise<CrawlResult[]> {
+    const loginPatterns = [
+      '/login', '/signin', '/entrar', '/acesso',
+      '/register', '/signup', '/registo', '/criar-conta',
+      '/admin', '/dashboard', '/painel', '/gestao',
+      '/account', '/conta', '/perfil', '/profile',
+      '/checkout', '/payment', '/pagamento', '/compra'
+    ];
+
+    return pages.filter(page => {
+      // Verificar se a URL contém padrões de login
+      const hasLoginPattern = loginPatterns.some(pattern => 
+        page.url.toLowerCase().includes(pattern)
+      );
+      
+      return !hasLoginPattern;
+    });
+  }
+
+  /**
+   * Parse robots.txt para encontrar sitemaps e URLs mencionadas
+   */
+  private parseRobotsTxt(content: string): string[] {
+    const urls: string[] = [];
+    const lines = content.split('\n');
+    
+    for (const line of lines) {
+      const trimmedLine = line.trim().toLowerCase();
+      
+      // Procurar por referências de sitemap
+      if (trimmedLine.startsWith('sitemap:')) {
+        const sitemapUrl = line.substring(8).trim();
+        if (sitemapUrl && this.shouldIncludeUrl(sitemapUrl, { excludePatterns: [], includePatterns: [], maxPages: 100, maxDepth: 1, includeExternal: false, timeout: 30000 })) {
+          urls.push(sitemapUrl);
+        }
+      }
+      
+      // Procurar por caminhos mencionados em Disallow (às vezes indicam páginas existentes)
+      if (trimmedLine.startsWith('disallow:')) {
+        const path = line.substring(9).trim();
+        if (path && path !== '/' && !path.includes('*') && !path.includes('?')) {
+          const fullUrl = `${this.baseUrl}${path}`;
+          if (this.shouldIncludeUrl(fullUrl, { excludePatterns: [], includePatterns: [], maxPages: 100, maxDepth: 1, includeExternal: false, timeout: 30000 })) {
+            urls.push(fullUrl);
+          }
+        }
+      }
+    }
+    
+    return [...new Set(urls)]; // Remover duplicatas
   }
 
   /**

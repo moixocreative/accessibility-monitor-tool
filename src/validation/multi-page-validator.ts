@@ -4,11 +4,14 @@ import { AuditResult, AccessibilityViolation } from '../types';
 import { logger } from '../utils/logger';
 
 export interface MultiPageAuditOptions {
-  crawlStrategy: 'auto' | 'sitemap' | 'manual';
+  crawlStrategy: 'auto' | 'sitemap' | 'manual' | 'comprehensive';
   crawlOptions: Partial<CrawlOptions>;
   auditType: 'simple' | 'complete';
   maxConcurrent: number;
   delayBetweenPages: number;
+  retryFailedPages: boolean;
+  maxRetries: number;
+  useSharedSession: boolean;
 }
 
 export interface MultiPageAuditResult {
@@ -65,15 +68,18 @@ export class MultiPageValidator {
     const auditId = `multi_audit_${Date.now()}`;
 
     const defaultOptions: MultiPageAuditOptions = {
-      crawlStrategy: 'auto',
+      crawlStrategy: 'comprehensive',
       crawlOptions: {
-        maxPages: 10,
-        maxDepth: 2,
+        maxPages: 50,
+        maxDepth: 3,
         includeExternal: false
       },
       auditType: 'simple',
-      maxConcurrent: 2,
-      delayBetweenPages: 1000,
+      maxConcurrent: 1, // Mais conservador para evitar detecção
+      delayBetweenPages: 5000, // 5 segundos entre páginas
+      retryFailedPages: true,
+      maxRetries: 2,
+      useSharedSession: true,
       ...options
     };
 
@@ -143,86 +149,174 @@ export class MultiPageValidator {
   ): Promise<PageAuditResult[]> {
     const results: PageAuditResult[] = [];
     const validPages = pages.filter(page => page.isValid);
+    const failedPages: CrawlResult[] = [];
 
-    // Processar páginas em lotes para evitar sobrecarga
-    for (let i = 0; i < validPages.length; i += options.maxConcurrent) {
-      const batch = validPages.slice(i, i + options.maxConcurrent);
+    logger.info(`🔍 Iniciando auditoria de ${validPages.length} páginas válidas`);
+
+    // Processar páginas sequencialmente para máxima compatibilidade
+    for (let i = 0; i < validPages.length; i++) {
+      const page = validPages[i];
+      if (!page) continue;
       
-      const batchPromises = batch.map(async (page, batchIndex) => {
-        try {
-          // Delay entre páginas para evitar rate limiting
-          if (i > 0 || batchIndex > 0) {
-            await new Promise(resolve => 
-              setTimeout(resolve, options.delayBetweenPages)
-            );
-          }
-
-          logger.info(`Auditando página ${i + batchIndex + 1}/${validPages.length}: ${page.url}`);
-          
-          const startTime = Date.now();
-          const isCompleteAudit = options.auditType === 'complete';
-          
-          const auditResult = await this.wcagValidator.auditSite(
-            page.url,
-            `page_${Date.now()}_${batchIndex}`,
-            isCompleteAudit
-          );
-          
-          const auditTime = Date.now() - startTime;
-
-          return {
-            url: page.url,
-            title: page.title,
-            auditResult,
-            auditTime,
-            crawlInfo: page
-          };
-
-        } catch (error) {
-          logger.warn(`Erro ao auditar página ${page.url}:`, error);
-          
-          // Retornar resultado de erro para manter consistência
-          return {
-            url: page.url,
-            title: page.title,
-            auditResult: {
-              id: `error_${Date.now()}`,
-              siteId: `page_error`,
-              timestamp: new Date(),
-              wcagScore: -1,
-              lighthouseScore: {
-                accessibility: 0,
-                performance: 0,
-                seo: 0,
-                bestPractices: 0
-              },
-              violations: [],
-              axeResults: {
-                violations: [],
-                passes: [],
-                incomplete: [],
-                inapplicable: []
-              },
-              summary: {
-                totalViolations: 0,
-                criticalViolations: 0,
-                priorityViolations: 0,
-                compliancePercentage: 0
-              }
-            },
-            auditTime: 0,
-            crawlInfo: page
-          };
+      try {
+        // Delay entre páginas para evitar detecção
+        if (i > 0) {
+          logger.info(`⏳ Aguardando ${options.delayBetweenPages}ms antes da próxima página...`);
+          await new Promise(resolve => setTimeout(resolve, options.delayBetweenPages));
         }
-      });
 
-      const batchResults = await Promise.all(batchPromises);
-      results.push(...batchResults);
+        logger.info(`🔍 Auditando página ${i + 1}/${validPages.length}: ${page.url}`);
+        
+        const result = await this.auditSinglePageRobust(page, options);
+        results.push(result);
 
-      logger.info(`Lote ${Math.floor(i / options.maxConcurrent) + 1} concluído: ${batchResults.length} páginas auditadas`);
+        // Se a auditoria falhou, adicionar à lista de retry
+        if (result.auditResult.wcagScore < 0 && options.retryFailedPages) {
+          failedPages.push(page);
+        }
+
+        logger.info(`✅ Página ${i + 1} concluída: ${page.url} (Score: ${result.auditResult.wcagScore})`);
+
+      } catch (error) {
+        logger.error(`❌ Erro crítico ao auditar ${page.url}:`, error);
+        
+        // Criar resultado de erro
+        const errorResult = this.createErrorResult(page);
+        results.push(errorResult);
+        
+        if (options.retryFailedPages) {
+          failedPages.push(page);
+        }
+      }
     }
 
+    // Retry de páginas falhadas
+    if (failedPages.length > 0 && options.retryFailedPages) {
+      logger.info(`🔄 Tentando novamente ${failedPages.length} páginas que falharam...`);
+      
+      for (const page of failedPages) {
+        try {
+          await new Promise(resolve => setTimeout(resolve, options.delayBetweenPages * 2)); // Delay maior para retry
+          
+          logger.info(`🔄 Retry: ${page.url}`);
+          const retryResult = await this.auditSinglePageRobust(page, options);
+          
+          // Substituir resultado anterior se o retry teve sucesso
+          if (retryResult.auditResult.wcagScore >= 0) {
+            const existingIndex = results.findIndex(r => r.url === page.url);
+            if (existingIndex >= 0) {
+              results[existingIndex] = retryResult;
+              logger.info(`✅ Retry bem-sucedido: ${page.url} (Score: ${retryResult.auditResult.wcagScore})`);
+            }
+          }
+          
+        } catch (error) {
+          logger.warn(`❌ Retry falhou para ${page.url}:`, error);
+        }
+      }
+    }
+
+    const successfulAudits = results.filter(r => r.auditResult.wcagScore >= 0).length;
+    logger.info(`📊 Auditoria concluída: ${successfulAudits}/${results.length} páginas bem-sucedidas`);
+
     return results;
+  }
+
+  /**
+   * Auditar uma única página com múltiplas estratégias de robustez
+   */
+  private async auditSinglePageRobust(
+    page: CrawlResult,
+    options: MultiPageAuditOptions
+  ): Promise<PageAuditResult> {
+    const startTime = Date.now();
+    const isCompleteAudit = options.auditType === 'complete';
+    
+    let lastError: Error | null = null;
+    
+    // Tentar auditoria com diferentes estratégias
+    for (let attempt = 1; attempt <= options.maxRetries + 1; attempt++) {
+      try {
+        logger.info(`🎯 Tentativa ${attempt} para ${page.url}`);
+        
+        // Estratégia diferente para cada tentativa
+        const siteId = `page_${Date.now()}_${attempt}`;
+        
+        if (attempt > 1) {
+          // Delay adicional para tentativas subsequentes
+          await new Promise(resolve => setTimeout(resolve, 3000 * attempt));
+          
+          // Reinicializar browser a cada retry para evitar problemas de estado
+          await this.wcagValidator.close();
+        }
+        
+        const auditResult = await this.wcagValidator.auditSite(
+          page.url,
+          siteId,
+          isCompleteAudit
+        );
+        
+        const auditTime = Date.now() - startTime;
+
+        return {
+          url: page.url,
+          title: page.title,
+          auditResult,
+          auditTime,
+          crawlInfo: page
+        };
+        
+      } catch (error) {
+        lastError = error as Error;
+        logger.warn(`⚠️ Tentativa ${attempt} falhou para ${page.url}:`, error);
+        
+        if (attempt === options.maxRetries + 1) {
+          // Última tentativa falhou, retornar erro
+          break;
+        }
+      }
+    }
+    
+    // Todas as tentativas falharam
+    logger.error(`❌ Todas as tentativas falharam para ${page.url}. Último erro:`, lastError);
+    return this.createErrorResult(page);
+  }
+
+  /**
+   * Criar resultado de erro padronizado
+   */
+  private createErrorResult(page: CrawlResult): PageAuditResult {
+    return {
+      url: page.url,
+      title: page.title,
+      auditResult: {
+        id: `error_${Date.now()}`,
+        siteId: `page_error`,
+        timestamp: new Date(),
+        wcagScore: -1,
+        lighthouseScore: {
+          accessibility: 0,
+          performance: 0,
+          seo: 0,
+          bestPractices: 0
+        },
+        violations: [],
+        axeResults: {
+          violations: [],
+          passes: [],
+          incomplete: [],
+          inapplicable: []
+        },
+        summary: {
+          totalViolations: 0,
+          criticalViolations: 0,
+          priorityViolations: 0,
+          compliancePercentage: 0
+        }
+      },
+      auditTime: 0,
+      crawlInfo: page
+    };
   }
 
   /**
