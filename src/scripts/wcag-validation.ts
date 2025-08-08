@@ -129,7 +129,19 @@ async function main() {
     console.log(error instanceof Error ? error.message : String(error));
     process.exit(1);
   } finally {
-    await validator.close();
+    try {
+      console.log('\n🧹 Limpando recursos...');
+      await Promise.race([
+        validator.close(),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Cleanup timeout')), 15000)
+        )
+      ]);
+      console.log('✅ Recursos limpos com sucesso');
+    } catch (cleanupError) {
+      console.log('⚠️  Erro durante limpeza de recursos:', cleanupError);
+      // Continuar mesmo com erro de cleanup
+    }
   }
 }
 
