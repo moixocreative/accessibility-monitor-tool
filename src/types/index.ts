@@ -61,6 +61,15 @@ export interface AuditResult {
     priorityViolations: number;
     compliancePercentage: number;
   };
+  // MÉTRICAS DE RISCO LEGAL (ALINHADAS COM PORTFOLIO UNTILE)
+  legalRiskMetrics?: {
+    legalRiskScore: number;
+    exposureScore: number;
+    riskLevel: 'BAIXO' | 'MÉDIO' | 'ALTO';
+    criticalViolations: number;
+    seriousViolations: number;
+    priorityViolations: number;
+  };
 }
 
 export interface EmergencyIncident {

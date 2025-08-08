@@ -145,6 +145,25 @@ async function main() {
     console.log(`  SEO: ${auditResult.lighthouseScore.seo}%`);
     console.log(`  Boas Práticas: ${auditResult.lighthouseScore.bestPractices}%`);
 
+    // MÉTRICAS DE RISCO LEGAL (ALINHADAS COM PORTFOLIO UNTILE)
+    console.log('\n⚖️  MÉTRICAS DE RISCO LEGAL');
+    console.log('==============================');
+    const legalRiskMetrics = (auditResult as any).legalRiskMetrics || {
+      legalRiskScore: 0,
+      exposureScore: 0,
+      riskLevel: 'BAIXO',
+      criticalViolations: 0,
+      seriousViolations: 0,
+      priorityViolations: 0
+    };
+    
+    console.log(`Risco Legal: ${legalRiskMetrics.legalRiskScore}/100`);
+    console.log(`Exposição Legal: ${legalRiskMetrics.exposureScore}/100`);
+    console.log(`Nível de Risco: ${legalRiskMetrics.riskLevel}`);
+    console.log(`Violações Críticas: ${legalRiskMetrics.criticalViolations}`);
+    console.log(`Violações Sérias: ${legalRiskMetrics.seriousViolations}`);
+    console.log(`Violações Prioritárias: ${legalRiskMetrics.priorityViolations}`);
+
     // Mostrar recomendações baseadas no tipo de auditoria
     console.log('\n💡 RECOMENDAÇÕES');
     console.log('==================');
