@@ -487,3 +487,55 @@
 {"level":"info","message":"Validação WCAG concluída","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:16:58"}
 {"level":"info","message":"Fechando browser...","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:16:58"}
 {"level":"info","message":"Browser fechado com sucesso","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:16:58"}
+{"level":"info","message":"Iniciando validação WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:40:14"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:40:14"}
+{"level":"warn","message":"Browser não disponível, pulando validação axe-core","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:40:14"}
+{"level":"warn","message":"Dados do axe-core não disponíveis, score WCAG não calculado","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:40:14"}
+{"level":"info","message":"Iniciando validação WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:40:41"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:40:41"}
+{"level":"warn","message":"Browser não disponível, pulando validação axe-core","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:40:41"}
+{"level":"warn","message":"Dados do axe-core não disponíveis, score WCAG não calculado","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:40:41"}
+{"level":"info","message":"Iniciando validação WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:41:35"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:41:35"}
+{"level":"warn","message":"Browser não disponível, pulando validação axe-core","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:41:35"}
+{"level":"warn","message":"Dados do axe-core não disponíveis, score WCAG não calculado","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:41:35"}
+{"level":"info","message":"Iniciando validação WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:42:11"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:42:11"}
+{"level":"warn","message":"Browser não disponível, pulando validação axe-core","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:42:11"}
+{"level":"warn","message":"Dados do axe-core não disponíveis, score WCAG não calculado","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:42:11"}
+{"level":"info","message":"Iniciando validação WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:43:44"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:43:44"}
+{"level":"info","message":"Browser não inicializado, tentando inicializar...","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:43:44"}
+{"level":"info","message":"Tentando inicializar Playwright com configurações stealth...","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:43:44"}
+{"level":"info","message":"Playwright inicializado com sucesso","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:43:44"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:43:44"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:43:44"}
+{"level":"info","message":"Tentativa 1/3 para executar axe-core","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:43:44"}
+{"level":"info","message":"Página carregada: Casa de Investimentos - Gestão de Patrimónios e Fundos de Investimento (https://www.casadeinvestimentos.pt/)","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:43:46"}
+{"level":"info","message":"Axe-core executado com sucesso","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:43:49"}
+{"level":"info","message":"Fechando browser...","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:43:49"}
+{"level":"info","message":"Browser fechado com sucesso","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:43:49"}
+{"level":"info","message":"Iniciando validação WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:44:14"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:44:14"}
+{"level":"info","message":"Browser não inicializado, tentando inicializar...","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:44:14"}
+{"level":"info","message":"Tentando inicializar Playwright com configurações stealth...","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:44:14"}
+{"level":"info","message":"Playwright inicializado com sucesso","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:44:14"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:44:14"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:44:14"}
+{"level":"info","message":"Tentativa 1/3 para executar axe-core completo (Playwright)","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:44:14"}
+{"level":"info","message":"Página carregada: Casa de Investimentos - Gestão de Patrimónios e Fundos de Investimento (https://www.casadeinvestimentos.pt/)","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:44:15"}
+{"level":"info","message":"Axe-core completo executado com sucesso (Playwright - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:44:18"}
+{"level":"info","message":"Fechando browser...","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:44:18"}
+{"level":"info","message":"Browser fechado com sucesso","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:44:18"}
+{"level":"info","message":"Iniciando validação WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:45:19"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:45:19"}
+{"level":"info","message":"Browser não inicializado, tentando inicializar...","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:45:19"}
+{"level":"info","message":"Tentando inicializar Playwright com configurações stealth...","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:45:19"}
+{"level":"info","message":"Playwright inicializado com sucesso","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:45:19"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:45:19"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:45:19"}
+{"level":"info","message":"Tentativa 1/3 para executar axe-core completo (Playwright)","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:45:19"}
+{"level":"info","message":"Página carregada: Untile | Digital Product Development Studio (https://www.untile.pt/)","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:45:20"}
+{"level":"info","message":"Axe-core completo executado com sucesso (Playwright - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:45:24"}
+{"level":"info","message":"Fechando browser...","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:45:24"}
+{"level":"info","message":"Browser fechado com sucesso","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 17:45:24"}

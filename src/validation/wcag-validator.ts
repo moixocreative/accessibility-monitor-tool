@@ -328,25 +328,32 @@ export class WCAGValidator {
   }
 
   /**
-   * Executar auditoria completa de um site
+   * Auditoria completa de um site
    */
-  async auditSite(url: string, siteId: string): Promise<AuditResult> {
-    logger.info(`Iniciando auditoria WCAG para: ${url}`);
-
+  async auditSite(url: string, siteId: string, isCompleteAudit: boolean = false): Promise<AuditResult> {
     try {
-      // Garantir que o browser está inicializado
+      logger.info(`Iniciando auditoria WCAG para ${url} (${isCompleteAudit ? 'completa' : 'simples'})`);
+      
+      // Executar axe-core
+      let axeResult: any = { violations: [], passes: [], incomplete: [], inapplicable: [] };
+      
+      // Verificar se o browser está inicializado
       if (!this.browser) {
         logger.info('Browser não inicializado, tentando inicializar...');
         await this.initBrowser();
       }
-
-      // Executar axe-core apenas se o browser estiver disponível
-      let axeResult = { violations: [], passes: [], incomplete: [], inapplicable: [] };
+      
       if (this.browser) {
+        logger.info('Browser disponível, executando axe-core...');
         try {
-          logger.info('Browser disponível, executando axe-core...');
-          axeResult = await this.runAxeCore(url);
-          logger.info(`Axe-core executado com ${axeResult.violations.length} violações`);
+          // Configurar axe-core baseado no tipo de auditoria
+          if (isCompleteAudit) {
+            logger.info('Executando auditoria completa - todos os critérios WCAG 2.1 AA');
+            axeResult = await this.runAxeCoreComplete(url);
+          } else {
+            logger.info('Executando auditoria simples - apenas critérios prioritários');
+            axeResult = await this.runAxeCore(url);
+          }
         } catch (error) {
           logger.warn('Erro ao executar axe-core, continuando sem validação detalhada:', error);
         }
@@ -539,25 +546,46 @@ export class WCAGValidator {
     }
 
     if (!this.browser) {
-      throw new Error('Browser não pôde ser inicializado');
-    }
-
-    try {
-      logger.info(`Executando axe-core em ${url}`);
-      
-      if (this.usePlaywright) {
-        return await this.runAxeCoreWithPlaywright(url);
-      } else {
-        return await this.runAxeCoreWithPuppeteer(url);
-      }
-    } catch (error) {
-      logger.error('Erro geral ao executar axe-core:', error);
+      logger.warn('Browser não disponível para axe-core');
       return {
         violations: [],
         passes: [],
         incomplete: [],
         inapplicable: []
       };
+    }
+
+    // Usar Playwright se disponível, senão Puppeteer
+    if (this.usePlaywright) {
+      return this.runAxeCoreWithPlaywright(url);
+    } else {
+      return this.runAxeCoreWithPuppeteer(url);
+    }
+  }
+
+  /**
+   * Executar axe-core com todos os critérios WCAG 2.1 AA
+   */
+  private async runAxeCoreComplete(url: string): Promise<any> {
+    if (!this.browser) {
+      await this.initBrowser();
+    }
+
+    if (!this.browser) {
+      logger.warn('Browser não disponível para axe-core completo');
+      return {
+        violations: [],
+        passes: [],
+        incomplete: [],
+        inapplicable: []
+      };
+    }
+
+    // Usar Playwright se disponível, senão Puppeteer
+    if (this.usePlaywright) {
+      return this.runAxeCoreCompleteWithPlaywright(url);
+    } else {
+      return this.runAxeCoreCompleteWithPuppeteer(url);
     }
   }
 
@@ -716,6 +744,158 @@ export class WCAGValidator {
   }
 
   /**
+   * Executar axe-core com todos os critérios WCAG 2.1 AA com Playwright
+   */
+  private async runAxeCoreCompleteWithPlaywright(url: string): Promise<any> {
+    const maxRetries = 3;
+    let lastError: Error | null = null;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      logger.info(`Tentativa ${attempt}/${maxRetries} para executar axe-core completo (Playwright)`);
+      
+      const context = await (this.browser as any).newContext({
+        viewport: { width: 1280, height: 720 },
+        extraHTTPHeaders: {
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+          'Accept-Language': 'en-US,en;q=0.5',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'DNT': '1',
+          'Connection': 'keep-alive',
+          'Upgrade-Insecure-Requests': '1',
+          'Sec-Fetch-Dest': 'document',
+          'Sec-Fetch-Mode': 'navigate',
+          'Sec-Fetch-Site': 'none',
+          'Sec-Fetch-User': '?1',
+          'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+          'sec-ch-ua-mobile': '?0',
+          'sec-ch-ua-platform': '"macOS"',
+          'Cache-Control': 'max-age=0'
+        }
+      });
+
+      const page = await context.newPage();
+      
+      try {
+        // Configurar timeouts mais agressivos
+        page.setDefaultTimeout(30000); // 30 segundos para operações
+        page.setDefaultNavigationTimeout(45000); // 45 segundos para navegação
+
+        // Navegar para a URL com timeout reduzido
+        await page.goto(url, {
+          waitUntil: 'domcontentloaded',
+          timeout: 45000
+        });
+
+        // Verificar se a página foi carregada corretamente
+        const title = await page.title();
+        const currentUrl = page.url();
+        const bodyContent = await page.evaluate(() => (globalThis as any).document.body?.textContent || '');
+
+        logger.info(`Página carregada: ${title} (${currentUrl})`);
+
+        // Verificar se a página não está bloqueada
+        if (title.toLowerCase().includes('cloudflare') || 
+            title.toLowerCase().includes('checking your browser') ||
+            currentUrl.includes('cloudflare') ||
+            bodyContent.toLowerCase().includes('cloudflare') ||
+            bodyContent.toLowerCase().includes('checking your browser')) {
+          throw new Error('Página bloqueada por proteção anti-bot');
+        }
+
+        // Delay reduzido para estabilização
+        await page.waitForTimeout(1000 + Math.random() * 2000); // 1-3 segundos
+
+        // Scroll simples e rápido
+        await page.evaluate(() => {
+          const scrollAmount = Math.floor(Math.random() * 300) + 50;
+          (globalThis as any).window.scrollTo(0, scrollAmount);
+        });
+
+        // Injetar axe-core com timeout reduzido
+        await page.addScriptTag({
+          url: 'https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.7.0/axe.min.js'
+        });
+
+        // Aguardar carregamento do axe-core
+        await page.waitForTimeout(500);
+
+        // Executar axe-core com TODOS os critérios WCAG 2.1 AA
+        const axeResult = await page.evaluate(() => {
+          return new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+              reject(new Error('Axe-core execution timeout (15s)'));
+            }, 15000); // Apenas 15 segundos
+
+            try {
+              // Verificar se axe está disponível
+              if (typeof (globalThis as any).axe === 'undefined') {
+                clearTimeout(timeout);
+                reject(new Error('Axe-core não está disponível'));
+                return;
+              }
+
+              // Executar TODOS os critérios WCAG 2.1 AA sem restrições
+              (globalThis as any).axe.run({
+                runOnly: {
+                  type: 'tag',
+                  values: ['wcag2a', 'wcag2aa']
+                }
+              }, (err: any, results: any) => {
+                clearTimeout(timeout);
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve(results);
+                }
+              });
+            } catch (error) {
+              clearTimeout(timeout);
+              reject(new Error(`Erro ao executar axe-core: ${error}`));
+            }
+          });
+        }) as any;
+
+        await page.close();
+        await context.close();
+        logger.info(`Axe-core completo executado com sucesso (Playwright - tentativa ${attempt})`);
+        return {
+          violations: axeResult.violations || [],
+          passes: axeResult.passes || [],
+          incomplete: axeResult.incomplete || [],
+          inapplicable: axeResult.inapplicable || []
+        };
+
+      } catch (pageError) {
+        lastError = pageError as Error;
+        logger.warn(`Tentativa ${attempt} falhou:`, lastError.message);
+        
+        try {
+          await page.close();
+          await context.close();
+        } catch (closeError) {
+          logger.warn('Erro ao fechar página/contexto:', closeError);
+        }
+
+        // Se não é a última tentativa, aguardar um pouco antes de tentar novamente
+        if (attempt < maxRetries) {
+          const delay = attempt * 2000; // 2s, 4s, 6s
+          logger.info(`Aguardando ${delay}ms antes da próxima tentativa...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+      }
+    }
+
+    // Se todas as tentativas falharam, retornar resultado vazio
+    logger.error('Todas as tentativas de execução do axe-core falharam (Playwright)');
+    return {
+      violations: [],
+      passes: [],
+      incomplete: [],
+      inapplicable: []
+    };
+  }
+
+  /**
    * Executar axe-core com Puppeteer
    */
   private async runAxeCoreWithPuppeteer(url: string): Promise<any> {
@@ -724,6 +904,164 @@ export class WCAGValidator {
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       logger.info(`Tentativa ${attempt}/${maxRetries} para executar axe-core (Puppeteer)`);
+      
+      const page = await (this.browser as any).newPage();
+      
+      try {
+        // Configurar timeouts mais agressivos
+        page.setDefaultTimeout(30000); // 30 segundos
+        page.setDefaultNavigationTimeout(45000); // 45 segundos
+
+        // Configurar headers mais realistas
+        await page.setExtraHTTPHeaders({
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+          'Accept-Language': 'en-US,en;q=0.5',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'DNT': '1',
+          'Connection': 'keep-alive',
+          'Upgrade-Insecure-Requests': '1',
+          'Sec-Fetch-Dest': 'document',
+          'Sec-Fetch-Mode': 'navigate',
+          'Sec-Fetch-Site': 'none',
+          'Sec-Fetch-User': '?1',
+          'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+          'sec-ch-ua-mobile': '?0',
+          'sec-ch-ua-platform': '"macOS"',
+          'Cache-Control': 'max-age=0'
+        });
+
+        // Configurar viewport
+        await page.setViewport({ width: 1280, height: 720 });
+
+        // Navegar para a URL com timeout reduzido
+        await page.goto(url, { 
+          waitUntil: 'domcontentloaded', 
+          timeout: 45000 
+        });
+
+        // Verificar se a página carregou corretamente
+        const pageTitle = await page.title();
+        const pageUrl = page.url();
+        const bodyText = await page.evaluate(() => (globalThis as any).document.body?.textContent || '');
+
+        logger.info(`Página carregada: "${pageTitle}" em ${pageUrl}`);
+
+        // Verificar se não fomos redirecionados para uma página de erro
+        if (pageUrl.includes('error') || pageUrl.includes('blocked') || 
+            pageTitle.toLowerCase().includes('error') || 
+            pageTitle.toLowerCase().includes('blocked') ||
+            pageTitle.toLowerCase().includes('access denied') ||
+            pageTitle.toLowerCase().includes('cloudflare') ||
+            pageTitle.toLowerCase().includes('checking your browser')) {
+          throw new Error(`Página de erro detectada: ${pageTitle}`);
+        }
+
+        // Verificar se a página tem conteúdo válido
+        if (bodyText.length < 100) {
+          throw new Error('Página parece estar vazia ou bloqueada');
+        }
+
+        // Delay reduzido para estabilização
+        await page.waitForTimeout(1000 + Math.random() * 2000); // 1-3 segundos
+
+        // Scroll simples e rápido
+        await page.evaluate(() => {
+          const scrollHeight = (globalThis as any).document.body.scrollHeight;
+          const randomScroll = Math.floor(Math.random() * Math.min(scrollHeight, 300)) + 50;
+          (globalThis as any).window.scrollTo(0, randomScroll);
+        });
+
+        // Aguardar um pouco mais
+        await page.waitForTimeout(500);
+
+        // Injetar axe-core
+        await page.addScriptTag({
+          url: 'https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.7.0/axe.min.js'
+        });
+
+        // Executar axe-core com TODOS os critérios WCAG 2.1 AA
+        const axeResults = await page.evaluate(() => {
+          return new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+              reject(new Error('Axe-core execution timeout (15s)'));
+            }, 15000); // Apenas 15 segundos
+
+            try {
+              // Verificar se axe está disponível
+              if (typeof (globalThis as any).axe === 'undefined') {
+                clearTimeout(timeout);
+                reject(new Error('Axe-core não está disponível'));
+                return;
+              }
+
+              // Executar TODOS os critérios WCAG 2.1 AA sem restrições
+              (globalThis as any).axe.run({
+                runOnly: {
+                  type: 'tag',
+                  values: ['wcag2a', 'wcag2aa']
+                }
+              }, (err: any, results: any) => {
+                clearTimeout(timeout);
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve(results);
+                }
+              });
+            } catch (error) {
+              clearTimeout(timeout);
+              reject(new Error(`Erro ao executar axe-core: ${error}`));
+            }
+          });
+        }) as any;
+
+        await page.close();
+        logger.info(`Axe-core completo executado com sucesso (Puppeteer - tentativa ${attempt})`);
+        return {
+          violations: axeResults.violations || [],
+          passes: axeResults.passes || [],
+          incomplete: axeResults.incomplete || [],
+          inapplicable: axeResults.inapplicable || []
+        };
+
+      } catch (pageError) {
+        lastError = pageError as Error;
+        logger.warn(`Tentativa ${attempt} falhou:`, lastError.message);
+        
+        try {
+          await page.close();
+        } catch (closeError) {
+          logger.warn('Erro ao fechar página:', closeError);
+        }
+
+        // Se não é a última tentativa, aguardar um pouco antes de tentar novamente
+        if (attempt < maxRetries) {
+          const delay = attempt * 2000; // 2s, 4s, 6s
+          logger.info(`Aguardando ${delay}ms antes da próxima tentativa...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+      }
+    }
+
+    // Se todas as tentativas falharam, retornar resultado vazio
+    logger.error('Todas as tentativas de execução do axe-core falharam (Puppeteer)');
+    return {
+      violations: [],
+      passes: [],
+      incomplete: [],
+      inapplicable: []
+    };
+  }
+
+  /**
+   * Executar axe-core com todos os critérios WCAG 2.1 AA com Puppeteer
+   */
+  private async runAxeCoreCompleteWithPuppeteer(url: string): Promise<any> {
+    const maxRetries = 3;
+    let lastError: Error | null = null;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      logger.info(`Tentativa ${attempt}/${maxRetries} para executar axe-core completo (Puppeteer)`);
       
       const page = await (this.browser as any).newPage();
       
@@ -844,7 +1182,7 @@ export class WCAGValidator {
         }) as any;
 
         await page.close();
-        logger.info(`Axe-core executado com sucesso (Puppeteer - tentativa ${attempt})`);
+        logger.info(`Axe-core completo executado com sucesso (Puppeteer - tentativa ${attempt})`);
         return {
           violations: axeResults.violations || [],
           passes: axeResults.passes || [],
