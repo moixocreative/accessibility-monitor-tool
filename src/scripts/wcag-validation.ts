@@ -45,27 +45,11 @@ async function main() {
   const validator = new WCAGValidator();
 
   try {
-    // Mostrar critérios prioritários
-    console.log('\n🎯 CRITÉRIOS WCAG 2.1 AA PRIORITÁRIOS UNTILE');
-    console.log('================================================');
-    
-    PRIORITY_WCAG_CRITERIA.forEach(criteria => {
-      console.log(`\n${criteria.id} - ${criteria.name} (${criteria.level})`);
-      console.log(`  Prioridade: ${criteria.priority}`);
-      console.log(`  Princípio: ${criteria.principle}`);
-      console.log(`  Descrição: ${criteria.description}`);
-      console.log(`  Tecnologias:`);
-      console.log(`    Webflow: ${criteria.technology.webflow}`);
-      console.log(`    Laravel: ${criteria.technology.laravel}`);
-      console.log(`    WordPress: ${criteria.technology.wordpress}`);
-    });
-
-    // Mostrar critérios críticos
-    const criticalCriteria = getCriticalCriteria();
-    console.log(`\n🚨 CRITÉRIOS CRÍTICOS (P0): ${criticalCriteria.length}`);
-    criticalCriteria.forEach(criteria => {
-      console.log(`  - ${criteria.id}: ${criteria.name}`);
-    });
+    // Mostrar critérios prioritários (versão resumida)
+    console.log('\n🎯 CRITÉRIOS WCAG 2.1 AA PRIORITÁRIOS');
+    console.log('========================================');
+    console.log(`Total de critérios: ${PRIORITY_WCAG_CRITERIA.length}`);
+    console.log(`Critérios críticos (P0): ${getCriticalCriteria().length}`);
 
     // Executar auditoria real
     console.log(`\n🔍 EXECUTANDO AUDITORIA WCAG`);

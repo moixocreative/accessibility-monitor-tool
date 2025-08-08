@@ -13,3 +13,9 @@
 {"level":"warn","message":"Browser não disponível, pulando validação axe-core","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 12:31:25"}
 {"level":"warn","message":"Dados do axe-core não disponíveis, score WCAG não calculado","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 12:31:25"}
 {"level":"error","message":"Erro ao inicializar browser: socket hang up","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 12:31:26"}
+{"level":"warn","message":"Browser não disponível, pulando validação axe-core","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 13:02:32"}
+{"level":"warn","message":"Dados do axe-core não disponíveis, score WCAG não calculado","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 13:02:32"}
+{"level":"warn","message":"Browser não disponível, pulando validação axe-core","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 13:04:29"}
+{"level":"warn","message":"Dados do axe-core não disponíveis, score WCAG não calculado","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 13:04:29"}
+{"level":"warn","message":"Browser não disponível, pulando validação axe-core","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 13:05:01"}
+{"level":"warn","message":"Dados do axe-core não disponíveis, score WCAG não calculado","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 13:05:01"}
