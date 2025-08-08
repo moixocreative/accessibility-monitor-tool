@@ -1,0 +1,2 @@
+{"id":"incident_1754308518979_p2g4wir1t","level":"warn","message":"Incidente P1 criado","sites":["site_1"],"timestamp":"2025-08-04T11:55:18.979Z","title":"Falha na auditoria de Welligence Website","violations":0}
+{"id":"incident_1754308518979_p2g4wir1t","level":"warn","message":"INCIDENTE P1 ALTO DETETADO","slaDeadline":"2025-08-04T19:55:18.978Z","timestamp":"2025-08-04T11:55:18.979Z","title":"Falha na auditoria de Welligence Website"}
