@@ -42,7 +42,10 @@ src/
 .github/workflows/
 ├── test.yml # Testes automatizados
 ├── release.yml # Releases automáticos
-└── sync-dist.yml # Sincronização DigitalOcean---
+└── sync-dist.yml # Sincronização DigitalOcean
+
+
+---
 
 ## 🔧 Configuração Técnica
 
