@@ -425,6 +425,13 @@ export class WCAGValidator {
    * Calcular score WCAG baseado apenas no axe-core
    */
   private calculateWCAGScoreFromAxe(axeResult: any): number {
+    // Verificar se temos dados válidos do axe-core
+    if (!axeResult.violations || axeResult.violations.length === 0) {
+      // Se não temos dados do axe-core, não podemos calcular score real
+      logger.warn('Dados do axe-core não disponíveis, score WCAG não calculado');
+      return -1; // Indicar que score não foi calculado
+    }
+
     const totalViolations = axeResult.violations?.length || 0;
     const criticalViolations = axeResult.violations?.filter((v: any) => 
       v.impact === 'critical' || v.impact === 'serious'
