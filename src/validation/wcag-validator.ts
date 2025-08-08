@@ -69,9 +69,6 @@ export class WCAGValidator {
     logger.info(`Iniciando auditoria WCAG para: ${url}`);
 
     try {
-      // Executar Lighthouse
-      const lighthouseResult = await this.runLighthouse(url);
-      
       // Executar axe-core apenas se o browser estiver disponível
       let axeResult = { violations: [], passes: [], incomplete: [], inapplicable: [] };
       if (this.browser) {
@@ -87,8 +84,8 @@ export class WCAGValidator {
       // Analisar violações
       const violations = this.analyzeViolations(axeResult, url);
       
-      // Calcular score WCAG
-      const wcagScore = this.calculateWCAGScore(lighthouseResult, axeResult);
+      // Calcular score WCAG baseado apenas no axe-core
+      const wcagScore = this.calculateWCAGScoreFromAxe(axeResult);
       
       // Gerar resumo
       const summary = this.generateSummary(violations, wcagScore);
@@ -100,10 +97,10 @@ export class WCAGValidator {
         wcagScore,
         violations,
         lighthouseScore: {
-          accessibility: lighthouseResult.accessibility || 0,
-          performance: lighthouseResult.performance || 0,
-          seo: lighthouseResult.seo || 0,
-          bestPractices: lighthouseResult.bestPractices || 0
+          accessibility: 0,
+          performance: 0,
+          seo: 0,
+          bestPractices: 0
         },
         axeResults: axeResult,
         summary
@@ -264,7 +261,11 @@ export class WCAGValidator {
    */
   private async runAxeCore(url: string): Promise<any> {
     if (!this.browser) {
-      throw new Error('Browser não inicializado');
+      await this.initBrowser();
+    }
+
+    if (!this.browser) {
+      throw new Error('Browser não pôde ser inicializado');
     }
 
     try {
@@ -418,6 +419,22 @@ export class WCAGValidator {
       default:
         return 'moderate';
     }
+  }
+
+  /**
+   * Calcular score WCAG baseado apenas no axe-core
+   */
+  private calculateWCAGScoreFromAxe(axeResult: any): number {
+    const totalViolations = axeResult.violations?.length || 0;
+    const criticalViolations = axeResult.violations?.filter((v: any) => 
+      v.impact === 'critical' || v.impact === 'serious'
+    ).length || 0;
+    
+    // Penalizar violações críticas mais severamente
+    const violationPenalty = (criticalViolations * 10) + (totalViolations * 2);
+    const axeScore = Math.max(0, 100 - violationPenalty);
+    
+    return Math.round(axeScore);
   }
 
   /**

@@ -38,15 +38,18 @@ export class EmergencyResponse {
    * Processar incidente baseado no tipo
    */
   private async processIncident(incident: EmergencyIncident): Promise<void> {
+    // Em CI/CD, apenas simular o processamento sem enviar emails
+    const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
+    
     switch (incident.type) {
       case 'P0':
-        await this.handleP0Incident(incident);
+        await this.handleP0Incident(incident, isCI);
         break;
       case 'P1':
-        await this.handleP1Incident(incident);
+        await this.handleP1Incident(incident, isCI);
         break;
       case 'P2':
-        await this.handleP2Incident(incident);
+        await this.handleP2Incident(incident, isCI);
         break;
     }
   }
@@ -54,26 +57,33 @@ export class EmergencyResponse {
   /**
    * Processar incidente P0 (CRÍTICO) - SLA 2h
    */
-  private async handleP0Incident(incident: EmergencyIncident): Promise<void> {
+  private async handleP0Incident(incident: EmergencyIncident, isCI: boolean = false): Promise<void> {
     logEmergency('error', 'INCIDENTE P0 CRÍTICO DETETADO', {
       id: incident.id,
       title: incident.title,
       slaDeadline: incident.slaDeadline
     });
 
-    // Notificar equipa crítica imediatamente
-    await this.notificationService.sendEmergencyAlert({
-      level: 'P0',
-      title: incident.title,
-      description: incident.description,
-      sites: incident.sites,
-      violations: incident.violations,
-      deadline: incident.slaDeadline
-    });
+    if (!isCI) {
+      // Notificar equipa crítica imediatamente
+      try {
+        await this.notificationService.sendEmergencyAlert({
+          title: incident.title,
+          description: incident.description,
+          severity: 'P0',
+          ...(incident.sites?.[0] && { url: incident.sites[0] }),
+          ...(incident.violations && { violations: incident.violations.map(v => v.description || v.criteria?.name || 'Violação') })
+        });
+      } catch (error) {
+        logger.error('Erro ao enviar alerta de emergência:', error);
+      }
 
-    // Notificar autoridade se necessário
-    if (this.shouldNotifyAuthority(incident)) {
-      await this.notifyAuthority(incident);
+      // Notificar autoridade se necessário
+      if (this.shouldNotifyAuthority(incident)) {
+        await this.notifyAuthority(incident);
+      }
+    } else {
+      logger.info('Modo CI/CD: Simulando notificações de emergência P0');
     }
 
     // Atribuir a equipa de resposta
@@ -86,22 +96,29 @@ export class EmergencyResponse {
   /**
    * Processar incidente P1 (ALTO) - SLA 8h
    */
-  private async handleP1Incident(incident: EmergencyIncident): Promise<void> {
+  private async handleP1Incident(incident: EmergencyIncident, isCI: boolean = false): Promise<void> {
     logEmergency('warn', 'INCIDENTE P1 ALTO DETETADO', {
       id: incident.id,
       title: incident.title,
       slaDeadline: incident.slaDeadline
     });
 
-    // Notificar equipa de resposta
-    await this.notificationService.sendEmergencyAlert({
-      level: 'P1',
-      title: incident.title,
-      description: incident.description,
-      sites: incident.sites,
-      violations: incident.violations,
-      deadline: incident.slaDeadline
-    });
+    if (!isCI) {
+      // Notificar equipa de resposta
+      try {
+        await this.notificationService.sendEmergencyAlert({
+          title: incident.title,
+          description: incident.description,
+          severity: 'P1',
+          ...(incident.sites?.[0] && { url: incident.sites[0] }),
+          ...(incident.violations && { violations: incident.violations.map(v => v.description || v.criteria?.name || 'Violação') })
+        });
+      } catch (error) {
+        logger.error('Erro ao enviar alerta de emergência:', error);
+      }
+    } else {
+      logger.info('Modo CI/CD: Simulando notificações de emergência P1');
+    }
 
     // Atribuir a equipa de resposta
     incident.assignedTo = 'emergency-team-p1';
@@ -113,21 +130,28 @@ export class EmergencyResponse {
   /**
    * Processar incidente P2 (MÉDIO) - SLA 24h
    */
-  private async handleP2Incident(incident: EmergencyIncident): Promise<void> {
+  private async handleP2Incident(incident: EmergencyIncident, isCI: boolean = false): Promise<void> {
     logEmergency('warn', 'INCIDENTE P2 MÉDIO DETETADO', {
       id: incident.id,
       title: incident.title,
       slaDeadline: incident.slaDeadline
     });
 
-    // Notificar equipa de manutenção
-    await this.notificationService.sendMaintenanceAlert({
-      title: incident.title,
-      description: incident.description,
-      sites: incident.sites,
-      violations: incident.violations,
-      deadline: incident.slaDeadline
-    });
+    if (!isCI) {
+      // Notificar equipa de manutenção
+      try {
+        await this.notificationService.sendMaintenanceAlert({
+          title: incident.title,
+          description: incident.description,
+          action: 'Corrigir violações de acessibilidade identificadas',
+          ...(incident.sites?.[0] && { url: incident.sites[0] })
+        });
+      } catch (error) {
+        logger.error('Erro ao enviar alerta de manutenção:', error);
+      }
+    } else {
+      logger.info('Modo CI/CD: Simulando notificações de manutenção P2');
+    }
 
     // Atribuir a equipa de manutenção
     incident.assignedTo = 'maintenance-team';
@@ -160,7 +184,7 @@ export class EmergencyResponse {
     const communication: EmergencyCommunication = {
       id: `comm_${Date.now()}`,
       type: 'authority',
-      recipient: process.env.AUTHORITY_EMAIL || 'authority@example.pt',
+      recipient: process.env.AUTHORITY_EMAIL || process.env.EMERGENCY_EMAIL || 'mauriciopereita@untile.pt',
       subject: `[URGENTE] Violação Acessibilidade Digital - ${incident.title}`,
       content: this.generateAuthorityTemplate(incident),
       sentAt: new Date(),
@@ -220,7 +244,7 @@ ${violationsSummary}
 ## CONTACTO TÉCNICO
 
 Responsável técnico: [Nome]
-Email: accessibility@untile.pt
+Email: ${process.env.SMTP_USER || 'mauriciopereita@untile.pt'}
 Telefone: ${process.env.EMERGENCY_PHONE || '+351-XXX-XXX-XXX'}
 Disponibilidade: 24/7 para questões de acessibilidade
 
@@ -228,7 +252,7 @@ Permanecemos à disposição para esclarecimentos adicionais.
 
 Cumprimentos,
 [Nome] - [Título]
-UNTILE | accessibility@untile.pt
+UNTILE | ${process.env.SMTP_USER || 'mauriciopereita@untile.pt'}
     `.trim();
   }
 

@@ -17,6 +17,12 @@ async function main() {
   const portfolioMonitor = new PortfolioMonitor();
   const emergencyResponse = new EmergencyResponse();
 
+  // Configurar timeout mais longo
+  const timeout = setTimeout(() => {
+    logger.error('Timeout na geração de relatório');
+    process.exit(1);
+  }, 300000); // 5 minutos
+
   try {
     switch (reportType) {
       case '--test':
@@ -40,6 +46,7 @@ async function main() {
     logger.error('Erro na geração de relatório:', error);
     process.exit(1);
   } finally {
+    clearTimeout(timeout);
     await portfolioMonitor.cleanup();
   }
 }
