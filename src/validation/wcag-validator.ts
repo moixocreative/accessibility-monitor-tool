@@ -7,10 +7,8 @@ export class WCAGValidator {
   private browser: Browser | null = null;
 
   constructor() {
-    // Inicialização assíncrona do browser
-    this.initBrowser().catch(error => {
-      logger.error('Erro na inicialização do browser:', error);
-    });
+    // Não inicializar browser no construtor - será feito quando necessário
+    this.browser = null;
   }
 
   /**
@@ -26,24 +24,23 @@ export class WCAGValidator {
         return;
       }
 
-      // Timeout mais curto para evitar operações canceladas
+      // Configuração robusta do browser
       const browserPromise = puppeteer.launch({
-        headless: 'new',
+        headless: true, // Usar headless true em vez de 'new'
         args: [
           '--no-sandbox',
           '--disable-setuid-sandbox',
           '--disable-dev-shm-usage',
-          '--disable-accelerated-2d-canvas',
-          '--no-first-run',
-          '--no-zygote',
           '--disable-gpu',
+          '--no-first-run',
           '--disable-web-security',
           '--disable-features=VizDisplayCompositor',
           '--disable-background-timer-throttling',
           '--disable-backgrounding-occluded-windows',
-          '--disable-renderer-backgrounding'
+          '--disable-renderer-backgrounding',
+          '--disable-ipc-flooding-protection'
         ],
-        timeout: 15000 // Timeout mais curto
+        timeout: 30000 // Timeout mais longo
       });
 
       // Adicionar timeout adicional para toda a operação
@@ -69,11 +66,19 @@ export class WCAGValidator {
     logger.info(`Iniciando auditoria WCAG para: ${url}`);
 
     try {
+      // Garantir que o browser está inicializado
+      if (!this.browser) {
+        logger.info('Browser não inicializado, tentando inicializar...');
+        await this.initBrowser();
+      }
+
       // Executar axe-core apenas se o browser estiver disponível
       let axeResult = { violations: [], passes: [], incomplete: [], inapplicable: [] };
       if (this.browser) {
         try {
+          logger.info('Browser disponível, executando axe-core...');
           axeResult = await this.runAxeCore(url);
+          logger.info(`Axe-core executado com ${axeResult.violations.length} violações`);
         } catch (error) {
           logger.warn('Erro ao executar axe-core, continuando sem validação detalhada:', error);
         }
@@ -275,11 +280,11 @@ export class WCAGValidator {
         // Configurar viewport
         await page.setViewport({ width: 1280, height: 720 });
         
-        // Navegar para a página com timeout
+        // Navegar para a página com timeout mais robusto
         await Promise.race([
-          page.goto(url, { waitUntil: 'networkidle2', timeout: 15000 }),
+          page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 }),
           new Promise<never>((_, reject) => 
-            setTimeout(() => reject(new Error('Navigation timeout')), 20000)
+            setTimeout(() => reject(new Error('Navigation timeout')), 25000)
           )
         ]);
         
@@ -425,6 +430,13 @@ export class WCAGValidator {
    * Calcular score WCAG baseado apenas no axe-core
    */
   private calculateWCAGScoreFromAxe(axeResult: any): number {
+    // Verificar se temos dados válidos do axe-core
+    if (!axeResult.violations || axeResult.violations.length === 0) {
+      // Se não temos dados do axe-core, não podemos calcular score real
+      logger.warn('Dados do axe-core não disponíveis, score WCAG não calculado');
+      return -1; // Indicar que score não foi calculado
+    }
+
     const totalViolations = axeResult.violations?.length || 0;
     const criticalViolations = axeResult.violations?.filter((v: any) => 
       v.impact === 'critical' || v.impact === 'serious'

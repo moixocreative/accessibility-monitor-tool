@@ -12,6 +12,7 @@
     "audit": "yarn audit:portfolio && yarn audit:wcag",
     "audit:portfolio": "ts-node src/scripts/portfolio-audit.ts",
     "audit:wcag": "ts-node src/scripts/wcag-validation.ts",
+    "audit:url": "ts-node src/scripts/wcag-validation.ts",
     "monitor": "ts-node src/scripts/monitoring.ts",
     "emergency": "ts-node src/scripts/emergency-response.ts",
     "report": "ts-node src/scripts/generate-report.ts",
