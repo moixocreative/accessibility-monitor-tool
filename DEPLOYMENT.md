@@ -7,13 +7,13 @@
 **⚠️ IMPORTANTE**: Configure os secrets do GitHub antes de usar o sistema!
 
 #### Passo 1: Configurar SMTP_PASS
-1. Aceda ao repositório: https://github.com/moixocreative/untile-accessibility-monitoring
+1. Aceda ao repositório: https://github.com/moixocreative/accessibility-monitor-tool
 2. Clique em **Settings** (menu superior)
 3. No menu lateral, clique em **Secrets and variables** → **Actions**
 4. Clique em **New repository secret**
 5. Configure:
    - **Name**: `SMTP_PASS`
-   - **Value**: `Moixo#1974*20Untile`
+   - **Value**: `your_actual_smtp_password_here`
 6. Clique em **Add secret**
 
 #### Passo 2: Verificar Configuração
@@ -34,23 +34,23 @@ PORT=3000
 
 # Monitorização
 MONITORING_INTERVAL=3600000  # 1 hora em milliseconds
-ALERT_EMAIL=mauriciopereita@untile.pt
+ALERT_EMAIL=your_alert_email@example.com
 
 # WCAG Validation
 WCAG_LEVEL=AA
 PRIORITY_CRITERIA=15
 
 # Emergency Contacts
-EMERGENCY_EMAIL=mauriciopereita@untile.pt
+EMERGENCY_EMAIL=your_emergency_email@example.com
 EMERGENCY_PHONE=+351-XXX-XXX-XXX
-AUTHORITY_EMAIL=mauriciopereita@untile.pt
+AUTHORITY_EMAIL=your_authority_email@example.com
 
 # SMTP Configuration (Produção)
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
-SMTP_USER=mauriciopereita@untile.pt
+SMTP_USER=your_smtp_user@example.com
 SMTP_PASS=your_actual_smtp_password_here
-SMTP_FROM=mauriciopereita@untile.pt
+SMTP_FROM=your_smtp_from@example.com
 
 # Slack Integration (opcional)
 SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK
@@ -133,9 +133,9 @@ yarn report --deploy
 ### 7. Configuração de Email
 
 O sistema está configurado para enviar emails para:
-- **Alertas de Emergência**: mauriciopereita@untile.pt
-- **Alertas de Manutenção**: mauriciopereita@untile.pt
-- **Notificações para Autoridade**: mauriciopereita@untile.pt
+- **Alertas de Emergência**: your_emergency_email@example.com
+- **Alertas de Manutenção**: your_maintenance_email@example.com
+- **Notificações para Autoridade**: your_authority_email@example.com
 
 ### 8. Troubleshooting
 
@@ -180,7 +180,7 @@ O sistema está configurado para enviar emails para:
 ### 11. Suporte
 
 Para questões técnicas:
-- **Email**: mauriciopereita@untile.pt
+- **Email**: your_contact_email@example.com
 - **Slack**: #accessibility-emergency
 - **Telefone**: +351-XXX-XXX-XXX (24/7 para emergências)
 - **Documentação**: Ver `GITHUB_SECRETS_SETUP.md` para configuração detalhada
@@ -193,4 +193,4 @@ Para questões técnicas:
 - [ ] Notificações por email funcionando
 - [ ] Secrets opcionais configurados (se necessário)
 
-**Status**: 🟢 **CONFIGURAÇÃO COMPLETA** 
+**Status**: 🟢 **CONFIGURAÇÃO COMPLETA**
