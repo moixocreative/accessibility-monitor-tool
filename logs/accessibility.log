@@ -26,3 +26,19 @@
 {"level":"error","message":"Erro ao inicializar browser: socket hang up","service":"untile-accessibility-monitoring","timestamp":"2025-08-04 14:31:59"}
 {"level":"info","message":"Iniciando validação WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-04 14:33:17"}
 {"level":"info","message":"Validação WCAG concluída","service":"untile-accessibility-monitoring","timestamp":"2025-08-04 14:33:17"}
+{"level":"info","message":"Iniciando validação WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 12:19:34"}
+{"level":"info","message":"Validação WCAG concluída","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 12:19:34"}
+{"level":"error","message":"Erro ao inicializar browser: socket hang up","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 12:19:37"}
+{"level":"info","message":"Iniciando validação WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 12:29:32"}
+{"level":"info","message":"Iniciando auditoria WCAG para: https://www.untile.pt","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 12:29:32"}
+{"level":"warn","message":"Browser não disponível, pulando validação axe-core","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 12:29:32"}
+{"level":"info","message":"Auditoria concluída para https://www.untile.pt. Score: 100%","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 12:29:32"}
+{"level":"info","message":"Validação WCAG concluída","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 12:29:32"}
+{"level":"error","message":"Erro ao inicializar browser: socket hang up","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 12:29:33"}
+{"level":"info","message":"Iniciando validação WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 12:31:25"}
+{"level":"info","message":"Iniciando auditoria WCAG para: https://www.untile.pt","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 12:31:25"}
+{"level":"warn","message":"Browser não disponível, pulando validação axe-core","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 12:31:25"}
+{"level":"warn","message":"Dados do axe-core não disponíveis, score WCAG não calculado","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 12:31:25"}
+{"level":"info","message":"Auditoria concluída para https://www.untile.pt. Score: -1%","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 12:31:25"}
+{"level":"info","message":"Validação WCAG concluída","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 12:31:25"}
+{"level":"error","message":"Erro ao inicializar browser: socket hang up","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 12:31:26"}
