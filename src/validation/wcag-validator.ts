@@ -599,29 +599,32 @@ export class WCAGValidator {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       logger.info(`Tentativa ${attempt}/${maxRetries} para executar axe-core`);
       
-      const context = await (this.browser as any).newContext({
-        viewport: { width: 1280, height: 720 },
-        extraHTTPHeaders: {
-          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-          'Accept-Language': 'en-US,en;q=0.5',
-          'Accept-Encoding': 'gzip, deflate, br',
-          'DNT': '1',
-          'Connection': 'keep-alive',
-          'Upgrade-Insecure-Requests': '1',
-          'Sec-Fetch-Dest': 'document',
-          'Sec-Fetch-Mode': 'navigate',
-          'Sec-Fetch-Site': 'none',
-          'Sec-Fetch-User': '?1',
-          'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
-          'sec-ch-ua-mobile': '?0',
-          'sec-ch-ua-platform': '"macOS"',
-          'Cache-Control': 'max-age=0'
-        }
-      });
-
-      const page = await context.newPage();
+      let context: any = null;
+      let page: any = null;
       
       try {
+        context = await (this.browser as any).newContext({
+          viewport: { width: 1280, height: 720 },
+          extraHTTPHeaders: {
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'DNT': '1',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'none',
+            'Sec-Fetch-User': '?1',
+            'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"macOS"',
+            'Cache-Control': 'max-age=0'
+          }
+        });
+
+        page = await context.newPage();
+        
         // Configurar timeouts mais agressivos
         page.setDefaultTimeout(30000); // 30 segundos para operações
         page.setDefaultNavigationTimeout(45000); // 45 segundos para navegação
@@ -665,7 +668,7 @@ export class WCAGValidator {
         // Aguardar carregamento do axe-core
         await page.waitForTimeout(500);
 
-        // Executar axe-core com timeout muito mais agressivo
+        // Executar axe-core com critérios prioritários expandidos
         const axeResult = await page.evaluate(() => {
           return new Promise((resolve, reject) => {
             const timeout = setTimeout(() => {
@@ -679,19 +682,11 @@ export class WCAGValidator {
                 return;
               }
 
+              // Usar configuração mais simples, sem restrições de regras
               (globalThis as any).axe.run({
                 runOnly: {
                   type: 'tag',
                   values: ['wcag2a', 'wcag2aa']
-                },
-                rules: {
-                  'color-contrast': { enabled: true },
-                  'document-title': { enabled: true },
-                  'html-has-lang': { enabled: true },
-                  'html-lang-valid': { enabled: true },
-                  'landmark-one-main': { enabled: true },
-                  'page-has-heading-one': { enabled: true },
-                  'region': { enabled: true }
                 }
               }, (err: any, results: any) => {
                 clearTimeout(timeout);
@@ -709,17 +704,21 @@ export class WCAGValidator {
         });
 
         logger.info('Axe-core executado com sucesso');
-        await page.close();
-        await context.close();
+        
+        // Fechar recursos
+        if (page) await page.close();
+        if (context) await context.close();
+        
         return axeResult;
 
       } catch (error) {
         lastError = error as Error;
         logger.warn(`Tentativa ${attempt} falhou:`, lastError.message);
         
+        // Fechar recursos mesmo com erro
         try {
-          await page.close();
-          await context.close();
+          if (page) await page.close();
+          if (context) await context.close();
         } catch (closeError) {
           logger.warn('Erro ao fechar página/contexto:', closeError);
         }
@@ -1392,12 +1391,27 @@ export class WCAGValidator {
 
     const totalViolations = axeResult.violations?.length || 0;
     const criticalViolations = axeResult.violations?.filter((v: any) => 
-      v.impact === 'critical' || v.impact === 'serious'
+      v.impact === 'critical'
+    ).length || 0;
+    const seriousViolations = axeResult.violations?.filter((v: any) => 
+      v.impact === 'serious'
+    ).length || 0;
+    const moderateViolations = axeResult.violations?.filter((v: any) => 
+      v.impact === 'moderate'
+    ).length || 0;
+    const minorViolations = axeResult.violations?.filter((v: any) => 
+      v.impact === 'minor'
     ).length || 0;
     
-    // Penalizar violações críticas mais severamente
-    const violationPenalty = (criticalViolations * 10) + (totalViolations * 2);
-    const axeScore = Math.max(0, 100 - violationPenalty);
+    // Fórmula mais realista baseada no impacto das violações
+    // Critical: -8 pontos cada, Serious: -4 pontos cada, Moderate: -2 pontos cada, Minor: -1 ponto cada
+    const criticalPenalty = criticalViolations * 8;
+    const seriousPenalty = seriousViolations * 4;
+    const moderatePenalty = moderateViolations * 2;
+    const minorPenalty = minorViolations * 1;
+    
+    const totalPenalty = criticalPenalty + seriousPenalty + moderatePenalty + minorPenalty;
+    const axeScore = Math.max(0, 100 - totalPenalty);
     
     return Math.round(axeScore);
   }

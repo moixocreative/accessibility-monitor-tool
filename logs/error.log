@@ -27,3 +27,4 @@
 {"level":"error","message":"Erro ao executar axe-core:","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 16:12:59"}
 {"level":"error","message":"Erro ao executar axe-core:","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 16:23:11"}
 {"level":"error","message":"Erro ao executar axe-core:","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 16:38:27"}
+{"level":"error","message":"Todas as tentativas de execução do axe-core falharam","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 21:11:37"}
