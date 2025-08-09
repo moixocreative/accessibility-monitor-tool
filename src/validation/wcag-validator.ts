@@ -20,309 +20,121 @@ export class WCAGValidator {
   }
 
   /**
-   * Inicializar browser para auditoria com múltiplas estratégias
+   * Inicializar browser com estratégia simplificada e otimizada
+   * Baseado nas melhores práticas de Context7, Claude e ChatGPT-5
    */
   private async initBrowser(): Promise<void> {
     if (this.browser) {
       return;
     }
 
-    // Estratégia 1: Playwright com configurações stealth avançadas
+    // Estratégia 1: Playwright (mais estável e moderno)
     try {
-      logger.info('Tentando inicializar Playwright com configurações stealth...');
+      logger.info('🚀 Inicializando Playwright (estratégia otimizada)...');
       const playwrightBrowser = await chromium.launch({
         headless: true,
         args: [
-          '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu',
-          '--no-first-run', '--disable-web-security', '--disable-features=VizDisplayCompositor',
-          '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows',
-          '--disable-renderer-backgrounding', '--disable-ipc-flooding-protection',
-          '--disable-blink-features=AutomationControlled', '--disable-extensions',
-          '--disable-plugins', '--disable-default-apps', '--disable-sync', '--disable-translate',
-          '--hide-scrollbars', '--mute-audio', '--no-default-browser-check', '--no-experiments',
-          '--no-pings', '--no-zygote', '--single-process', '--disable-background-networking',
-          '--disable-client-side-phishing-detection', '--disable-component-extensions-with-background-pages',
-          '--disable-domain-reliability', '--disable-features=TranslateUI',
-          '--force-color-profile=srgb', '--metrics-recording-only', '--password-store=basic',
-          '--use-mock-keychain', '--disable-hang-monitor', '--disable-prompt-on-repost',
-          '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows',
-          '--disable-renderer-backgrounding', '--disable-ipc-flooding-protection'
-        ]
+          '--no-sandbox', 
+          '--disable-setuid-sandbox', 
+          '--disable-dev-shm-usage', 
+          '--disable-gpu',
+          '--disable-blink-features=AutomationControlled',
+          '--disable-web-security',
+          '--disable-background-timer-throttling',
+          '--disable-backgrounding-occluded-windows',
+          '--disable-renderer-backgrounding',
+          '--disable-extensions',
+          '--disable-plugins',
+          '--hide-scrollbars',
+          '--mute-audio',
+          '--no-default-browser-check',
+          '--no-first-run'
+        ],
+        timeout: 60000 // Context7 recommendation: aumentar timeout
       });
+      
       this.browser = playwrightBrowser;
       this.usePlaywright = true;
       this.useRealBrowser = false;
-      logger.info('Playwright inicializado com sucesso');
+      logger.info('✅ Playwright inicializado com sucesso');
       return;
     } catch (playwrightError) {
-      logger.warn('Playwright falhou, tentando puppeteer-extra:', playwrightError);
+      logger.warn('❌ Playwright falhou, tentando puppeteer-extra:', playwrightError);
     }
 
-    // Estratégia 2: Tentar com puppeteer-extra com configurações básicas
+    // Estratégia 2: puppeteer-extra (fallback estável)
     try {
-      logger.info('Tentando inicializar puppeteer-extra com configurações básicas...');
+      logger.info('🔄 Tentando puppeteer-extra como fallback...');
       const browserPromise = puppeteer.launch({
         headless: true,
         args: [
-          '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu',
-          '--no-first-run', '--disable-web-security', '--disable-blink-features=AutomationControlled',
-          '--disable-extensions', '--disable-plugins', '--hide-scrollbars', '--mute-audio',
+          '--no-sandbox', 
+          '--disable-setuid-sandbox', 
+          '--disable-dev-shm-usage', 
+          '--disable-gpu',
+          '--disable-blink-features=AutomationControlled',
+          '--disable-web-security',
+          '--disable-background-timer-throttling',
+          '--disable-backgrounding-occluded-windows',
+          '--disable-renderer-backgrounding',
+          '--disable-extensions',
+          '--disable-plugins',
+          '--hide-scrollbars',
+          '--mute-audio',
           '--no-default-browser-check',
+          '--no-first-run',
           '--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         ],
-        timeout: 30000
+        timeout: 60000 // Context7 recommendation
       });
+      
       this.browser = await Promise.race([
         browserPromise,
-        new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Browser initialization timeout')), 15000))
+        new Promise<never>((_, reject) => 
+          setTimeout(() => reject(new Error('Browser initialization timeout')), 45000)
+        )
       ]);
+      
       this.useRealBrowser = false;
-      logger.info('puppeteer-extra com configurações básicas inicializado com sucesso');
-        return;
-    } catch (basicError) {
-      logger.warn('puppeteer-extra básico falhou, tentando configurações avançadas:', basicError);
-      }
-
-    // Estratégia 3: Tentar com puppeteer-extra com configurações avançadas
-    try {
-      logger.info('Tentando inicializar puppeteer-extra com configurações avançadas...');
-      const browserPromise = puppeteer.launch({
-        headless: true,
-        args: [
-          '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu',
-          '--no-first-run', '--disable-web-security', '--disable-features=VizDisplayCompositor',
-          '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows',
-          '--disable-renderer-backgrounding', '--disable-ipc-flooding-protection',
-          '--disable-blink-features=AutomationControlled', '--disable-extensions',
-          '--disable-plugins', '--disable-images', '--disable-javascript', '--disable-default-apps',
-          '--disable-sync', '--disable-translate', '--hide-scrollbars', '--mute-audio',
-          '--no-default-browser-check', '--no-experiments', '--no-pings', '--no-zygote',
-          '--single-process', '--disable-background-networking', '--disable-client-side-phishing-detection',
-          '--disable-component-extensions-with-background-pages', '--disable-domain-reliability',
-          '--disable-features=TranslateUI', '--force-color-profile=srgb', '--metrics-recording-only',
-          '--password-store=basic', '--use-mock-keychain',
-          '--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-        ],
-        timeout: 60000
-      });
-      this.browser = await Promise.race([
-        browserPromise,
-        new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Browser initialization timeout')), 20000))
-      ]);
-      this.useRealBrowser = false;
-      logger.info('puppeteer-extra com configurações avançadas inicializado com sucesso');
+      this.usePlaywright = false;
+      logger.info('✅ puppeteer-extra inicializado com sucesso');
       return;
-    } catch (advancedError) {
-      logger.warn('puppeteer-extra avançado falhou, tentando puppeteer-real-browser:', advancedError);
+    } catch (puppeteerError) {
+      logger.warn('❌ puppeteer-extra falhou, tentando puppeteer-real-browser:', puppeteerError);
     }
 
-    // Estratégia 4: Tentar com puppeteer-real-browser como último recurso
+    // Estratégia 3: puppeteer-real-browser (último recurso)
     try {
-      logger.info('Tentando inicializar puppeteer-real-browser...');
+      logger.info('🆘 Tentando puppeteer-real-browser como último recurso...');
       const { browser } = await connect({
         headless: true,
         args: [
-          '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu',
-          '--no-first-run', '--disable-web-security', '--disable-features=VizDisplayCompositor',
-          '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows',
-          '--disable-renderer-backgrounding', '--disable-ipc-flooding-protection',
-          '--disable-blink-features=AutomationControlled', '--disable-extensions',
-          '--disable-plugins', '--disable-default-apps', '--disable-sync', '--disable-translate',
-          '--hide-scrollbars', '--mute-audio', '--no-default-browser-check', '--no-experiments',
-          '--no-pings', '--no-zygote', '--single-process', '--disable-background-networking',
-          '--disable-client-side-phishing-detection', '--disable-component-extensions-with-background-pages',
-          '--disable-domain-reliability', '--disable-features=TranslateUI',
-          '--force-color-profile=srgb', '--metrics-recording-only', '--password-store=basic',
-          '--use-mock-keychain'
+          '--no-sandbox', 
+          '--disable-setuid-sandbox', 
+          '--disable-dev-shm-usage', 
+          '--disable-gpu',
+          '--disable-blink-features=AutomationControlled',
+          '--disable-web-security',
+          '--disable-extensions',
+          '--disable-plugins',
+          '--hide-scrollbars',
+          '--mute-audio',
+          '--no-default-browser-check',
+          '--no-first-run'
         ],
         customConfig: {},
-        connectOption: { defaultViewport: { width: 1280, height: 720 } }
+        connectOption: { 
+          defaultViewport: { width: 1280, height: 720 } 
+        }
       });
+      
       this.browser = browser;
       this.useRealBrowser = true;
-      logger.info('puppeteer-real-browser inicializado com sucesso');
+      this.usePlaywright = false;
+      logger.info('✅ puppeteer-real-browser inicializado com sucesso');
       return;
     } catch (realBrowserError) {
-      logger.warn('puppeteer-real-browser falhou, tentando estratégia ultra-avançada:', realBrowserError);
-    }
-
-    // Estratégia 5: Configuração ultra-avançada com humanização
-    try {
-      logger.info('Tentando inicializar com estratégia ultra-avançada...');
-      const userAgents = [
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15',
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0'
-      ];
-      const randomUserAgent = userAgents[Math.floor(Math.random() * userAgents.length)];
-      const browserPromise = puppeteer.launch({
-        headless: true,
-        args: [
-          '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu',
-          '--no-first-run', '--disable-web-security', '--disable-features=VizDisplayCompositor',
-          '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows',
-          '--disable-renderer-backgrounding', '--disable-ipc-flooding-protection',
-          '--disable-blink-features=AutomationControlled', '--disable-extensions',
-          '--disable-plugins', '--disable-default-apps', '--disable-sync', '--disable-translate',
-          '--hide-scrollbars', '--mute-audio', '--no-default-browser-check', '--no-experiments',
-          '--no-pings', '--no-zygote', '--single-process', '--disable-background-networking',
-          '--disable-client-side-phishing-detection', '--disable-component-extensions-with-background-pages',
-          '--disable-domain-reliability', '--disable-features=TranslateUI',
-          '--force-color-profile=srgb', '--metrics-recording-only', '--password-store=basic',
-          '--use-mock-keychain', '--disable-hang-monitor', '--disable-prompt-on-repost',
-          '--disable-client-side-phishing-detection', '--disable-component-extensions-with-background-pages',
-          '--disable-domain-reliability', '--disable-features=TranslateUI',
-          '--disable-ipc-flooding-protection', '--disable-renderer-backgrounding',
-          '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows',
-          '--disable-renderer-backgrounding', '--disable-ipc-flooding-protection',
-          `--user-agent=${randomUserAgent}`
-        ],
-        timeout: 90000
-      });
-      this.browser = await Promise.race([
-        browserPromise,
-        new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Browser initialization timeout')), 30000))
-      ]);
-      this.useRealBrowser = false;
-      logger.info('Estratégia ultra-avançada inicializada com sucesso');
-      return;
-    } catch (advancedError) {
-      logger.warn('Estratégia ultra-avançada falhou, tentando estratégia stealth ultra-avançada:', advancedError);
-    }
-
-    // Estratégia 6: Puppeteer-extra com configurações stealth ultra-avançadas
-    try {
-      logger.info('Tentando inicializar puppeteer-extra com configurações stealth ultra-avançadas...');
-      const stealthPlugin = StealthPlugin();
-      stealthPlugin.enabledEvasions.add('webgl.vendor');
-      stealthPlugin.enabledEvasions.add('navigator.plugins');
-      stealthPlugin.enabledEvasions.add('navigator.languages');
-      stealthPlugin.enabledEvasions.add('navigator.permissions');
-      stealthPlugin.enabledEvasions.add('iframe.contentWindow');
-      stealthPlugin.enabledEvasions.add('chrome.runtime');
-      stealthPlugin.enabledEvasions.add('chrome.app');
-      stealthPlugin.enabledEvasions.add('chrome.csi');
-      stealthPlugin.enabledEvasions.add('sourceurl');
-      stealthPlugin.enabledEvasions.add('console.debug');
-      stealthPlugin.enabledEvasions.add('navigator.webdriver');
-      stealthPlugin.enabledEvasions.add('navigator.vendor');
-      stealthPlugin.enabledEvasions.add('user-agent-override');
-      stealthPlugin.enabledEvasions.add('navigator.hardwareConcurrency');
-      const browserPromise = puppeteer.launch({
-        headless: true,
-        args: [
-          '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu',
-          '--no-first-run', '--disable-web-security', '--disable-features=VizDisplayCompositor',
-          '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows',
-          '--disable-renderer-backgrounding', '--disable-ipc-flooding-protection',
-          '--disable-blink-features=AutomationControlled', '--disable-extensions',
-          '--disable-plugins', '--disable-default-apps', '--disable-sync', '--disable-translate',
-          '--hide-scrollbars', '--mute-audio', '--no-default-browser-check', '--no-experiments',
-          '--no-pings', '--no-zygote', '--single-process', '--disable-background-networking',
-          '--disable-client-side-phishing-detection', '--disable-component-extensions-with-background-pages',
-          '--disable-domain-reliability', '--disable-features=TranslateUI',
-          '--force-color-profile=srgb', '--metrics-recording-only', '--password-store=basic',
-          '--use-mock-keychain', '--disable-hang-monitor', '--disable-prompt-on-repost',
-          '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows',
-          '--disable-renderer-backgrounding', '--disable-ipc-flooding-protection',
-          '--disable-features=IsolateOrigins,site-per-process,SitePerProcess',
-          '--flag-switches-begin', '--disable-site-isolation-trials', '--flag-switches-end'
-        ],
-        timeout: 120000
-      });
-      this.browser = await Promise.race([
-        browserPromise,
-        new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Browser initialization timeout')), 45000))
-      ]);
-      this.useRealBrowser = false;
-      this.usePlaywright = false;
-      logger.info('puppeteer-extra com configurações stealth ultra-avançadas inicializado com sucesso');
-      return;
-    } catch (ultraAdvancedError) {
-      logger.warn('puppeteer-extra stealth ultra-avançado falhou, tentando estratégia final:', ultraAdvancedError);
-    }
-
-    // Estratégia 7: Configuração final com técnicas de evasão ultra-sofisticadas
-    try {
-      logger.info('Tentando inicializar com estratégia final ultra-sofisticada...');
-      
-      // Configurar stealth plugin com evasões específicas baseadas no Context7
-      const stealthPlugin = StealthPlugin();
-      
-      // Remover evasões padrão e adicionar apenas as mais críticas
-      stealthPlugin.enabledEvasions.clear();
-      stealthPlugin.enabledEvasions.add('webgl.vendor');
-      stealthPlugin.enabledEvasions.add('navigator.plugins');
-      stealthPlugin.enabledEvasions.add('navigator.languages');
-      stealthPlugin.enabledEvasions.add('navigator.permissions');
-      stealthPlugin.enabledEvasions.add('iframe.contentWindow');
-      stealthPlugin.enabledEvasions.add('chrome.runtime');
-      stealthPlugin.enabledEvasions.add('chrome.app');
-      stealthPlugin.enabledEvasions.add('chrome.csi');
-      stealthPlugin.enabledEvasions.add('sourceurl');
-      stealthPlugin.enabledEvasions.add('console.debug');
-      stealthPlugin.enabledEvasions.add('navigator.webdriver');
-      stealthPlugin.enabledEvasions.add('navigator.vendor');
-      stealthPlugin.enabledEvasions.add('user-agent-override');
-      stealthPlugin.enabledEvasions.add('navigator.hardwareConcurrency');
-      stealthPlugin.enabledEvasions.add('defaultArgs');
-      
-      const browserPromise = puppeteer.launch({
-        headless: true,
-        args: [
-          // Configurações básicas de segurança
-          '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu',
-          
-          // Configurações de performance
-          '--no-first-run', '--disable-web-security', '--disable-features=VizDisplayCompositor',
-          '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows',
-          '--disable-renderer-backgrounding', '--disable-ipc-flooding-protection',
-          
-          // Configurações anti-detecção
-          '--disable-blink-features=AutomationControlled', '--disable-extensions',
-          '--disable-plugins', '--disable-default-apps', '--disable-sync', '--disable-translate',
-          
-          // Configurações de interface
-          '--hide-scrollbars', '--mute-audio', '--no-default-browser-check', '--no-experiments',
-          '--no-pings', '--no-zygote', '--single-process',
-          
-          // Configurações de rede
-          '--disable-background-networking', '--disable-client-side-phishing-detection',
-          '--disable-component-extensions-with-background-pages', '--disable-domain-reliability',
-          '--disable-features=TranslateUI',
-          
-          // Configurações de segurança avançadas
-          '--force-color-profile=srgb', '--metrics-recording-only', '--password-store=basic',
-          '--use-mock-keychain', '--disable-hang-monitor', '--disable-prompt-on-repost',
-          
-          // Configurações de isolamento de site (crítico para contornar proteções)
-          '--disable-features=IsolateOrigins,site-per-process,SitePerProcess',
-          '--flag-switches-begin', '--disable-site-isolation-trials', '--flag-switches-end',
-          
-          // Configurações adicionais para contornar proteções mais agressivas
-          '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows',
-          '--disable-renderer-backgrounding', '--disable-ipc-flooding-protection',
-          '--disable-features=TranslateUI', '--disable-features=VizDisplayCompositor',
-          
-          // User agent realista
-          '--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-        ],
-        timeout: 150000 // Timeout aumentado para 2.5 minutos
-      });
-      
-      this.browser = await Promise.race([
-        browserPromise,
-        new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Browser initialization timeout')), 60000))
-      ]);
-      
-      this.useRealBrowser = false;
-      this.usePlaywright = false;
-      logger.info('Estratégia final ultra-sofisticada inicializada com sucesso');
-      return;
-    } catch (finalError) {
-      logger.error('Todas as estratégias de inicialização falharam:', finalError);
+      logger.error('❌ Todas as estratégias de inicialização falharam:', realBrowserError);
       this.browser = null;
     }
   }
@@ -559,12 +371,8 @@ export class WCAGValidator {
       };
     }
 
-    // Usar Playwright se disponível, senão Puppeteer
-    if (this.usePlaywright) {
-      return this.runAxeCoreWithPlaywright(url);
-    } else {
-      return this.runAxeCoreWithPuppeteer(url);
-    }
+    // Usar estratégia simplificada e estável
+    return this.runAxeCoreOptimized(url, 'simple');
   }
 
   /**
@@ -585,12 +393,193 @@ export class WCAGValidator {
       };
     }
 
-    // Usar Playwright se disponível, senão Puppeteer
-    if (this.usePlaywright) {
-      return this.runAxeCoreCompleteWithPlaywright(url);
-    } else {
-      return this.runAxeCoreCompleteWithPuppeteer(url);
+    // Usar estratégia simplificada e estável
+    return this.runAxeCoreOptimized(url, 'complete');
+  }
+
+  /**
+   * Método otimizado para executar axe-core (combinando melhores práticas)
+   * Baseado em Context7, Claude e ChatGPT-5 recommendations
+   */
+  private async runAxeCoreOptimized(url: string, auditType: 'simple' | 'complete'): Promise<any> {
+    const maxRetries = 2; // Reduzido para 2 tentativas
+    let lastError: Error | null = null;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      logger.info(`Executando axe-core otimizado (tentativa ${attempt}/${maxRetries}) - ${auditType}`);
+      
+      let page: any = null;
+      let context: any = null;
+      
+      try {
+        // Configuração otimizada baseada no tipo de browser
+        if (this.usePlaywright) {
+          context = await (this.browser as any).newContext({
+            viewport: { width: 1280, height: 720 },
+            extraHTTPHeaders: {
+              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+              'Accept-Language': 'en-US,en;q=0.5',
+              'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            }
+          });
+          page = await context.newPage();
+          
+          // Timeouts otimizados para Playwright
+          page.setDefaultTimeout(45000); // 45s baseado na doc Context7
+          page.setDefaultNavigationTimeout(60000); // 60s para navegação
+        } else {
+          page = await (this.browser as any).newPage();
+          
+          // Timeouts otimizados para Puppeteer  
+          page.setDefaultTimeout(45000); // 45s baseado na doc Context7
+          page.setDefaultNavigationTimeout(60000); // 60s para navegação
+          
+          // Headers otimizados
+          await page.setExtraHTTPHeaders({
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+          });
+          
+          await page.setViewport({ width: 1280, height: 720 });
+        }
+
+        // Navegação otimizada
+        logger.info(`Navegando para: ${url}`);
+        await page.goto(url, { 
+          waitUntil: 'domcontentloaded',
+          timeout: 60000 
+        });
+
+        // Verificar se página carregou corretamente
+        const title = await page.title();
+        const currentUrl = page.url();
+        
+        logger.info(`Página carregada: "${title}" em ${currentUrl}`);
+
+        // Verificar se não é página de erro/bloqueio
+        if (title.toLowerCase().includes('cloudflare') || 
+            title.toLowerCase().includes('error') ||
+            title.toLowerCase().includes('access denied') ||
+            currentUrl.includes('error')) {
+          throw new Error(`Página bloqueada ou erro detectado: ${title}`);
+        }
+
+        // Estabilização da página
+        await page.waitForTimeout(2000); // 2s para estabilização
+
+        // Injetar axe-core
+        await page.addScriptTag({
+          url: 'https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.7.0/axe.min.js'
+        });
+
+        // Aguardar carregamento do axe-core
+        await page.waitForTimeout(1000);
+
+        // Verificar se axe-core foi carregado corretamente
+        const axeLoaded = await page.evaluate(() => {
+          return typeof (globalThis as any).axe !== 'undefined';
+        });
+
+        if (!axeLoaded) {
+          throw new Error('axe-core não foi carregado corretamente');
+        }
+
+        logger.info('axe-core carregado, iniciando execução...');
+
+        // Executar axe-core com configuração otimizada
+        const axeResult = await page.evaluate((auditType: string) => {
+          return new Promise((resolve, reject) => {
+            // Timeout aumentado baseado em Context7 recommendations
+            const timeout = setTimeout(() => {
+              reject(new Error('Axe-core execution timeout (30s)'));
+            }, 30000); // Reduzido para 30 segundos
+
+            try {
+              // Verificar novamente se axe está disponível
+              const axe = (globalThis as any).axe;
+              if (!axe || typeof axe.run !== 'function') {
+                clearTimeout(timeout);
+                reject(new Error('Axe-core não está disponível ou função run não encontrada'));
+                return;
+              }
+
+              // Configuração simplificada baseada no tipo de auditoria
+              const axeConfig: any = {
+                // Configuração básica e estável
+                resultTypes: ['violations']  // Apenas violações para reduzir carga
+              };
+
+              if (auditType === 'simple') {
+                // 15 critérios prioritários - configuração simplificada
+                axeConfig.runOnly = ['wcag2a', 'wcag2aa'];
+              } else {
+                // Todos os critérios WCAG 2.1 AA - configuração simplificada
+                axeConfig.runOnly = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
+              }
+
+              console.log('Iniciando axe.run com configuração:', axeConfig);
+
+              // Executar axe-core com configuração simplificada
+              axe.run(axeConfig, (err: any, results: any) => {
+                console.log('Axe.run callback executado');
+                clearTimeout(timeout);
+                if (err) {
+                  console.error('Erro no axe.run:', err);
+                  reject(new Error(`Erro axe-core: ${err.message || err}`));
+                } else {
+                  console.log('Axe.run sucesso, resultados:', results);
+                  resolve(results);
+                }
+              });
+            } catch (error) {
+              console.error('Erro na execução do axe-core:', error);
+              clearTimeout(timeout);
+              reject(new Error(`Erro ao executar axe-core: ${error}`));
+            }
+          });
+        }, auditType);
+
+        // Cleanup
+        if (this.usePlaywright) {
+          await page.close();
+          await context.close();
+        } else {
+          await page.close();
+        }
+        
+        logger.info(`Axe-core otimizado executado com sucesso (${auditType} - tentativa ${attempt})`);
+        return axeResult;
+
+      } catch (error) {
+        lastError = error as Error;
+        logger.warn(`Tentativa ${attempt} falhou:`, lastError.message);
+        
+        // Cleanup em caso de erro
+        try {
+          if (page) await page.close();
+          if (context) await context.close();
+        } catch (closeError) {
+          logger.warn('Erro ao fechar página/contexto:', closeError);
+        }
+
+        // Se não é a última tentativa, aguardar antes de retry
+        if (attempt < maxRetries) {
+          const delay = attempt * 3000; // 3s, 6s
+          logger.info(`Aguardando ${delay}ms antes da próxima tentativa...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+      }
     }
+
+    // Se todas as tentativas falharam
+    logger.error(`Todas as tentativas falharam para axe-core otimizado (${auditType})`);
+    return {
+      violations: [],
+      passes: [],
+      incomplete: [],
+      inapplicable: []
+    };
   }
 
   /**

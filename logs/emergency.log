@@ -96,3 +96,18 @@
 {"level":"warn","message":"Tentativa 3 falhou:","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 21:11:37"}
 {"level":"error","message":"Todas as tentativas de execução do axe-core falharam","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 21:11:37"}
 {"level":"warn","message":"Dados do axe-core não disponíveis, score WCAG não calculado","service":"untile-accessibility-monitoring","timestamp":"2025-08-08 21:11:37"}
+{"level":"warn","message":"Tentativa 1 falhou:","service":"untile-accessibility-monitoring","timestamp":"2025-08-09 00:22:50"}
+{"level":"warn","message":"Tentativa 1 falhou:","service":"untile-accessibility-monitoring","timestamp":"2025-08-09 00:22:50"}
+{"level":"warn","message":"Tentativa 2 falhou:","service":"untile-accessibility-monitoring","timestamp":"2025-08-09 00:22:52"}
+{"level":"warn","message":"Tentativa 2 falhou:","service":"untile-accessibility-monitoring","timestamp":"2025-08-09 00:22:52"}
+{"level":"warn","message":"Tentativa 3 falhou:","service":"untile-accessibility-monitoring","timestamp":"2025-08-09 00:22:56"}
+{"level":"error","message":"Todas as tentativas de execução do axe-core falharam","service":"untile-accessibility-monitoring","timestamp":"2025-08-09 00:22:56"}
+{"level":"warn","message":"Dados do axe-core não disponíveis, score WCAG não calculado","service":"untile-accessibility-monitoring","timestamp":"2025-08-09 00:22:56"}
+{"level":"warn","message":"Tentativa 3 falhou:","service":"untile-accessibility-monitoring","timestamp":"2025-08-09 00:22:56"}
+{"level":"error","message":"Todas as tentativas de execução do axe-core falharam","service":"untile-accessibility-monitoring","timestamp":"2025-08-09 00:22:56"}
+{"level":"warn","message":"Dados do axe-core não disponíveis, score WCAG não calculado","service":"untile-accessibility-monitoring","timestamp":"2025-08-09 00:22:56"}
+{"level":"warn","message":"Tentativa 1 falhou:","service":"untile-accessibility-monitoring","timestamp":"2025-08-09 00:22:58"}
+{"level":"warn","message":"Tentativa 2 falhou:","service":"untile-accessibility-monitoring","timestamp":"2025-08-09 00:23:00"}
+{"level":"warn","message":"Tentativa 3 falhou:","service":"untile-accessibility-monitoring","timestamp":"2025-08-09 00:23:04"}
+{"level":"error","message":"Todas as tentativas de execução do axe-core falharam","service":"untile-accessibility-monitoring","timestamp":"2025-08-09 00:23:04"}
+{"level":"warn","message":"Dados do axe-core não disponíveis, score WCAG não calculado","service":"untile-accessibility-monitoring","timestamp":"2025-08-09 00:23:04"}
