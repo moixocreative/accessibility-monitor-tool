@@ -20,7 +20,7 @@ class PortfolioMonitor {
             {
                 id: 'site_1',
                 name: 'Welligence Website',
-                url: 'https://welligence.pt',
+                url: 'https://solutions.welligence.com',
                 technology: 'webflow',
                 client: 'Welligence',
                 lastAudit: new Date(),
@@ -38,28 +38,39 @@ class PortfolioMonitor {
                 wcagScore: 92,
                 violations: [],
                 status: 'active'
-            },
-            {
-                id: 'site_3',
-                name: 'E-commerce Demo',
-                url: 'https://demo-ecommerce.untile.pt',
-                technology: 'wordpress',
-                client: 'Demo Client',
-                lastAudit: new Date(),
-                wcagScore: 78,
-                violations: [],
-                status: 'active'
             }
         ];
         logger_1.logger.info(`Portfolio carregado com ${this.sites.length} sites`);
     }
     startMonitoring() {
-        const interval = process.env.MONITORING_INTERVAL || '0 */6 * * *';
-        this.monitoringJob = new cron_1.CronJob(interval, () => {
-            this.runPortfolioAudit();
-        });
+        const interval = this.getMonitoringInterval();
+        this.monitoringJob = new cron_1.CronJob(interval, async () => {
+            try {
+                logger_1.logger.info('Executando auditoria periódica agendada');
+                await this.runPortfolioAudit();
+                logger_1.logger.info('Auditoria periódica concluída com sucesso');
+            }
+            catch (error) {
+                logger_1.logger.error('Erro na auditoria periódica:', error);
+            }
+        }, null, false, 'Europe/Lisbon');
         this.monitoringJob.start();
-        logger_1.logger.info('Monitorização do portfolio iniciada', { interval });
+        logger_1.logger.info('Monitorização do portfolio iniciada', {
+            interval,
+            nextRun: this.monitoringJob.nextDate().toISO()
+        });
+    }
+    getMonitoringInterval() {
+        const config = process.env.MONITORING_INTERVAL || '0 0 * * 1';
+        const cronPattern = /^(\*|([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])|\*\/([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])) (\*|([0-9]|1[0-9]|2[0-3])|\*\/([0-9]|1[0-9]|2[0-3])) (\*|([1-9]|1[0-9]|2[0-9]|3[0-1])|\*\/([1-9]|1[0-9]|2[0-9]|3[0-1])) (\*|([1-9]|1[0-2])|\*\/([1-9]|1[0-2])) (\*|([0-6])|\*\/([0-6]))$/;
+        if (!cronPattern.test(config)) {
+            logger_1.logger.warn('Expressão cron inválida, usando padrão', {
+                provided: config,
+                default: '0 0 * * 1'
+            });
+            return '0 0 * * 1';
+        }
+        return config;
     }
     stopMonitoring() {
         if (this.monitoringJob) {
@@ -68,6 +79,22 @@ class PortfolioMonitor {
             logger_1.logger.info('Monitorização do portfolio parada');
         }
     }
+    isMonitoringActive() {
+        return this.monitoringJob ? true : false;
+    }
+    getNextScheduledRun() {
+        const nextDate = this.monitoringJob?.nextDate();
+        return nextDate ? nextDate.toJSDate() : null;
+    }
+    getMonitoringStats() {
+        const lastRun = this.monitoringJob?.lastDate();
+        return {
+            isActive: this.isMonitoringActive(),
+            nextRun: this.getNextScheduledRun(),
+            interval: this.getMonitoringInterval(),
+            ...(lastRun && { lastRun })
+        };
+    }
     async runPortfolioAudit() {
         logger_1.logger.info('Iniciando auditoria completa do portfolio');
         const auditResults = [];
@@ -75,7 +102,7 @@ class PortfolioMonitor {
         for (const site of this.sites) {
             try {
                 (0, logger_1.logAudit)(`Auditoria iniciada para ${site.name}`, { url: site.url });
-                const auditResult = await this.validator.auditSite(site.url, site.id);
+                const auditResult = await this.validator.auditSite(site.url, site.id, true);
                 auditResults.push(auditResult);
                 site.lastAudit = auditResult.timestamp;
                 site.wcagScore = auditResult.wcagScore;

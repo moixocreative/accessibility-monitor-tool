@@ -110,6 +110,31 @@ ALERT_EMAIL=devops@company.com
 - **Padrão**: `false`
 - **Exemplo**: `DEBUG_MODE=true`
 
+---
+
+### **🔄 Periodic Monitoring**
+
+#### **`MONITORING_INTERVAL`**
+- **Descrição**: Expressão cron para agendamento de monitorização
+- **Padrão**: `0 0 * * 1` (semanalmente às 0h de segunda-feira)
+- **Exemplos**:
+  - `0 0 * * 1` - Semanalmente (segunda-feira à meia-noite)
+  - `0 */6 * * *` - A cada 6 horas
+  - `0 0 * * *` - Diariamente à meia-noite
+  - `0 */12 * * *` - A cada 12 horas
+  - `0 9,18 * * *` - Duas vezes por dia (9h e 18h)
+
+#### **`MONITORING_ENABLED`**
+- **Descrição**: Ativar/desativar monitorização periódica
+- **Valores**: `true`, `false`
+- **Padrão**: `true`
+- **Exemplo**: `MONITORING_ENABLED=true`
+
+#### **`MONITORING_TIMEZONE`**
+- **Descrição**: Timezone para agendamento de monitorização
+- **Padrão**: `Europe/Lisbon`
+- **Exemplo**: `MONITORING_TIMEZONE=Europe/Lisbon`
+
 #### **`BROWSER_TIMEOUT`**
 - **Descrição**: Timeout para launch do browser (ms)
 - **Padrão**: `45000` (45s)

@@ -1,0 +1,108 @@
+name: Manual Complete Monitoring
+
+on:
+  workflow_dispatch:
+    inputs:
+      audit_type:
+        description: 'Tipo de auditoria'
+        required: true
+        default: 'complete'
+        type: choice
+        options:
+        - simple
+        - complete
+      sites:
+        description: 'Sites específicos (deixar vazio para todos)'
+        required: false
+        type: string
+        default: ''
+      pages_limit:
+        description: 'Limite de páginas por site'
+        required: false
+        type: number
+        default: 50
+
+jobs:
+  complete-monitoring:
+    name: Complete Accessibility Monitoring
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'yarn'
+
+    - name: Cache dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          node_modules
+          ~/.cache/puppeteer
+          ~/.cache/ms-playwright
+        key: Linux-node-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('**/package.json') }}
+        restore-keys: |
+          Linux-node-
+
+    - name: Install dependencies
+      run: |
+        yarn install --network-timeout 100000
+
+    - name: Install Playwright browsers
+      run: |
+        npx playwright install chromium
+        npx playwright install-deps chromium
+
+    - name: Setup environment
+      run: |
+        cp .env.example .env
+        echo "MONITORING_INTERVAL=0 0 * * 1" >> .env
+        echo "MONITORING_ENABLED=true" >> .env
+        echo "TIMEOUT=120000" >> .env
+        echo "HEADLESS=true" >> .env
+
+    - name: Run complete portfolio audit
+      run: |
+        echo "🚀 Iniciando monitorização completa..."
+        echo "Tipo de auditoria: ${{ github.event.inputs.audit_type }}"
+        echo "Sites: ${{ github.event.inputs.sites || 'Todos' }}"
+        echo "Limite de páginas: ${{ github.event.inputs.pages_limit }}"
+        
+        timeout 1800s yarn audit:portfolio console || echo "⚠️ Auditoria concluída com warnings"
+      env:
+        TIMEOUT: 120000
+        HEADLESS: true
+        AUDIT_TYPE: ${{ github.event.inputs.audit_type }}
+        PAGES_LIMIT: ${{ github.event.inputs.pages_limit }}
+
+    - name: Generate comprehensive report
+      run: |
+        echo "📊 Gerando relatório completo..."
+        timeout 300s yarn report --test || echo "⚠️ Relatório gerado com warnings"
+      env:
+        TIMEOUT: 60000
+
+    - name: Upload monitoring results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: monitoring-results-${{ github.run_number }}
+        path: |
+          reports/
+          logs/
+        retention-days: 30
+
+    - name: Notify completion
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "✅ Monitorização completa concluída com sucesso!"
+          echo "📊 Relatórios disponíveis nos artifacts"
+        else
+          echo "❌ Monitorização falhou"
+          echo "🔍 Verificar logs para detalhes"
+        fi

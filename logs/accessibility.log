@@ -1060,3 +1060,104 @@
 {"averageScore":0,"level":"info","message":"✅ Auditoria multi-página concluída em 19406ms","pagesAudited":3,"pagesDiscovered":3,"service":"untile-accessibility-monitoring","timestamp":"2025-08-09 00:23:04"}
 {"level":"info","message":"Fechando browser...","service":"untile-accessibility-monitoring","timestamp":"2025-08-09 00:23:04"}
 {"level":"info","message":"Browser fechado com sucesso","service":"untile-accessibility-monitoring","timestamp":"2025-08-09 00:23:04"}
+{"level":"info","message":"🧪 Testando sistema de monitorização periódica","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:00"}
+{"level":"info","message":"Portfolio carregado com 2 sites","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:00"}
+{"default":"0 */6 * * *","error":"validateCronExpression is not a function","level":"warn","message":"Erro ao validar expressão cron, usando padrão","provided":"0 */6 * * *","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:00"}
+{"level":"info","message":"Iniciando auditoria completa do portfolio","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:00"}
+{"level":"info","message":"[AUDIT] Auditoria iniciada para Welligence Website","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:00","url":"https://solutions.welligence.com"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://solutions.welligence.com (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:00"}
+{"level":"info","message":"Browser não inicializado, tentando inicializar...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:00"}
+{"level":"info","message":"🚀 Inicializando Playwright (estratégia otimizada)...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:00"}
+{"level":"info","message":"✅ Playwright inicializado com sucesso","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:00"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:00"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:00"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:00"}
+{"level":"info","message":"Navegando para: https://solutions.welligence.com","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:00"}
+{"level":"info","message":"Página carregada: \"UPSTREAM O&G\" em https://solutions.welligence.com/solutions/upstream-o-g","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:02"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:04"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:05"}
+{"level":"info","message":"Total de violações axe-core: 6","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:05"}
+{"level":"info","message":"Violação axe-core: aria-allowed-attr - critical - Ensures ARIA attributes are allowed for an element's role","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:05"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:05"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:05"}
+{"level":"info","message":"Violação axe-core: landmark-banner-is-top-level - moderate - Ensures the banner landmark is at top level","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:05"}
+{"level":"info","message":"Violação axe-core: link-name - serious - Ensures links have discernible text","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:05"}
+{"level":"info","message":"Violação axe-core: nested-interactive - serious - Ensures interactive controls are not nested as they are not always announced by screen readers or can cause focus problems for assistive technologies","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:05"}
+{"level":"info","message":"Total de violações processadas: 6","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:05"}
+{"count":3,"level":"warn","message":"Violações críticas detectadas em Welligence Website","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:05","violations":[{"criteria":"4.1.2","element":"<div data-fade-in=\"\" aria-expanded=\"false\" data-accordion=\"faq\" class=\"faq_accordion_item\">","severity":"critical"},{"criteria":"1.4.3","element":"<div class=\"header-nav-link\">SOLUTIONS</div>","severity":"serious"},{"criteria":"4.1.2","element":"<a href=\"https://welligence.com/\" class=\"header-logo-link w-nav-brand\">","severity":"serious"}]}
+{"criticalViolations":3,"level":"info","message":"[AUDIT] Auditoria concluída para Welligence Website","score":84,"service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:05","violations":6}
+{"level":"info","message":"[AUDIT] Auditoria iniciada para UNTILE Corporate","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:05","url":"https://untile.pt"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://untile.pt (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:05"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:05"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:05"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:05"}
+{"level":"info","message":"Navegando para: https://untile.pt","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:05"}
+{"level":"info","message":"Página carregada: \"Untile | Digital Product Development Studio\" em https://www.untile.pt/","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:06"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:09"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:09"}
+{"level":"info","message":"Total de violações axe-core: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:09"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:09"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:09"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:09"}
+{"level":"info","message":"Total de violações processadas: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:09"}
+{"count":2,"level":"warn","message":"Violações críticas detectadas em UNTILE Corporate","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:09","violations":[{"criteria":"4.1.2","element":"<svg viewBox=\"0 0 843 248\" aria-hidden=\"“true”\" xmlns=\"http://www.w3.org/2000/svg\">","severity":"critical"},{"criteria":"1.4.3","element":"<h3 data-w-id=\"74b22209-ef56-cc12-0319-4a3680cb2dfa\" class=\"section_pre-footer-title is-second-title\" style=\"color: inherit;\">","severity":"serious"}]}
+{"criticalViolations":2,"level":"info","message":"[AUDIT] Auditoria concluída para UNTILE Corporate","score":91,"service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:09","violations":3}
+{"level":"warn","message":"Processando 5 violações críticas","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:09"}
+{"averageScore":88,"complianceTrend":5.5,"criticalViolations":2,"level":"info","message":"Relatório do portfolio gerado","recommendations":["Focar em melhorias nos critérios: 4.1.2, generic, 1.4.3","2 violações críticas requerem correção imediata"],"service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:09","totalSites":2,"totalViolations":9}
+{"criticalViolations":5,"level":"info","message":"Auditoria do portfolio concluída","service":"untile-accessibility-monitoring","sitesAudited":2,"timestamp":"2025-08-10 00:06:09"}
+{"default":"0 */6 * * *","error":"validateCronExpression is not a function","level":"warn","message":"Erro ao validar expressão cron, usando padrão","provided":"0 */6 * * *","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:09"}
+{"interval":"0 */6 * * *","level":"info","message":"Monitorização do portfolio iniciada","nextRun":"2025-08-10T06:00:00.000+01:00","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:09"}
+{"default":"0 */6 * * *","error":"validateCronExpression is not a function","level":"warn","message":"Erro ao validar expressão cron, usando padrão","provided":"0 */6 * * *","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:39"}
+{"level":"info","message":"Monitorização do portfolio parada","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:39"}
+{"level":"info","message":"Fechando browser...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:39"}
+{"level":"info","message":"Browser fechado com sucesso","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:39"}
+{"level":"info","message":"PortfolioMonitor cleanup concluído","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:06:39"}
+{"level":"info","message":"🧪 Testando sistema de monitorização periódica","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:36"}
+{"level":"info","message":"Portfolio carregado com 2 sites","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:36"}
+{"level":"info","message":"Iniciando auditoria completa do portfolio","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:36"}
+{"level":"info","message":"[AUDIT] Auditoria iniciada para Welligence Website","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:36","url":"https://solutions.welligence.com"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://solutions.welligence.com (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:36"}
+{"level":"info","message":"Browser não inicializado, tentando inicializar...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:36"}
+{"level":"info","message":"🚀 Inicializando Playwright (estratégia otimizada)...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:36"}
+{"level":"info","message":"✅ Playwright inicializado com sucesso","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:37"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:37"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:37"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:37"}
+{"level":"info","message":"Navegando para: https://solutions.welligence.com","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:37"}
+{"level":"info","message":"Página carregada: \"UPSTREAM O&G\" em https://solutions.welligence.com/solutions/upstream-o-g","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:37"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:40"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:41"}
+{"level":"info","message":"Total de violações axe-core: 6","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:41"}
+{"level":"info","message":"Violação axe-core: aria-allowed-attr - critical - Ensures ARIA attributes are allowed for an element's role","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:41"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:41"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:41"}
+{"level":"info","message":"Violação axe-core: landmark-banner-is-top-level - moderate - Ensures the banner landmark is at top level","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:41"}
+{"level":"info","message":"Violação axe-core: link-name - serious - Ensures links have discernible text","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:41"}
+{"level":"info","message":"Violação axe-core: nested-interactive - serious - Ensures interactive controls are not nested as they are not always announced by screen readers or can cause focus problems for assistive technologies","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:41"}
+{"level":"info","message":"Total de violações processadas: 6","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:41"}
+{"count":3,"level":"warn","message":"Violações críticas detectadas em Welligence Website","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:41","violations":[{"criteria":"4.1.2","element":"<div data-fade-in=\"\" aria-expanded=\"false\" data-accordion=\"faq\" class=\"faq_accordion_item\">","severity":"critical"},{"criteria":"1.4.3","element":"<div class=\"header-nav-link\">SOLUTIONS</div>","severity":"serious"},{"criteria":"4.1.2","element":"<a href=\"https://welligence.com/\" class=\"header-logo-link w-nav-brand\">","severity":"serious"}]}
+{"criticalViolations":3,"level":"info","message":"[AUDIT] Auditoria concluída para Welligence Website","score":84,"service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:41","violations":6}
+{"level":"info","message":"[AUDIT] Auditoria iniciada para UNTILE Corporate","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:41","url":"https://untile.pt"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://untile.pt (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:41"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:41"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:41"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:41"}
+{"level":"info","message":"Navegando para: https://untile.pt","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:41"}
+{"level":"info","message":"Página carregada: \"Untile | Digital Product Development Studio\" em https://www.untile.pt/","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:42"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:44"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:45"}
+{"level":"info","message":"Total de violações axe-core: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:45"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:45"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:45"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:45"}
+{"level":"info","message":"Total de violações processadas: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:45"}
+{"count":2,"level":"warn","message":"Violações críticas detectadas em UNTILE Corporate","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:45","violations":[{"criteria":"4.1.2","element":"<svg viewBox=\"0 0 843 248\" aria-hidden=\"“true”\" xmlns=\"http://www.w3.org/2000/svg\">","severity":"critical"},{"criteria":"1.4.3","element":"<h3 data-w-id=\"74b22209-ef56-cc12-0319-4a3680cb2dfa\" class=\"section_pre-footer-title is-second-title\" style=\"color: inherit;\">","severity":"serious"}]}
+{"criticalViolations":2,"level":"info","message":"[AUDIT] Auditoria concluída para UNTILE Corporate","score":91,"service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:45","violations":3}
+{"level":"warn","message":"Processando 5 violações críticas","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:45"}
+{"averageScore":88,"complianceTrend":5.5,"criticalViolations":2,"level":"info","message":"Relatório do portfolio gerado","recommendations":["Focar em melhorias nos critérios: 4.1.2, generic, 1.4.3","2 violações críticas requerem correção imediata"],"service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:45","totalSites":2,"totalViolations":9}
+{"criticalViolations":5,"level":"info","message":"Auditoria do portfolio concluída","service":"untile-accessibility-monitoring","sitesAudited":2,"timestamp":"2025-08-10 00:12:45"}
+{"interval":"0 0 * * 1","level":"info","message":"Monitorização do portfolio iniciada","nextRun":"2025-08-11T00:00:00.000+01:00","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:12:45"}
+{"level":"info","message":"Monitorização do portfolio parada","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:13:15"}
+{"level":"info","message":"Fechando browser...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:13:15"}
+{"level":"info","message":"Browser fechado com sucesso","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:13:15"}
+{"level":"info","message":"PortfolioMonitor cleanup concluído","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:13:15"}

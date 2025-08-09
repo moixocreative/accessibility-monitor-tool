@@ -89,6 +89,62 @@ yarn audit:multi https://www.example.com auto simple console 5
 
 ---
 
+## 🔄 Monitorização Periódica
+
+### `yarn monitor:start`
+
+Inicia a monitorização periódica contínua de todos os sites do portfolio.
+
+**Sintaxe:**
+```bash
+yarn monitor:start
+```
+
+**O que faz:**
+- ✅ Inicia monitorização agendada (configurável via MONITORING_INTERVAL)
+- ✅ Executa auditoria completa de todos os sites
+- ✅ Detecta violações críticas automaticamente
+- ✅ Gera relatórios periódicos
+- ✅ Mantém processo ativo até Ctrl+C
+
+**Configuração:**
+```bash
+# .env
+MONITORING_INTERVAL=0 0 * * 1  # Semanalmente às 0h de segunda-feira
+MONITORING_ENABLED=true
+MONITORING_TIMEZONE=Europe/Lisbon
+```
+
+**Exemplo de saída:**
+```bash
+📊 CONFIGURAÇÃO DA MONITORIZAÇÃO
+==================================
+Intervalo: 0 0 * * 1
+Ativo: ✅ Sim
+Próxima execução: 11/08/2025, 00:00:00
+
+🔄 Sistema de monitorização ativo. Pressione Ctrl+C para parar.
+```
+
+---
+
+### `yarn monitor:test`
+
+Testa a funcionalidade de monitorização periódica.
+
+**Sintaxe:**
+```bash
+yarn monitor:test
+```
+
+**O que testa:**
+- ✅ Validação de expressões cron
+- ✅ Configuração de monitorização
+- ✅ Auditoria única do portfolio
+- ✅ Início/paragem de monitorização
+
+
+
 ## ⚙️ Validação e Configuração
 
 ### `yarn emergency --validate`

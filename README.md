@@ -44,6 +44,12 @@ yarn audit:wcag https://www.example.com simple console
 - Tratamento robusto de erros de rede
 - Configuração automática de ambiente
 
+### 🔄 **Monitorização Periódica**
+- Agendamento configurável (cron expressions)
+- Análise completa automática de todos os sites
+- Notificações de violações críticas
+- Relatórios periódicos
+
 ## 🎯 Para quem é esta ferramenta?
 
 ### 👨‍💻 **Developers** → [Development Guide](docs/development/)
@@ -73,6 +79,12 @@ yarn audit:multi https://example.com comprehensive simple console 20
 
 # Portfolio (múltiplos sites)
 yarn audit:portfolio console
+
+# Monitorização Periódica
+yarn monitor:start                    # Iniciar monitorização contínua (semanal)
+yarn monitor:test                     # Testar monitorização
+
+
 
 # Validação de configuração
 yarn emergency --validate
