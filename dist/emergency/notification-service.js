@@ -8,268 +8,291 @@ const nodemailer_1 = __importDefault(require("nodemailer"));
 const logger_1 = require("../utils/logger");
 class NotificationService {
     transporter;
+    isTestMode;
+    shouldSendEmails;
     constructor() {
-        this.transporter = nodemailer_1.default.createTransport({
-            host: process.env.SMTP_HOST || 'smtp.gmail.com',
-            port: parseInt(process.env.SMTP_PORT || '587'),
-            secure: false,
-            auth: {
-                user: process.env.SMTP_USER || 'accessibility@untile.pt',
-                pass: process.env.SMTP_PASS || 'password'
-            }
-        });
+        this.isTestMode = process.env.NODE_ENV === 'test' || process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
+        this.shouldSendEmails = process.env.SEND_EMAILS === 'true' || false;
+        if (this.isTestMode || !this.shouldSendEmails) {
+            this.transporter = {
+                sendMail: async () => {
+                    logger_1.logger.info('SIMULAÇÃO: Email simulado enviado (SEND_EMAILS=false ou modo de teste)');
+                    return Promise.resolve();
+                }
+            };
+        }
+        else {
+            this.transporter = nodemailer_1.default.createTransport({
+                host: process.env.SMTP_HOST || 'smtp.gmail.com',
+                port: parseInt(process.env.SMTP_PORT || '587'),
+                secure: false,
+                auth: {
+                    user: process.env.SMTP_USER || 'accessibility@untile.pt',
+                    pass: process.env.SMTP_PASS || 'password'
+                }
+            });
+        }
     }
-    async sendEmergencyAlert(alert) {
-        const subject = `[${alert.level}] ${alert.title}`;
-        const html = this.generateEmergencyEmail(alert);
+    async sendEmergencyAlert(options) {
+        const subject = `[${options.severity}] Alerta de Emergência - ${options.title}`;
+        const html = this.generateEmergencyTemplate(options);
         try {
+            if (this.isTestMode || !this.shouldSendEmails) {
+                logger_1.logger.info('SIMULAÇÃO: Alerta de emergência simulado (SEND_EMAILS=false ou modo de teste)', {
+                    severity: options.severity,
+                    title: options.title,
+                    url: options.url,
+                    violations: options.violations?.length || 0
+                });
+                return;
+            }
             await this.sendEmail({
-                to: process.env.EMERGENCY_EMAIL || 'emergency@untile.pt',
+                to: process.env.EMERGENCY_EMAIL || 'your_emergency_email@example.com',
                 subject,
                 html
             });
-            if (process.env.SLACK_WEBHOOK_URL) {
-                await this.sendSlackNotification(alert);
-            }
-            logger_1.logger.info('Alerta de emergência enviado', {
-                level: alert.level,
-                title: alert.title,
-                sites: alert.sites.length
+            logger_1.logger.info(`Alerta de emergência ${options.severity} enviado`, {
+                title: options.title,
+                severity: options.severity
             });
         }
         catch (error) {
             logger_1.logger.error('Erro ao enviar alerta de emergência:', error);
-            throw error;
+            if (!this.isTestMode && this.shouldSendEmails) {
+                throw error;
+            }
         }
     }
-    async sendMaintenanceAlert(alert) {
-        const subject = `[MANUTENÇÃO] ${alert.title}`;
-        const html = this.generateMaintenanceEmail(alert);
+    async sendMaintenanceAlert(options) {
+        const subject = `[MANUTENÇÃO] ${options.title}`;
+        const html = this.generateMaintenanceTemplate(options);
         try {
+            if (this.isTestMode || !this.shouldSendEmails) {
+                logger_1.logger.info('SIMULAÇÃO: Alerta de manutenção simulado (SEND_EMAILS=false ou modo de teste)', {
+                    title: options.title,
+                    action: options.action,
+                    url: options.url
+                });
+                return;
+            }
             await this.sendEmail({
-                to: process.env.MAINTENANCE_EMAIL || 'maintenance@untile.pt',
+                to: process.env.MAINTENANCE_EMAIL || process.env.EMERGENCY_EMAIL || 'your_maintenance_email@example.com',
                 subject,
                 html
             });
             logger_1.logger.info('Alerta de manutenção enviado', {
-                title: alert.title,
-                sites: alert.sites.length
+                title: options.title,
+                action: options.action
             });
         }
         catch (error) {
             logger_1.logger.error('Erro ao enviar alerta de manutenção:', error);
-            throw error;
+            if (!this.isTestMode && this.shouldSendEmails) {
+                throw error;
+            }
         }
     }
-    async sendAuthorityNotification(communication) {
+    async sendAuthorityNotification(incident) {
+        const subject = `[URGENTE] Violação Acessibilidade Digital - ${incident.title}`;
+        const html = this.generateAuthorityTemplate(incident);
         try {
+            if (this.isTestMode || !this.shouldSendEmails) {
+                logger_1.logger.info('SIMULAÇÃO: Notificação para autoridade simulada (SEND_EMAILS=false ou modo de teste)', {
+                    incidentId: incident.id,
+                    title: incident.title,
+                    type: incident.type
+                });
+                return;
+            }
             await this.sendEmail({
-                to: communication.recipient,
-                subject: communication.subject,
-                html: communication.content
+                to: process.env.AUTHORITY_EMAIL || 'your_authority_email@example.com',
+                subject,
+                html
             });
-            logger_1.logger.info('Notificação enviada para autoridade', {
-                communicationId: communication.id,
-                recipient: communication.recipient
+            logger_1.logger.info('Notificação para autoridade enviada', {
+                incidentId: incident.id,
+                title: incident.title
             });
         }
         catch (error) {
             logger_1.logger.error('Erro ao enviar notificação para autoridade:', error);
-            throw error;
+            if (!this.isTestMode && this.shouldSendEmails) {
+                throw error;
+            }
         }
     }
     async sendEmail(options) {
         const mailOptions = {
-            from: process.env.SMTP_FROM || 'accessibility@untile.pt',
+            from: process.env.SMTP_FROM || process.env.SMTP_USER || 'your_smtp_from@example.com',
             to: options.to,
             subject: options.subject,
             html: options.html
         };
         await this.transporter.sendMail(mailOptions);
     }
-    async sendSlackNotification(alert) {
-        try {
-            const webhookUrl = process.env.SLACK_WEBHOOK_URL;
-            if (!webhookUrl)
-                return;
-            const color = alert.level === 'P0' ? '#ff0000' : alert.level === 'P1' ? '#ffaa00' : '#ffff00';
-            const payload = {
-                attachments: [{
-                        color,
-                        title: `🚨 ${alert.title}`,
-                        text: alert.description,
-                        fields: [
-                            {
-                                title: 'Nível',
-                                value: alert.level,
-                                short: true
-                            },
-                            {
-                                title: 'Sites Afetados',
-                                value: alert.sites.length.toString(),
-                                short: true
-                            },
-                            {
-                                title: 'Violações',
-                                value: alert.violations.length.toString(),
-                                short: true
-                            },
-                            {
-                                title: 'Deadline',
-                                value: alert.deadline.toLocaleString('pt-PT'),
-                                short: true
-                            }
-                        ],
-                        footer: 'UNTILE Accessibility Monitoring System'
-                    }]
-            };
-            logger_1.logger.info('Notificação Slack preparada', payload);
-        }
-        catch (error) {
-            logger_1.logger.error('Erro ao enviar notificação Slack:', error);
-        }
-    }
-    generateEmergencyEmail(alert) {
-        const violationsList = alert.violations
-            .map(v => `<li><strong>${v.criteria?.name || 'Violação'}</strong>: ${v.description}</li>`)
-            .join('');
-        const sitesList = alert.sites.map(site => `<li>${site}</li>`).join('');
+    generateEmergencyTemplate(options) {
+        const severityColor = {
+            P0: '#ff0000',
+            P1: '#ff6600',
+            P2: '#ffcc00'
+        };
+        const severityText = {
+            P0: 'CRÍTICO',
+            P1: 'ALTO',
+            P2: 'MÉDIO'
+        };
         return `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Alerta de Emergência - Acessibilidade</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
-        .header { background-color: ${alert.level === 'P0' ? '#ff0000' : alert.level === 'P1' ? '#ffaa00' : '#ffff00'}; 
-                  color: white; padding: 20px; border-radius: 5px; }
-        .content { margin: 20px 0; }
-        .section { margin: 15px 0; }
-        .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #ccc; }
-        .deadline { background-color: #f0f0f0; padding: 10px; border-radius: 3px; }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>🚨 ALERTA DE EMERGÊNCIA - ${alert.level}</h1>
-        <h2>${alert.title}</h2>
-    </div>
-
-    <div class="content">
-        <div class="section">
-            <h3>Descrição</h3>
-            <p>${alert.description}</p>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Alerta de Emergência</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+            .header { background-color: ${severityColor[options.severity]}; color: white; padding: 20px; text-align: center; }
+            .content { padding: 20px; }
+            .severity { background-color: ${severityColor[options.severity]}; color: white; padding: 10px; display: inline-block; }
+            .footer { background-color: #f5f5f5; padding: 20px; margin-top: 20px; font-size: 12px; }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1>🚨 ALERTA DE EMERGÊNCIA</h1>
+            <div class="severity">${severityText[options.severity]}</div>
         </div>
-
-        <div class="section">
-            <h3>Sites Afetados</h3>
-            <ul>${sitesList}</ul>
+        
+        <div class="content">
+            <h2>${options.title}</h2>
+            <p><strong>Descrição:</strong> ${options.description}</p>
+            
+            ${options.url ? `<p><strong>URL:</strong> <a href="${options.url}">${options.url}</a></p>` : ''}
+            
+            ${options.violations && options.violations.length > 0 ? `
+            <h3>Violations Detected:</h3>
+            <ul>
+                ${options.violations.map(v => `<li>${v}</li>`).join('')}
+            </ul>
+            ` : ''}
+            
+            <p><strong>Timestamp:</strong> ${new Date().toLocaleString('pt-PT')}</p>
         </div>
-
-        <div class="section">
-            <h3>Violações Detectadas</h3>
-            <ul>${violationsList}</ul>
+        
+        <div class="footer">
+            <p><strong>UNTILE Accessibility Monitoring System</strong></p>
+            <p>Email: ${process.env.SMTP_USER || 'your_smtp_user@example.com'} | Telefone: ${process.env.EMERGENCY_PHONE || '+351-XXX-XXX-XXX'}</p>
+            <p>Este é um alerta automático. Não responda a este email.</p>
         </div>
-
-        <div class="section">
-            <h3>Deadline SLA</h3>
-            <div class="deadline">
-                <strong>${alert.deadline.toLocaleString('pt-PT')}</strong>
-                <br>
-                ${alert.level === 'P0' ? 'SLA: 2 horas' : alert.level === 'P1' ? 'SLA: 8 horas' : 'SLA: 24 horas'}
-            </div>
-        </div>
-
-        <div class="section">
-            <h3>Ações Imediatas</h3>
-            <ol>
-                <li>Verificar violações identificadas</li>
-                <li>Implementar correções prioritárias</li>
-                <li>Validar conformidade WCAG 2.1 AA</li>
-                <li>Atualizar status do incidente</li>
-            </ol>
-        </div>
-    </div>
-
-    <div class="footer">
-        <p><strong>UNTILE Accessibility Monitoring System</strong></p>
-        <p>Email: accessibility@untile.pt | Telefone: ${process.env.EMERGENCY_PHONE || '+351-XXX-XXX-XXX'}</p>
-        <p>Este é um alerta automático. Não responda a este email.</p>
-    </div>
-</body>
-</html>
+    </body>
+    </html>
     `.trim();
     }
-    generateMaintenanceEmail(alert) {
-        const violationsList = alert.violations
-            .map(v => `<li><strong>${v.criteria?.name || 'Violação'}</strong>: ${v.description}</li>`)
-            .join('');
-        const sitesList = alert.sites.map(site => `<li>${site}</li>`).join('');
+    generateMaintenanceTemplate(options) {
         return `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Alerta de Manutenção - Acessibilidade</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
-        .header { background-color: #007bff; color: white; padding: 20px; border-radius: 5px; }
-        .content { margin: 20px 0; }
-        .section { margin: 15px 0; }
-        .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #ccc; }
-        .deadline { background-color: #f0f0f0; padding: 10px; border-radius: 3px; }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>🔧 ALERTA DE MANUTENÇÃO</h1>
-        <h2>${alert.title}</h2>
-    </div>
-
-    <div class="content">
-        <div class="section">
-            <h3>Descrição</h3>
-            <p>${alert.description}</p>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Alerta de Manutenção</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+            .header { background-color: #0066cc; color: white; padding: 20px; text-align: center; }
+            .content { padding: 20px; }
+            .action { background-color: #e6f3ff; padding: 15px; border-left: 4px solid #0066cc; }
+            .footer { background-color: #f5f5f5; padding: 20px; margin-top: 20px; font-size: 12px; }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1>🔧 ALERTA DE MANUTENÇÃO</h1>
         </div>
-
-        <div class="section">
-            <h3>Sites Afetados</h3>
-            <ul>${sitesList}</ul>
-        </div>
-
-        <div class="section">
-            <h3>Violações Detectadas</h3>
-            <ul>${violationsList}</ul>
-        </div>
-
-        <div class="section">
-            <h3>Deadline</h3>
-            <div class="deadline">
-                <strong>${alert.deadline.toLocaleString('pt-PT')}</strong>
-                <br>
-                SLA: 24 horas
+        
+        <div class="content">
+            <h2>${options.title}</h2>
+            <p><strong>Descrição:</strong> ${options.description}</p>
+            
+            ${options.url ? `<p><strong>URL:</strong> <a href="${options.url}">${options.url}</a></p>` : ''}
+            
+            <div class="action">
+                <h3>Ação Necessária:</h3>
+                <p>${options.action}</p>
             </div>
+            
+            <p><strong>Timestamp:</strong> ${new Date().toLocaleString('pt-PT')}</p>
         </div>
-
-        <div class="section">
-            <h3>Ações Recomendadas</h3>
-            <ol>
-                <li>Revisar violações identificadas</li>
-                <li>Planear correções durante manutenção</li>
-                <li>Validar melhorias implementadas</li>
-                <li>Atualizar documentação</li>
-            </ol>
+        
+        <div class="footer">
+            <p><strong>UNTILE Accessibility Monitoring System</strong></p>
+            <p>Email: ${process.env.SMTP_USER || 'your_smtp_user@example.com'}</p>
+            <p>Este é um alerta automático. Não responda a este email.</p>
         </div>
-    </div>
-
-    <div class="footer">
-        <p><strong>UNTILE Accessibility Monitoring System</strong></p>
-        <p>Email: maintenance@untile.pt</p>
-        <p>Este é um alerta automático. Não responda a este email.</p>
-    </div>
-</body>
-</html>
+    </body>
+    </html>
+    `.trim();
+    }
+    generateAuthorityTemplate(incident) {
+        return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Notificação para Autoridade</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+            .header { background-color: #cc0000; color: white; padding: 20px; text-align: center; }
+            .content { padding: 20px; }
+            .incident { background-color: #fff5f5; padding: 15px; border-left: 4px solid #cc0000; }
+            .footer { background-color: #f5f5f5; padding: 20px; margin-top: 20px; font-size: 12px; }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1>🚨 NOTIFICAÇÃO PARA AUTORIDADE</h1>
+        </div>
+        
+        <div class="content">
+            <h2>Violation de Acessibilidade Digital</h2>
+            
+            <div class="incident">
+                <h3>Detalhes do Incidente:</h3>
+                <p><strong>ID:</strong> ${incident.id}</p>
+                <p><strong>Título:</strong> ${incident.title}</p>
+                <p><strong>Descrição:</strong> ${incident.description}</p>
+                <p><strong>Severidade:</strong> ${incident.severity}</p>
+                <p><strong>URL:</strong> ${incident.url || 'N/A'}</p>
+                <p><strong>Data/Hora:</strong> ${new Date().toLocaleString('pt-PT')}</p>
+            </div>
+            
+            <h3>Medidas Tomadas:</h3>
+            <ul>
+                <li>Notificação imediata da equipa técnica</li>
+                <li>Início do processo de correção</li>
+                <li>Monitorização contínua da situação</li>
+            </ul>
+            
+            <h3>Próximos Passos:</h3>
+            <ul>
+                <li>Correção das violações identificadas</li>
+                <li>Validação da conformidade</li>
+                <li>Relatório de resolução</li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            <h3>CONTACTO TÉCNICO</h3>
+            
+            Responsável técnico: [Nome]
+            Email: ${process.env.SMTP_USER || 'your_smtp_user@example.com'}
+            Telefone: ${process.env.EMERGENCY_PHONE || '+351-XXX-XXX-XXX'}
+            Disponibilidade: 24/7 para questões de acessibilidade
+            
+            Permanecemos à disposição para esclarecimentos adicionais.
+            
+            Cumprimentos,
+            [Nome] - [Título]
+            UNTILE | ${process.env.SMTP_USER || 'your_smtp_user@example.com'}
+        </div>
+    </body>
+    </html>
     `.trim();
     }
 }

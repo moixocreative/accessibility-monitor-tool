@@ -56,6 +56,14 @@ export interface AuditResult {
         priorityViolations: number;
         compliancePercentage: number;
     };
+    legalRiskMetrics?: {
+        legalRiskScore: number;
+        exposureScore: number;
+        riskLevel: 'BAIXO' | 'MÉDIO' | 'ALTO';
+        criticalViolations: number;
+        seriousViolations: number;
+        priorityViolations: number;
+    };
 }
 export interface EmergencyIncident {
     id: string;

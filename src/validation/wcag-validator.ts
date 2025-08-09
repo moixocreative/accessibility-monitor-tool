@@ -161,10 +161,10 @@ export class WCAGValidator {
           // Configurar axe-core baseado no tipo de auditoria
           if (isCompleteAudit) {
             logger.info('Executando auditoria completa - todos os critérios WCAG 2.1 AA');
-            axeResult = await this.runAxeCoreComplete(url);
+            axeResult = await this.runAxeCoreOptimized(url, 'complete');
           } else {
             logger.info('Executando auditoria simples - apenas critérios prioritários');
-          axeResult = await this.runAxeCore(url);
+            axeResult = await this.runAxeCoreOptimized(url, 'simple');
           }
         } catch (error) {
           logger.warn('Erro ao executar axe-core, continuando sem validação detalhada:', error);
@@ -444,12 +444,33 @@ export class WCAGValidator {
           await page.setViewport({ width: 1280, height: 720 });
         }
 
-        // Navegação otimizada
+        // Navegação otimizada com retry
         logger.info(`Navegando para: ${url}`);
-        await page.goto(url, { 
-          waitUntil: 'domcontentloaded',
-          timeout: 60000 
-        });
+        
+        try {
+          await page.goto(url, { 
+            waitUntil: 'domcontentloaded',
+            timeout: 60000 
+          });
+        } catch (navError) {
+          // Tentar estratégia alternativa se navegação falhar
+          const errorMsg = navError instanceof Error ? navError.message : String(navError);
+          logger.warn('Primeira tentativa de navegação falhou, tentando estratégia alternativa:', errorMsg);
+          try {
+            await page.goto(url, { 
+              waitUntil: 'networkidle0',
+              timeout: 30000 
+            });
+          } catch (secondNavError) {
+            // Se segunda tentativa também falhar, tentar estratégia mais simples
+            const secondErrorMsg = secondNavError instanceof Error ? secondNavError.message : String(secondNavError);
+            logger.warn('Segunda tentativa também falhou, usando estratégia básica:', secondErrorMsg);
+            await page.goto(url, { 
+              waitUntil: 'load',
+              timeout: 45000 
+            });
+          }
+        }
 
         // Verificar se página carregou corretamente
         const title = await page.title();
@@ -457,32 +478,44 @@ export class WCAGValidator {
         
         logger.info(`Página carregada: "${title}" em ${currentUrl}`);
 
-        // Verificar se não é página de erro/bloqueio
-        if (title.toLowerCase().includes('cloudflare') || 
-            title.toLowerCase().includes('error') ||
-            title.toLowerCase().includes('access denied') ||
-            currentUrl.includes('error')) {
-          throw new Error(`Página bloqueada ou erro detectado: ${title}`);
+        // Verificar se não é página de erro/bloqueio (mais tolerante)
+        const errorIndicators = ['cloudflare', 'error 404', 'error 500', 'access denied', 'forbidden'];
+        const hasError = errorIndicators.some(indicator => 
+          title.toLowerCase().includes(indicator) || currentUrl.toLowerCase().includes(indicator)
+        );
+        
+        if (hasError) {
+          logger.warn(`Possível página de erro detectada: ${title}, mas continuando...`);
         }
 
         // Estabilização da página
         await page.waitForTimeout(2000); // 2s para estabilização
 
-        // Injetar axe-core
-        await page.addScriptTag({
-          url: 'https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.7.0/axe.min.js'
-        });
+        // Injetar axe-core com fallback
+        try {
+          await page.addScriptTag({
+            url: 'https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.7.0/axe.min.js'
+          });
+        } catch (injectError) {
+          logger.warn('Falha ao carregar axe-core do CDN, tentando versão alternativa');
+          await page.addScriptTag({
+            url: 'https://unpkg.com/axe-core@4.7.0/axe.min.js'
+          });
+        }
 
-        // Aguardar carregamento do axe-core
-        await page.waitForTimeout(1000);
-
-        // Verificar se axe-core foi carregado corretamente
-        const axeLoaded = await page.evaluate(() => {
-          return typeof (globalThis as any).axe !== 'undefined';
-        });
+        // Aguardar carregamento do axe-core com timeout
+        let axeLoaded = false;
+        for (let i = 0; i < 10; i++) {
+          await page.waitForTimeout(500);
+          axeLoaded = await page.evaluate(() => {
+            return typeof (globalThis as any).axe !== 'undefined' && 
+                   typeof (globalThis as any).axe.run === 'function';
+          });
+          if (axeLoaded) break;
+        }
 
         if (!axeLoaded) {
-          throw new Error('axe-core não foi carregado corretamente');
+          throw new Error('axe-core não foi carregado corretamente após 5 segundos');
         }
 
         logger.info('axe-core carregado, iniciando execução...');
@@ -507,18 +540,20 @@ export class WCAGValidator {
               // Configuração simplificada baseada no tipo de auditoria
               const axeConfig: any = {
                 // Configuração básica e estável
-                resultTypes: ['violations']  // Apenas violações para reduzir carga
+                resultTypes: ['violations', 'passes']  // Incluir passes para debugging
               };
 
               if (auditType === 'simple') {
-                // 15 critérios prioritários - configuração simplificada
-                axeConfig.runOnly = ['wcag2a', 'wcag2aa'];
+                // 15 critérios prioritários - usar tags
+                axeConfig.tags = ['wcag2a', 'wcag2aa'];
               } else {
-                // Todos os critérios WCAG 2.1 AA - configuração simplificada
-                axeConfig.runOnly = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
+                // Todos os critérios WCAG 2.1 AA - usar tags
+                axeConfig.tags = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
               }
 
-              console.log('Iniciando axe.run com configuração:', axeConfig);
+              console.log('Iniciando axe.run com configuração:', JSON.stringify(axeConfig));
+              console.log('Documento disponível:', typeof (globalThis as any).document !== 'undefined');
+              console.log('Axe version:', axe.version || 'unknown');
 
               // Executar axe-core com configuração simplificada
               axe.run(axeConfig, (err: any, results: any) => {
@@ -526,10 +561,14 @@ export class WCAGValidator {
                 clearTimeout(timeout);
                 if (err) {
                   console.error('Erro no axe.run:', err);
-                  reject(new Error(`Erro axe-core: ${err.message || err}`));
+                  console.error('Tipo do erro:', typeof err);
+                  console.error('Propriedades do erro:', Object.keys(err || {}));
+                  reject(new Error(`Erro axe-core: ${err.message || err.toString() || 'erro desconhecido'}`));
                 } else {
-                  console.log('Axe.run sucesso, resultados:', results);
-                  resolve(results);
+                  const violationCount = results?.violations?.length || 0;
+                  const passCount = results?.passes?.length || 0;
+                  console.log(`Axe.run sucesso: ${violationCount} violações, ${passCount} passes`);
+                  resolve(results || { violations: [], passes: [], incomplete: [], inapplicable: [] });
                 }
               });
             } catch (error) {
@@ -553,7 +592,11 @@ export class WCAGValidator {
 
       } catch (error) {
         lastError = error as Error;
-        logger.warn(`Tentativa ${attempt} falhou:`, lastError.message);
+        const errorMessage = lastError?.message || lastError?.toString() || 'Erro desconhecido';
+        const errorStack = lastError?.stack || 'Stack trace não disponível';
+        
+        logger.warn(`Tentativa ${attempt} falhou: ${errorMessage}`);
+        logger.debug('Stack trace:', errorStack);
         
         // Cleanup em caso de erro
         try {
@@ -574,11 +617,15 @@ export class WCAGValidator {
 
     // Se todas as tentativas falharam
     logger.error(`Todas as tentativas falharam para axe-core otimizado (${auditType})`);
+    logger.error('Último erro:', lastError?.message || 'Erro desconhecido');
+    
+    // Retornar resultado fallback em vez de falhar completamente
     return {
       violations: [],
       passes: [],
       incomplete: [],
-      inapplicable: []
+      inapplicable: [],
+      error: `Failed after ${maxRetries} attempts: ${lastError?.message || 'Unknown error'}`
     };
   }
 

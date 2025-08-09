@@ -2,6 +2,7 @@ import { chromium } from 'playwright';
 import { logger } from '../utils/logger';
 
 export interface CrawlOptions {
+  baseUrl?: string;
   maxPages: number;
   maxDepth: number;
   includeExternal: boolean;
@@ -528,7 +529,7 @@ export class PageCrawler {
       
       for (const path of commonPaths) {
         try {
-          const url = `${options.baseUrl}${path}`;
+          const url = `${options.baseUrl || ''}${path}`;
           const response = await page.goto(url, { 
             waitUntil: 'domcontentloaded',
             timeout: 10000 // Timeout menor para testar rapidamente
