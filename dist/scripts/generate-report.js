@@ -17,6 +17,10 @@ async function main() {
     logger_1.logger.info('Gerador de Relatórios UNTILE');
     const portfolioMonitor = new portfolio_monitor_1.PortfolioMonitor();
     const emergencyResponse = new emergency_response_1.EmergencyResponse();
+    const timeout = setTimeout(() => {
+        logger_1.logger.error('Timeout na geração de relatório');
+        process.exit(1);
+    }, 300000);
     try {
         switch (reportType) {
             case '--test':
@@ -38,6 +42,7 @@ async function main() {
         process.exit(1);
     }
     finally {
+        clearTimeout(timeout);
         await portfolioMonitor.cleanup();
     }
 }
