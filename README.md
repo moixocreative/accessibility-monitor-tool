@@ -1,217 +1,114 @@
-# UNTILE Accessibility Monitoring System
+# UNTILE Accessibility Monitor Tool
 
-Sistema de monitorização contínua de acessibilidade digital para conformidade com WCAG 2.1 AA e EAA 2025.
+> 🔍 **Ferramenta automatizada de monitorização de acessibilidade WCAG 2.1 AA para websites**
 
-<!-- Test commit to trigger workflow with secrets -->
+[![Build Status](https://github.com/moixocreative/accessibility-monitor-tool/workflows/CI/badge.svg)](https://github.com/moixocreative/accessibility-monitor-tool/actions)
+[![Coverage](https://img.shields.io/badge/coverage-85%25-green.svg)](https://github.com/moixocreative/accessibility-monitor-tool)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## 🎯 Funcionalidades
-
-### Monitorização Automática
-- Auditoria contínua de websites
-- Validação WCAG 2.1 AA (15 critérios prioritários)
-- Deteção de violações críticas
-- Relatórios automáticos
-
-### Sistema de Emergência
-- Classificação P0/P1/P2 de incidentes
-- Notificações automáticas por email
-- SLA management (2h/8h/24h)
-- Comunicação com autoridades
-
-### Controlo e Automação
-- GitHub Actions para CI/CD
-- Workflows de teste e release
-- Sincronização com DigitalOcean Spaces
-- Monitorização de performance
-
-## 🚀 Instalação
+## 🚀 Quick Start (5 minutos)
 
 ```bash
-# Clonar repositório
-git clone https://github.com/moixocreative/untile-accessibility-monitoring.git
-cd untile-accessibility-monitoring
-
-# Instalar dependências
+# 1. Clone e instale (1 min)
+git clone https://github.com/moixocreative/accessibility-monitor-tool.git
+cd accessibility-monitor-tool
 yarn install
 
-# Configurar variáveis de ambiente
-cp env.example .env
-# Editar .env com suas configurações
+# 2. Configure básico (2 min)
+cp .env.example .env
+# Edite .env com suas configurações básicas
 
-# Build do projeto
-yarn build
+# 3. Primeiro teste (2 min)
+yarn audit:wcag https://www.example.com simple console
 ```
 
-## 📋 Scripts Disponíveis
+## 📋 O que esta ferramenta faz?
+
+### ✅ **Dois tipos de análise WCAG**
+- **Simples**: 15 critérios críticos (análise rápida)
+- **Completa**: 50+ critérios WCAG 2.1 AA (análise abrangente)
+
+### 🕷️ **Análise completa de sites**
+- Crawling automático de todas as páginas
+- Análise individual por URL
+- Monitorização de portfolio (múltiplos sites)
+
+### 📊 **Relatórios detalhados**
+- Console, JSON, HTML, Markdown
+- Scoring realista baseado em violações
+- Recomendações específicas por site
+
+### 🔧 **Sistema robusto**
+- Múltiplas tentativas de navegação
+- Fallbacks automáticos para axe-core
+- Tratamento robusto de erros de rede
+- Configuração automática de ambiente
+
+## 🎯 Para quem é esta ferramenta?
+
+### 👨‍💻 **Developers** → [Development Guide](docs/development/)
+- Configurar ambiente de desenvolvimento
+- Contribuir para o projeto
+- Arquitetura e testes
+
+### 🧪 **QA Testers** → [Usage Guide](docs/usage/)
+- Executar testes de acessibilidade
+- Interpretar relatórios
+- Comandos principais
+
+### ⚙️ **DevOps/Admin** → [Configuration Guide](docs/configuration/)
+- Setup rápido em 5 minutos
+- Configurar SMTP/emails
+- Adicionar sites ao portfolio
+
+## 📊 Comandos Principais
 
 ```bash
-# Desenvolvimento
-yarn dev          # Modo desenvolvimento
-yarn build        # Build do projeto
-yarn test         # Executar testes
+# Análise individual
+yarn audit:wcag https://example.com simple console    # 15 critérios críticos
+yarn audit:wcag https://example.com complete html     # 50+ critérios completos
 
-# Monitorização
-yarn monitor      # Iniciar monitorização contínua
-yarn audit:wcag   # Auditoria WCAG única
-yarn audit:portfolio # Auditoria completa do portfolio
+# Análise multi-página  
+yarn audit:multi https://example.com comprehensive simple console 20
 
-# Emergência
-yarn emergency --test     # Testar sistema de emergência
-yarn emergency --validate # Validar configurações
-yarn emergency --report   # Gerar relatório de emergência
+# Portfolio (múltiplos sites)
+yarn audit:portfolio console
 
-# Relatórios
-yarn report --test    # Relatório de testes
-yarn report --release # Relatório de release
-yarn report --deploy  # Relatório de deploy
-
-# Qualidade
-yarn lint           # Linting
-yarn audit          # Auditoria de segurança
+# Validação de configuração
+yarn emergency --validate
 ```
-
-## 📚 Documentação
-
-Para informações detalhadas sobre configuração e uso do sistema, consulte:
-
-- **[Guia de Instalação](docs/installation-guide.md)** - Instalação passo a passo
-- **[Guia de Uso](docs/usage-guide.md)** - Como usar o sistema
-- **[Guia de Desenvolvimento](docs/development-guide.md)** - Para desenvolvedores
-- **[Configuração de Email](docs/email-configuration.md)** - Configuração de notificações
 
 ## 🏗️ Arquitetura
 
 ```
 src/
-├── core/           # Lógica principal
-├── monitoring/     # Sistema de monitorização
-├── validation/     # Validação WCAG
-├── emergency/      # Sistema de emergência
-├── reporting/      # Geração de relatórios
-├── api/           # API REST
-├── utils/         # Utilitários
-└── scripts/       # Scripts executáveis
+├── core/           # 15 critérios WCAG prioritários
+├── validation/     # Validadores (axe-core + custom)
+├── crawler/        # Discovery automático de páginas
+├── reports/        # Geração de relatórios
+└── scripts/        # Comandos executáveis
 ```
 
-## 🎯 Critérios WCAG 2.1 AA Prioritários
+## 📚 Documentação Completa
 
-### 1. Perceção (P)
-- **1.1.1** - Conteúdo não textual
-- **1.3.1** - Informação e relacionamentos
-- **1.4.3** - Contraste (mínimo)
+| Público | Documentação | Descrição |
+|---------|--------------|-----------|
+| **QA/Users** | [**Usage Guide**](docs/usage/) | Como usar a ferramenta |
+| **Developers** | [**Development Guide**](docs/development/) | Como contribuir |
+| **Admin/DevOps** | [**Configuration Guide**](docs/configuration/) | Como configurar |
 
-### 2. Operável (O)
-- **2.1.1** - Teclado
-- **2.4.1** - Bypass blocks
-- **2.4.7** - Foco visível
+## 🤝 Contribuição
 
-### 3. Compreensível (C)
-- **3.1.1** - Idioma da página
-- **3.2.1** - Foco
-- **3.2.2** - Input
-
-### 4. Robusto (R)
-- **4.1.1** - Parsing
-- **4.1.2** - Nome, função, valor
-
-## 🚨 Sistema de Emergência
-
-### Classificação de Incidentes
-- **P0 (Crítico)**: SLA 2 horas
-- **P1 (Alto)**: SLA 8 horas  
-- **P2 (Médio)**: SLA 24 horas
-
-### Fluxo de Emergência
-1. Deteção automática de violação
-2. Classificação por severidade
-3. Notificação imediata da equipa
-4. Comunicação com autoridades (se necessário)
-5. Tracking até resolução
-
-## 📊 Monitorização
-
-### Configuração
-```bash
-# Intervalo de monitorização (1 hora)
-MONITORING_INTERVAL=3600000
-
-# Email para alertas
-ALERT_EMAIL=mauriciopereita@untile.pt
-
-# Nível WCAG
-WCAG_LEVEL=AA
-
-# Critérios prioritários
-PRIORITY_CRITERIA=15
-```
-
-### Sites Monitorizados
-- Website principal
-- Área de cliente
-- Portal de serviços
-- Documentação técnica
-
-## 🔧 Configuração
-
-### Variáveis de Ambiente
-```bash
-# Configurações Gerais
-NODE_ENV=production
-PORT=3000
-
-# Monitorização
-MONITORING_INTERVAL=3600000  # 1 hora
-ALERT_EMAIL=mauriciopereita@untile.pt
-
-# WCAG Validation
-WCAG_LEVEL=AA
-PRIORITY_CRITERIA=15
-
-# Emergency Contacts
-EMERGENCY_EMAIL=mauriciopereita@untile.pt
-EMERGENCY_PHONE=+351-XXX-XXX-XXX
-AUTHORITY_EMAIL=mauriciopereita@untile.pt
-
-# SMTP Configuration
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=mauriciopereita@untile.pt
-SMTP_PASS=your_smtp_password_here
-SMTP_FROM=mauriciopereita@untile.pt
-
-# Slack Integration (opcional)
-SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK
-
-# Database (para futuras implementações)
-DATABASE_URL=postgresql://user:pass@localhost:5432/accessibility
-
-# Logging
-LOG_LEVEL=info
-```
-
-## 📞 Suporte
-
-Para informações detalhadas sobre instalação, configuração e utilização, consulte a documentação completa:
-
-- [Guia de Instalação](docs/installation-guide.md) - Instruções passo-a-passo para instalação e configuração
-- [Guia de Utilização](docs/usage-guide.md) - Como usar as funcionalidades do sistema
-- [Guia de Desenvolvimento](docs/development-guide.md) - Informações para desenvolvedores
-
-### Documentação Técnica
-- [Anexo A - Critérios WCAG 2.1 AA](./docs/anexo_a_wcag_criteria_revised.md)
-- [Anexo B - Conformidade Legal EAA 2025](./docs/anexo_b_legal_compliance_revised.md)
-- [Anexo I - Monitorização Automática](./docs/anexo_i_automated_monitoring_revised.md)
-
-Para questões técnicas ou de conformidade:
-
-- **Email**: mauriciopereita@untile.pt
-- **Slack**: #accessibility-emergency
-- **Telefone**: +351-XXX-XXX-XXX (24/7 para emergências)
+1. Fork o projeto
+2. Crie sua feature branch: `git checkout -b feature/amazing-feature`
+3. Commit suas mudanças: `git commit -m 'feat: add amazing feature'`
+4. Push para a branch: `git push origin feature/amazing-feature`
+5. Abra um Pull Request
 
 ## 📄 Licença
 
-Este projeto é propriedade da UNTILE e está sujeito aos termos de uso internos.
+Este projeto está licenciado sob a MIT License - veja o arquivo [LICENSE](LICENSE) para detalhes.
 
 ---
 
-**Desenvolvido com ❤️ pela equipa UNTILE** 
+**Desenvolvido com ❤️ pela equipa UNTILE**

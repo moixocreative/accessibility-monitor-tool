@@ -20,29 +20,29 @@ Este guia explica como configurar os secrets necessários para o funcionamento d
 
 #### SMTP_USER
 **Descrição**: Email para autenticação SMTP
-**Valor**: `mauriciopereita@untile.pt`
+**Valor**: `your-email@example.com`
 
 #### SMTP_PASS
 **Descrição**: Senha do email para autenticação SMTP
-**Valor**: `Moixo#1974*20Untile`
+**Valor**: `your-app-password-here`
 
 #### SMTP_FROM
 **Descrição**: Email remetente para notificações
-**Valor**: `mauriciopereita@untile.pt`
+**Valor**: `your-email@example.com`
 
 ### 2. Configurações de Email
 
 #### ALERT_EMAIL
 **Descrição**: Email para receber alertas gerais
-**Valor**: `mauriciopereita@untile.pt`
+**Valor**: `your-email@example.com`
 
 #### EMERGENCY_EMAIL
 **Descrição**: Email para receber alertas de emergência
-**Valor**: `mauriciopereita@untile.pt`
+**Valor**: `your-email@example.com`
 
 #### AUTHORITY_EMAIL
 **Descrição**: Email para notificações para autoridade
-**Valor**: `mauriciopereita@untile.pt`
+**Valor**: `your-email@example.com`
 
 ---
 
@@ -94,37 +94,37 @@ Este guia explica como configurar os secrets necessários para o funcionamento d
 #### 2.3 SMTP_USER
 1. Clique em **New repository secret**
 2. **Name**: `SMTP_USER`
-3. **Value**: `mauriciopereita@untile.pt`
+3. **Value**: `your-email@example.com`
 4. Clique em **Add secret**
 
 #### 2.4 SMTP_PASS
 1. Clique em **New repository secret**
 2. **Name**: `SMTP_PASS`
-3. **Value**: `Moixo#1974*20Untile`
+3. **Value**: `your-app-password-here`
 4. Clique em **Add secret**
 
 #### 2.5 SMTP_FROM
 1. Clique em **New repository secret**
 2. **Name**: `SMTP_FROM`
-3. **Value**: `mauriciopereita@untile.pt`
+3. **Value**: `your-email@example.com`
 4. Clique em **Add secret**
 
 #### 2.6 ALERT_EMAIL
 1. Clique em **New repository secret**
 2. **Name**: `ALERT_EMAIL`
-3. **Value**: `mauriciopereita@untile.pt`
+3. **Value**: `your-email@example.com`
 4. Clique em **Add secret**
 
 #### 2.7 EMERGENCY_EMAIL
 1. Clique em **New repository secret**
 2. **Name**: `EMERGENCY_EMAIL`
-3. **Value**: `mauriciopereita@untile.pt`
+3. **Value**: `your-email@example.com`
 4. Clique em **Add secret**
 
 #### 2.8 AUTHORITY_EMAIL
 1. Clique em **New repository secret**
 2. **Name**: `AUTHORITY_EMAIL`
-3. **Value**: `mauriciopereita@untile.pt`
+3. **Value**: `your-email@example.com`
 4. Clique em **Add secret**
 
 ### Passo 3: Verificar Configuração
@@ -197,12 +197,12 @@ env:
 cat > .env << EOF
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
-SMTP_USER=mauriciopereita@untile.pt
-SMTP_PASS=Moixo#1974*20Untile
-SMTP_FROM=mauriciopereita@untile.pt
-ALERT_EMAIL=mauriciopereita@untile.pt
-EMERGENCY_EMAIL=mauriciopereita@untile.pt
-AUTHORITY_EMAIL=mauriciopereita@untile.pt
+SMTP_USER=your-email@example.com
+SMTP_PASS=your-app-password-here
+SMTP_FROM=your-email@example.com
+ALERT_EMAIL=your-email@example.com
+EMERGENCY_EMAIL=your-email@example.com
+AUTHORITY_EMAIL=your-email@example.com
 EOF
 
 # Testar sistema
@@ -247,7 +247,7 @@ yarn audit:wcag
 
 Se tiver problemas com a configuração:
 
-- **Email**: mauriciopereita@untile.pt
+- **Email**: your-email@example.com
 - **GitHub Issues**: Criar issue no repositório
 - **Documentação**: Ver `DEPLOYMENT.md` para mais detalhes
 

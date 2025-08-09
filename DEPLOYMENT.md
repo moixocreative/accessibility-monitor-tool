@@ -49,7 +49,7 @@ AUTHORITY_EMAIL=your_authority_email@example.com
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your_smtp_user@example.com
-SMTP_PASS=your_actual_smtp_password_here
+SMTP_PASS=your_app_password_here
 SMTP_FROM=your_smtp_from@example.com
 
 # Slack Integration (opcional)
