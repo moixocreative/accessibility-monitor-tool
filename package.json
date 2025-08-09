@@ -15,6 +15,9 @@
     "audit:url": "ts-node src/scripts/wcag-validation.ts",
     "audit:multi": "ts-node src/scripts/multi-page-audit.ts",
     "monitor": "ts-node src/scripts/monitoring.ts",
+    "monitor:start": "ts-node src/scripts/start-monitoring.ts",
+    "monitor:test": "ts-node src/scripts/test-monitoring.ts",
+
     "emergency": "ts-node src/scripts/emergency-response.ts",
     "report": "ts-node src/scripts/generate-report.ts",
     "pre-commit": "yarn lint && yarn test"

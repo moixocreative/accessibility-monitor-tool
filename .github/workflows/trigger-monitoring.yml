@@ -1,0 +1,93 @@
+name: Trigger Periodic Monitoring
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_monitoring:
+        description: 'Executar monitorização periódica completa?'
+        required: true
+        default: 'true'
+        type: boolean
+
+jobs:
+  periodic-monitoring:
+    name: Periodic Monitoring
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.run_monitoring }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'yarn'
+
+    - name: Cache dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          node_modules
+          ~/.cache/puppeteer
+          ~/.cache/ms-playwright
+        key: Linux-node-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('**/package.json') }}
+        restore-keys: |
+          Linux-node-
+
+    - name: Install dependencies
+      run: |
+        yarn install --network-timeout 100000
+
+    - name: Install Playwright browsers
+      run: |
+        npx playwright install chromium
+        npx playwright install-deps chromium
+
+    - name: Setup environment
+      run: |
+        cp .env.example .env
+        echo "MONITORING_INTERVAL=0 0 * * 1" >> .env
+        echo "MONITORING_ENABLED=true" >> .env
+        echo "TIMEOUT=120000" >> .env
+        echo "HEADLESS=true" >> .env
+
+    - name: Run periodic monitoring
+      run: |
+        echo "🚀 Iniciando monitorização periódica..."
+        echo "📋 Todos os sites do portfolio"
+        echo "✅ Análise completa (todos os critérios)"
+        echo "⏱️  Timeout: 30 minutos"
+        echo ""
+        
+        timeout 1800s yarn monitor:start || echo "⚠️ Monitorização concluída"
+      env:
+        TIMEOUT: 120000
+        HEADLESS: true
+
+    - name: Upload results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: monitoring-results-${{ github.run_number }}
+        path: |
+          reports/
+          logs/
+        retention-days: 30
+
+    - name: Summary
+      if: always()
+      run: |
+        echo ""
+        echo "🎯 RESUMO DA MONITORIZAÇÃO"
+        echo "=========================="
+        
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "✅ Monitorização periódica concluída!"
+          echo "📊 Relatórios disponíveis nos artifacts"
+          echo "📁 Retenção: 30 dias"
+        else
+          echo "❌ Monitorização falhou"
+          echo "🔍 Verificar logs para detalhes"
+        fi

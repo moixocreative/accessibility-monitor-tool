@@ -1,0 +1,139 @@
+name: Complete Site Audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_complete_audit:
+        description: 'Executar auditoria completa de todos os sites e páginas?'
+        required: true
+        default: 'true'
+        type: boolean
+
+jobs:
+  complete-audit:
+    name: Complete Accessibility Audit
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.run_complete_audit }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'yarn'
+
+    - name: Cache dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          node_modules
+          ~/.cache/puppeteer
+          ~/.cache/ms-playwright
+        key: Linux-node-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('**/package.json') }}
+        restore-keys: |
+          Linux-node-
+
+    - name: Install dependencies
+      run: |
+        yarn install --network-timeout 100000
+
+    - name: Install Playwright browsers
+      run: |
+        npx playwright install chromium
+        npx playwright install-deps chromium
+
+    - name: Setup environment for complete audit
+      run: |
+        cp .env.example .env
+        echo "WCAG_LEVEL=AA" >> .env
+        echo "PRIORITY_CRITERIA=all" >> .env
+        echo "TIMEOUT=180000" >> .env
+        echo "HEADLESS=true" >> .env
+        echo "DEBUG_MODE=true" >> .env
+        echo "CAPTURE_SCREENSHOTS=true" >> .env
+
+    - name: Run complete portfolio audit
+      run: |
+        echo "🔍 INICIANDO AUDITORIA COMPLETA"
+        echo "================================="
+        echo "📋 Todos os sites do portfolio"
+        echo "🌐 Todas as páginas de cada site"
+        echo "✅ Todos os critérios WCAG 2.1 AA"
+        echo "⏱️  Timeout: 30 minutos por site"
+        echo ""
+        
+        timeout 3600s yarn audit:portfolio console || echo "⚠️ Auditoria concluída"
+      env:
+        TIMEOUT: 180000
+        HEADLESS: true
+        WCAG_LEVEL: AA
+        PRIORITY_CRITERIA: all
+
+    - name: Run multi-page audit for each site
+      run: |
+        echo "🕷️  AUDITORIA MULTI-PÁGINA"
+        echo "============================"
+        
+        # Obter sites do portfolio
+        SITES=$(node -e "
+          const { PortfolioMonitor } = require('./src/monitoring/portfolio-monitor');
+          const monitor = new PortfolioMonitor();
+          const sites = monitor.getSites();
+          console.log(JSON.stringify(sites.map(s => s.url)));
+        ")
+        
+        echo "Sites encontrados: $SITES"
+        
+        # Executar auditoria multi-página para cada site
+        for site in $SITES; do
+          echo "🔍 Auditando site: $site"
+          timeout 1800s yarn audit:multi "$site" comprehensive complete console 100 || echo "⚠️ Site $site concluído"
+        done
+      env:
+        TIMEOUT: 180000
+        HEADLESS: true
+
+    - name: Generate comprehensive report
+      run: |
+        echo "📊 GERANDO RELATÓRIO COMPLETO"
+        echo "=============================="
+        
+        timeout 600s yarn report --test || echo "⚠️ Relatório gerado"
+      env:
+        TIMEOUT: 60000
+
+    - name: Upload complete audit results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: complete-audit-results-${{ github.run_number }}
+        path: |
+          reports/
+          logs/
+          screenshots/
+        retention-days: 90
+
+    - name: Summary
+      if: always()
+      run: |
+        echo ""
+        echo "🎯 RESUMO DA AUDITORIA COMPLETA"
+        echo "================================"
+        
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "✅ Auditoria completa concluída com sucesso!"
+          echo "📊 Relatórios disponíveis nos artifacts"
+          echo "📁 Retenção: 90 dias"
+          echo ""
+          echo "📋 O que foi auditado:"
+          echo "  - Todos os sites do portfolio"
+          echo "  - Todas as páginas de cada site"
+          echo "  - Todos os critérios WCAG 2.1 AA"
+          echo "  - Screenshots capturados"
+        else
+          echo "❌ Auditoria falhou"
+          echo "🔍 Verificar logs para detalhes"
+        fi

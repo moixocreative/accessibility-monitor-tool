@@ -7,7 +7,16 @@ export declare class PortfolioMonitor {
     constructor();
     private loadPortfolioSites;
     startMonitoring(): void;
+    private getMonitoringInterval;
     stopMonitoring(): void;
+    isMonitoringActive(): boolean;
+    getNextScheduledRun(): Date | null;
+    getMonitoringStats(): {
+        isActive: boolean;
+        nextRun: Date | null;
+        interval: string;
+        lastRun?: Date;
+    };
     runPortfolioAudit(): Promise<void>;
     private processCriticalViolations;
     private generatePortfolioReport;

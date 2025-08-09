@@ -52,14 +52,49 @@ export class PortfolioMonitor {
    * Iniciar monitorização contínua
    */
   startMonitoring(): void {
-    const interval = process.env.MONITORING_INTERVAL || '0 */6 * * *'; // A cada 6 horas
+    const interval = this.getMonitoringInterval();
     
-    this.monitoringJob = new CronJob(interval, () => {
-      this.runPortfolioAudit();
-    });
+    this.monitoringJob = new CronJob(
+      interval,
+      async () => {
+        try {
+          logger.info('Executando auditoria periódica agendada');
+          await this.runPortfolioAudit();
+          logger.info('Auditoria periódica concluída com sucesso');
+        } catch (error) {
+          logger.error('Erro na auditoria periódica:', error);
+        }
+      },
+      null, // onComplete
+      false, // start
+      'Europe/Lisbon' // timezone
+    );
 
     this.monitoringJob.start();
-    logger.info('Monitorização do portfolio iniciada', { interval });
+    logger.info('Monitorização do portfolio iniciada', { 
+      interval,
+      nextRun: this.monitoringJob.nextDate().toISO()
+    });
+  }
+
+    /**
+   * Obter intervalo de monitorização configurável
+   */
+  private getMonitoringInterval(): string {
+    const config = process.env.MONITORING_INTERVAL || '0 0 * * 1';
+    
+    // Validar expressão cron básica
+    const cronPattern = /^(\*|([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])|\*\/([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])) (\*|([0-9]|1[0-9]|2[0-3])|\*\/([0-9]|1[0-9]|2[0-3])) (\*|([1-9]|1[0-9]|2[0-9]|3[0-1])|\*\/([1-9]|1[0-9]|2[0-9]|3[0-1])) (\*|([1-9]|1[0-2])|\*\/([1-9]|1[0-2])) (\*|([0-6])|\*\/([0-6]))$/;
+    
+    if (!cronPattern.test(config)) {
+      logger.warn('Expressão cron inválida, usando padrão', { 
+        provided: config, 
+        default: '0 0 * * 1'
+      });
+      return '0 0 * * 1'; // Semanalmente às 0h de segunda-feira
+    }
+    
+    return config;
   }
 
   /**
@@ -71,6 +106,39 @@ export class PortfolioMonitor {
       this.monitoringJob = null;
       logger.info('Monitorização do portfolio parada');
     }
+  }
+
+  /**
+   * Verificar se monitorização está ativa
+   */
+  isMonitoringActive(): boolean {
+    return this.monitoringJob ? true : false;
+  }
+
+  /**
+   * Obter próxima execução agendada
+   */
+  getNextScheduledRun(): Date | null {
+    const nextDate = this.monitoringJob?.nextDate();
+    return nextDate ? nextDate.toJSDate() : null;
+  }
+
+  /**
+   * Obter estatísticas da monitorização
+   */
+  getMonitoringStats(): {
+    isActive: boolean;
+    nextRun: Date | null;
+    interval: string;
+    lastRun?: Date;
+  } {
+    const lastRun = this.monitoringJob?.lastDate();
+    return {
+      isActive: this.isMonitoringActive(),
+      nextRun: this.getNextScheduledRun(),
+      interval: this.getMonitoringInterval(),
+      ...(lastRun && { lastRun })
+    };
   }
 
   /**
@@ -86,7 +154,8 @@ export class PortfolioMonitor {
       try {
         logAudit(`Auditoria iniciada para ${site.name}`, { url: site.url });
         
-        const auditResult = await this.validator.auditSite(site.url, site.id);
+        // Usar análise completa para monitorização periódica
+        const auditResult = await this.validator.auditSite(site.url, site.id, true);
         auditResults.push(auditResult);
 
         // Atualizar dados do site

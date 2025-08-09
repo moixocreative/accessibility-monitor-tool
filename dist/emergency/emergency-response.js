@@ -132,7 +132,7 @@ class EmergencyResponse {
         const communication = {
             id: `comm_${Date.now()}`,
             type: 'authority',
-            recipient: process.env.AUTHORITY_EMAIL || process.env.EMERGENCY_EMAIL || 'mauriciopereita@untile.pt',
+            recipient: process.env.AUTHORITY_EMAIL || process.env.EMERGENCY_EMAIL || 'admin@company.com',
             subject: `[URGENTE] Violação Acessibilidade Digital - ${incident.title}`,
             content: this.generateAuthorityTemplate(incident),
             sentAt: new Date(),
@@ -185,7 +185,7 @@ ${violationsSummary}
 ## CONTACTO TÉCNICO
 
 Responsável técnico: [Nome]
-Email: ${process.env.SMTP_USER || 'mauriciopereita@untile.pt'}
+Email: ${process.env.SMTP_USER || 'contact@company.com'}
 Telefone: ${process.env.EMERGENCY_PHONE || '+351-XXX-XXX-XXX'}
 Disponibilidade: 24/7 para questões de acessibilidade
 
@@ -193,7 +193,7 @@ Permanecemos à disposição para esclarecimentos adicionais.
 
 Cumprimentos,
 [Nome] - [Título]
-UNTILE | ${process.env.SMTP_USER || 'mauriciopereita@untile.pt'}
+UNTILE | ${process.env.SMTP_USER || 'contact@company.com'}
     `.trim();
     }
     getResponseTime(incident) {

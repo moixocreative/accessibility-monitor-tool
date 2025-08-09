@@ -26,6 +26,11 @@ Este guia é para **DevOps**, **SysAdmins**, **Tech Leads** e qualquer pessoa re
 - Configuração avançada
 - Templates e exemplos
 
+### 🤖 [**GitHub Actions**](github-actions.md)
+- Workflows de monitorização manual
+- Botões para auditoria completa
+- Configuração de CI/CD
+
 ## 🎯 Cenários de Configuração
 
 ### 🧪 **Development/Testing**
