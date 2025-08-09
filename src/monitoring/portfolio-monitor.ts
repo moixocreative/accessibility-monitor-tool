@@ -24,7 +24,7 @@ export class PortfolioMonitor {
       {
         id: 'site_1',
         name: 'Welligence Website',
-        url: 'https://welligence.pt',
+        url: 'https://solutions.welligence.com',
         technology: 'webflow',
         client: 'Welligence',
         lastAudit: new Date(),
@@ -40,17 +40,6 @@ export class PortfolioMonitor {
         client: 'UNTILE',
         lastAudit: new Date(),
         wcagScore: 92,
-        violations: [],
-        status: 'active'
-      },
-      {
-        id: 'site_3',
-        name: 'E-commerce Demo',
-        url: 'https://demo-ecommerce.untile.pt',
-        technology: 'wordpress',
-        client: 'Demo Client',
-        lastAudit: new Date(),
-        wcagScore: 78,
         violations: [],
         status: 'active'
       }
