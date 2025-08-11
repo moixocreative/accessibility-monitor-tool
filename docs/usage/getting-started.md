@@ -51,7 +51,7 @@ yarn emergency --validate
 Vamos fazer o primeiro teste numa página simples:
 
 ```bash
-# Teste básico (15 critérios críticos)
+# Teste básico (15 critérios críticos UNTILE)
 yarn audit:wcag https://www.untile.pt simple console
 ```
 

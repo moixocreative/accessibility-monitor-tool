@@ -123,3 +123,8 @@
 {"level":"warn","message":"Primeira tentativa de navegação falhou, tentando estratégia alternativa:","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:50"}
 {"level":"warn","message":"Segunda tentativa também falhou, usando estratégia básica:","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:51"}
 {"level":"warn","message":"Tentativa 1 falhou: page.goto: Navigation to \"https://www.untile.pt/case-studies/popcast-podcast-power-competitive-marketing\" is interrupted by another navigation to \"https://www.untile.pt/case-studies/popcast-podcast-power-competitive-marketing\"\nCall log:\n\u001b[2m  - navigating to \"https://www.untile.pt/case-studies/popcast-podcast-power-competitive-marketing\", waiting until \"load\"\u001b[22m\n","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:51"}
+{"level":"warn","message":"Primeira tentativa de navegação falhou, tentando estratégia alternativa:","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 15:02:00"}
+{"level":"warn","message":"Segunda tentativa também falhou, usando estratégia básica:","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 15:02:00"}
+{"level":"warn","message":"Tentativa 1 falhou: page.goto: Target page, context or browser has been closed","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 15:02:00"}
+{"level":"warn","message":"Primeira tentativa de navegação falhou, tentando estratégia alternativa:","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 15:03:09"}
+{"level":"warn","message":"Primeira tentativa de navegação falhou, tentando estratégia alternativa:","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 15:05:32"}

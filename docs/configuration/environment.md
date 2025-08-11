@@ -2,6 +2,58 @@
 
 > 🌐 **Todas as variáveis de ambiente explicadas com exemplos práticos**
 
+## 🎯 Configurações por Conjunto de Critérios
+
+### **🇵🇹 Critérios acessibilidade.gov.pt**
+```bash
+# Configuração para conformidade nacional
+CRITERIA_SET=gov-pt
+USE_STANDARD_FORMULA=true
+MONITORING_INTERVAL=0 0 * * 1  # Semanal
+MONITORING_TIMEZONE=Europe/Lisbon
+
+# Exemplo completo
+NODE_ENV=production
+CRITERIA_SET=gov-pt
+USE_STANDARD_FORMULA=true
+MONITORING_INTERVAL=0 0 * * 1
+MONITORING_ENABLED=true
+MONITORING_TIMEZONE=Europe/Lisbon
+```
+
+### **🎛️ Critérios Personalizados**
+```bash
+# Configuração para critérios específicos do projeto
+CRITERIA_SET=custom
+CUSTOM_CRITERIA="1.1.1,1.4.3,2.1.1,2.4.1,4.1.2"
+USE_STANDARD_FORMULA=false
+MONITORING_INTERVAL=0 0 * * 1  # Semanal
+
+# Exemplo completo
+NODE_ENV=production
+CRITERIA_SET=custom
+CUSTOM_CRITERIA="1.1.1,1.4.3,2.1.1,2.4.1,2.4.7,3.3.2,4.1.2,1.3.1,2.2.1,3.3.1"
+USE_STANDARD_FORMULA=false
+MONITORING_INTERVAL=0 0 * * 1
+MONITORING_ENABLED=true
+```
+
+### **🏢 Critérios UNTILE (Padrão)**
+```bash
+# Configuração padrão para portfolio UNTILE
+CRITERIA_SET=untile
+USE_STANDARD_FORMULA=false
+MONITORING_INTERVAL=0 0 * * 1  # Semanal
+
+# Exemplo completo
+NODE_ENV=production
+CRITERIA_SET=untile
+USE_STANDARD_FORMULA=false
+MONITORING_INTERVAL=0 0 * * 1
+MONITORING_ENABLED=true
+MONITORING_TIMEZONE=Europe/Lisbon
+```
+
 ## 📋 Configuração por Ambiente
 
 ### **🏠 Development (Padrão)**
@@ -134,6 +186,23 @@ ALERT_EMAIL=devops@company.com
 - **Descrição**: Timezone para agendamento de monitorização
 - **Padrão**: `Europe/Lisbon`
 - **Exemplo**: `MONITORING_TIMEZONE=Europe/Lisbon`
+
+#### **`CRITERIA_SET`**
+- **Descrição**: Conjunto de critérios WCAG para monitorização
+- **Valores**: `untile`, `gov-pt`, `custom`
+- **Padrão**: `untile`
+- **Exemplo**: `CRITERIA_SET=gov-pt`
+
+#### **`CUSTOM_CRITERIA`**
+- **Descrição**: Lista de critérios personalizados (separados por vírgulas)
+- **Padrão**: (não definido)
+- **Exemplo**: `CUSTOM_CRITERIA="1.1.1,1.4.3,2.1.1,2.4.1,4.1.2"`
+
+#### **`USE_STANDARD_FORMULA`**
+- **Descrição**: Usar fórmula padrão axe-core para cálculo de scores
+- **Valores**: `true`, `false`
+- **Padrão**: `false`
+- **Exemplo**: `USE_STANDARD_FORMULA=true`
 
 #### **`BROWSER_TIMEOUT`**
 - **Descrição**: Timeout para launch do browser (ms)

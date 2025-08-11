@@ -30,7 +30,7 @@ yarn audit:wcag https://www.example.com complete html
 yarn audit:wcag https://www.example.com simple json
 
 # Relatório em Markdown
-yarn audit:wcag https://www.example.com complete markdown
+yarn audit:wcag https://www.example.com simple markdown
 ```
 
 **⏱️ Tempo estimado:**
@@ -215,7 +215,37 @@ yarn monitor:test
 - ✅ Auditoria única do portfolio
 - ✅ Início/paragem de monitorização
 
+---
 
+### `yarn monitor:start:gov-pt`
+
+Inicia monitorização periódica usando critérios acessibilidade.gov.pt.
+
+**Sintaxe:**
+```bash
+yarn monitor:start:gov-pt
+```
+
+**O que faz:**
+- ✅ Monitorização periódica com critérios oficiais Gov.pt
+- ✅ Alinhamento com padrões nacionais de acessibilidade
+- ✅ Comparabilidade com acessibilidade.gov.pt
+
+---
+
+### `yarn monitor:test:gov-pt`
+
+Testa monitorização periódica com critérios acessibilidade.gov.pt.
+
+**Sintaxe:**
+```bash
+yarn monitor:test:gov-pt
+```
+
+**O que testa:**
+- ✅ Validação com critérios Gov.pt
+- ✅ Configuração de monitorização
+- ✅ Auditoria única do portfolio com critérios oficiais
 
 ## ⚙️ Validação e Configuração
 
@@ -404,7 +434,7 @@ SEND_EMAILS=false yarn emergency --test
 
 ### Workflow Básico (QA Testing)
 ```bash
-# 1. Teste rápido
+# 1. Teste rápido com critérios UNTILE
 yarn audit:wcag https://staging.example.com simple console
 
 # 2. Análise completa se necessário
@@ -412,6 +442,18 @@ yarn audit:wcag https://staging.example.com complete html
 
 # 3. Verificar todo o site antes do deploy
 yarn audit:multi https://staging.example.com comprehensive simple console 10
+```
+
+### Workflow com Critérios Gov.pt
+```bash
+# 1. Teste rápido com critérios oficiais
+yarn audit:wcag https://staging.example.com simple console
+
+# 2. Análise multi-página com critérios Gov.pt
+yarn audit:multi https://staging.example.com auto simple html 20 false gov-pt
+
+# 3. Verificar conformidade com padrões nacionais
+yarn audit:multi https://staging.example.com comprehensive simple html 50 false gov-pt
 ```
 
 ### Workflow CI/CD
@@ -422,10 +464,13 @@ yarn build
 # 2. Testes
 yarn test
 
-# 3. Análise de acessibilidade
+# 3. Análise de acessibilidade com critérios UNTILE
 yarn audit:wcag https://staging.example.com simple json
 
-# 4. Validar sistema de emergência
+# 4. Análise com critérios Gov.pt para conformidade nacional
+yarn audit:multi https://staging.example.com auto simple json 10 false gov-pt
+
+# 5. Validar sistema de emergência
 yarn emergency --validate
 ```
 
@@ -434,11 +479,42 @@ yarn emergency --validate
 # 1. Configurar sites no portfolio
 # (Editar src/monitoring/portfolio-monitor.ts)
 
-# 2. Executar análise completa
+# 2. Executar análise completa com critérios UNTILE
 yarn audit:portfolio html
 
-# 3. Verificar relatório
-# (Abrir arquivo HTML gerado)
+# 3. Executar análise com critérios Gov.pt
+yarn audit:multi https://example.com comprehensive simple html 50 false gov-pt
+
+# 4. Verificar relatórios
+# (Abrir arquivos HTML gerados)
+```
+
+### Workflow de Monitorização Periódica
+```bash
+# 1. Monitorização padrão (critérios UNTILE)
+yarn monitor:start
+
+# 2. Monitorização com critérios Gov.pt
+yarn monitor:start:gov-pt
+
+# 3. Testar monitorização Gov.pt
+yarn monitor:test:gov-pt
+
+# 4. Verificar relatórios periódicos
+# (Verificar pasta reports/)
+```
+
+### Workflow de Auditoria Personalizada
+```bash
+# 1. Definir critérios específicos para o projeto
+# Exemplo: apenas critérios críticos de navegação
+yarn audit:multi https://example.com auto simple html 20 false custom "2.1.1,2.4.1,2.4.7"
+
+# 2. Auditoria com critérios de formulários
+yarn audit:multi https://example.com auto simple html 20 false custom "3.3.1,3.3.2,4.1.2"
+
+# 3. Auditoria com critérios de conteúdo
+yarn audit:multi https://example.com auto simple html 20 false custom "1.1.1,1.4.3,1.3.1"
 ```
 
 ---

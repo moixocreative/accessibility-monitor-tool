@@ -42,6 +42,24 @@ NODE_ENV=development
 ```
 → [Quick Setup](quick-setup.md)
 
+### 🇵🇹 **Conformidade Nacional (acessibilidade.gov.pt)**
+```bash
+# Configuração para critérios oficiais
+CRITERIA_SET=gov-pt
+USE_STANDARD_FORMULA=true
+MONITORING_INTERVAL=0 0 * * 1  # Semanal
+```
+→ [Environment Variables](environment.md)
+
+### 🎛️ **Critérios Personalizados**
+```bash
+# Configuração para critérios específicos
+CRITERIA_SET=custom
+CUSTOM_CRITERIA="1.1.1,1.4.3,2.1.1,2.4.1,4.1.2"
+MONITORING_INTERVAL=0 0 * * 1  # Semanal
+```
+→ [Environment Variables](environment.md)
+
 ### 🚀 **Production**
 ```bash
 # Configuração completa
