@@ -142,7 +142,7 @@ export class WCAGValidator {
   /**
    * Auditoria completa de um site
    */
-  async auditSite(url: string, siteId: string, isCompleteAudit: boolean = false): Promise<AuditResult> {
+  async auditSite(url: string, siteId: string, isCompleteAudit: boolean = false, useStandardFormula: boolean = false): Promise<AuditResult> {
     try {
       logger.info(`Iniciando auditoria WCAG para ${url} (${isCompleteAudit ? 'completa' : 'simples'})`);
       
@@ -177,7 +177,7 @@ export class WCAGValidator {
       const violations = this.analyzeViolations(axeResult, url);
       
       // Calcular score WCAG baseado apenas no axe-core (FÓRMULA ALINHADA COM PORTFOLIO)
-      const wcagScore = this.calculateWCAGScoreFromAxe(axeResult);
+              const wcagScore = this.calculateWCAGScoreFromAxe(axeResult, useStandardFormula);
       
       // Calcular métricas de risco legal (ALINHADAS COM PORTFOLIO UNTILE)
       const legalRiskMetrics = this.calculateLegalRiskMetrics(violations);
@@ -1502,7 +1502,7 @@ export class WCAGValidator {
   /**
    * Calcular score WCAG baseado apenas no axe-core
    */
-  private calculateWCAGScoreFromAxe(axeResult: any): number {
+  private calculateWCAGScoreFromAxe(axeResult: any, useStandardFormula: boolean = false): number {
     // Verificar se temos dados válidos do axe-core
     if (!axeResult.violations || axeResult.violations.length === 0) {
       // Se não temos dados do axe-core, não podemos calcular score real
@@ -1523,21 +1523,29 @@ export class WCAGValidator {
       v.impact === 'minor'
     ).length || 0;
     
-    // FÓRMULA ALINHADA COM PORTFOLIO UNTILE
-    // Baseada em dados empíricos WebAIM Million 2024 e análise portfolio
-    // Critical: -6 pontos cada (violações mais severas)
-    // Serious: -3 pontos cada (violações significativas) 
-    // Moderate: -1 ponto cada (violações moderadas)
-    // Minor: -0.5 pontos cada (violações menores)
-    const criticalPenalty = criticalViolations * 6;
-    const seriousPenalty = seriousViolations * 3;
-    const moderatePenalty = moderateViolations * 1;
-    const minorPenalty = minorViolations * 0.5;
-    
-    const totalPenalty = criticalPenalty + seriousPenalty + moderatePenalty + minorPenalty;
-    const axeScore = Math.max(0, 100 - totalPenalty);
-    
-    return Math.round(axeScore);
+    if (useStandardFormula) {
+      // FÓRMULA PADRÃO DO AXE-CORE (como acessibilidade.gov.pt)
+      // Baseada na documentação oficial do axe-core
+      const totalViolations = criticalViolations + seriousViolations + moderateViolations + minorViolations;
+      const standardScore = Math.max(0, 100 - (totalViolations * 2)); // Penalização padrão de 2 pontos por violação
+      return Math.round(standardScore * 100) / 100;
+    } else {
+      // FÓRMULA ALINHADA COM PORTFOLIO UNTILE
+      // Baseada em dados empíricos WebAIM Million 2024 e análise portfolio
+      // Critical: -6 pontos cada (violações mais severas)
+      // Serious: -3 pontos cada (violações significativas) 
+      // Moderate: -1 ponto cada (violações moderadas)
+      // Minor: -0.5 pontos cada (violações menores)
+      const criticalPenalty = criticalViolations * 6;
+      const seriousPenalty = seriousViolations * 3;
+      const moderatePenalty = moderateViolations * 1;
+      const minorPenalty = minorViolations * 0.5;
+      
+      const totalPenalty = criticalPenalty + seriousPenalty + moderatePenalty + minorPenalty;
+      const axeScore = Math.max(0, 100 - totalPenalty);
+      
+      return Math.round(axeScore * 100) / 100;
+    }
   }
 
   /**
@@ -1566,7 +1574,7 @@ export class WCAGValidator {
     const totalPenalty = criticalPenalty + seriousPenalty + otherPenalty;
     const axeScore = Math.max(0, 100 - totalPenalty) * 0.65;
     
-    return Math.round(lighthouseScore + axeScore);
+    return Math.round((lighthouseScore + axeScore) * 100) / 100;
   }
 
   /**

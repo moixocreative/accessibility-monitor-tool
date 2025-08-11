@@ -12,6 +12,7 @@ export interface MultiPageAuditOptions {
   retryFailedPages: boolean;
   maxRetries: number;
   useSharedSession: boolean;
+  useStandardFormula?: boolean;
 }
 
 export interface MultiPageAuditResult {
@@ -253,7 +254,8 @@ export class MultiPageValidator {
         const auditResult = await this.wcagValidator.auditSite(
           page.url,
           siteId,
-          isCompleteAudit
+          isCompleteAudit,
+          options.useStandardFormula
         );
         
         const auditTime = Date.now() - startTime;
@@ -341,7 +343,7 @@ export class MultiPageValidator {
 
     // Calcular métricas básicas
     const scores = validResults.map(result => result.auditResult.wcagScore);
-    const averageScore = Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length);
+    const averageScore = Math.round((scores.reduce((sum, score) => sum + score, 0) / scores.length) * 100) / 100;
 
     const bestPage = validResults.reduce((best, current) => 
       current.auditResult.wcagScore > best.auditResult.wcagScore ? current : best

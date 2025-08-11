@@ -23,11 +23,12 @@ async function main() {
   const auditType = (process.argv[4]?.toLowerCase() as 'simple' | 'complete') || 'simple';
   const reportFormat = (process.argv[5]?.toLowerCase() as 'console' | 'json' | 'html' | 'markdown') || 'console';
   const maxPages = parseInt(process.argv[6] || '20') || 20;
+  const useStandardFormula = process.argv[7] === 'true';
 
   if (!baseUrl) {
     console.log('\n📝 AUDITORIA MULTI-PÁGINA - WCAG 2.1 AA');
     console.log('==========================================');
-    console.log('Uso: yarn audit:multi <URL> [estratégia] [tipo] [formato] [max-páginas]');
+    console.log('Uso: yarn audit:multi <URL> [estratégia] [tipo] [formato] [max-páginas] [fórmula-padrão]');
     console.log('');
     console.log('Parâmetros:');
     console.log('  URL         - URL base do site para auditar');
@@ -51,11 +52,16 @@ async function main() {
     console.log('Max páginas:');
     console.log('  número      - Máximo de páginas para auditar (padrão: 20)');
     console.log('');
+    console.log('Fórmula padrão:');
+    console.log('  true        - Usar fórmula padrão do axe-core (como acessibilidade.gov.pt)');
+    console.log('  false       - Usar fórmula personalizada UNTILE (padrão)');
+    console.log('');
     console.log('Exemplos:');
     console.log('  yarn audit:multi https://example.com');
     console.log('  yarn audit:multi https://example.com comprehensive complete html 50');
     console.log('  yarn audit:multi https://example.com auto simple json 15');
     console.log('  yarn audit:multi https://example.com sitemap simple console 10');
+    console.log('  yarn audit:multi https://example.com auto simple html 20 true');
     console.log('');
     console.log('💡 A auditoria multi-página pode demorar vários minutos dependendo');
     console.log('   do número de páginas e da estratégia escolhida.');
@@ -169,7 +175,8 @@ async function main() {
       delayBetweenPages: strategy === 'comprehensive' ? 8000 : 5000, // Delays maiores
       retryFailedPages: true,
       maxRetries: 2,
-      useSharedSession: false // Browser novo para cada página para evitar problemas de estado
+      useSharedSession: false, // Browser novo para cada página para evitar problemas de estado
+      useStandardFormula // Usar fórmula padrão do axe-core se especificado
     });
 
     // Gerar relatório
@@ -200,18 +207,51 @@ async function main() {
         criticalViolations: auditResult.summary.violationsBySeverity.critical,
         pagesWithIssues: auditResult.pageResults.filter(p => p.auditResult.violations.length > 0).length,
         compliance: {
-          percentage: auditResult.summary.averageScore,
+          percentage: Math.round(auditResult.summary.averageScore * 100) / 100,
           status: (auditResult.summary.averageScore >= 80 ? 'compliant' : 
                   auditResult.summary.averageScore >= 60 ? 'partial' : 'non-compliant') as 'compliant' | 'partial' | 'non-compliant'
         }
       },
-      commonIssues: auditResult.summary.commonIssues.map(issue => ({
-        criteria: issue.criteria,
-        count: issue.count,
-        pages: issue.pages,
-        severity: 'moderate' as const,
-        recommendation: `Corrigir ${issue.criteria} em ${issue.count} páginas`
-      })),
+      commonIssues: auditResult.summary.commonIssues.map(issue => {
+        // Determinar severidade baseada no tipo de critério WCAG
+        let severity: 'critical' | 'serious' | 'moderate' | 'minor' = 'moderate';
+        
+        // Critérios críticos (P0 - Bloqueiam completamente o acesso)
+        if (issue.criteria.includes('4.1.2') || // Nome, Função, Valor
+            issue.criteria.includes('3.3.2') || // Rótulos ou Instruções
+            issue.criteria.includes('label') || // Labels de formulário
+            issue.criteria.includes('input-button-name')) {
+          severity = 'critical';
+        }
+        // Critérios sérios (P1 - Dificultam significativamente o acesso)
+        else if (issue.criteria.includes('1.4.3') || // Contraste (Mínimo)
+                 issue.criteria.includes('color-contrast') || // Contraste de cor
+                 issue.criteria.includes('duplicate-id-active') || // IDs duplicados ativos
+                 issue.criteria.includes('aria-required-children') || // ARIA required children
+                 issue.criteria.includes('aria-required-parent')) {
+          severity = 'serious';
+        }
+        // Critérios moderados (P2 - Dificultam moderadamente o acesso)
+        else if (issue.criteria.includes('1.3.1') || // Info e Relações
+                 issue.criteria.includes('heading-order') || // Ordem de cabeçalhos
+                 issue.criteria.includes('region') || // Regiões da página
+                 issue.criteria.includes('landmark-one-main')) {
+          severity = 'moderate';
+        }
+        // Critérios menores (P3 - Melhoram a experiência mas não bloqueiam)
+        else if (issue.criteria.includes('duplicate-id') || // IDs duplicados
+                 issue.criteria.includes('empty-table-header')) { // Cabeçalhos de tabela vazios
+          severity = 'minor';
+        }
+        
+        return {
+          criteria: issue.criteria,
+          count: issue.count,
+          pages: issue.pages,
+          severity,
+          recommendation: `Corrigir ${issue.criteria} em ${issue.count} páginas`
+        };
+      }),
       recommendations: [
         'Revisar problemas críticos identificados',
         'Implementar testes automatizados de acessibilidade',
