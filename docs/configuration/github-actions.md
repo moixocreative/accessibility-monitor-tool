@@ -44,17 +44,14 @@ Workflow simples para acionar a monitorização periódica manualmente.
 ### Variáveis de Ambiente
 Os workflows usam automaticamente:
 ```bash
-WCAG_LEVEL=AA
-PRIORITY_CRITERIA=all
-TIMEOUT=180000
+MONITORING_INTERVAL=0 0 * * 1
+MONITORING_ENABLED=true
+TIMEOUT=120000
 HEADLESS=true
-DEBUG_MODE=true
-CAPTURE_SCREENSHOTS=true
 ```
 
 ### Timeouts
 - **Portfolio audit**: 30 minutos
-- **Multi-page audit**: 30 minutos por site
 - **Report generation**: 10 minutos
 
 ## 🔧 Troubleshooting
@@ -103,7 +100,7 @@ Para monitorização automática:
 yarn monitor:start
 
 # GitHub Actions (cron)
-# Configurar em .github/workflows/scheduled-monitoring.yml
+# Configurar em .github/workflows/trigger-monitoring.yml
 ```
 
 ## 🔐 Segurança
@@ -115,4 +112,4 @@ yarn monitor:start
 
 ---
 
-**💡 Dica**: Use os workflows GitHub Actions para auditorias completas sem consumir recursos locais!
+**💡 Dica**: Use o workflow GitHub Action para monitorização periódica sem consumir recursos locais!

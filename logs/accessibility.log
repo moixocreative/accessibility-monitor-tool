@@ -1161,3 +1161,396 @@
 {"level":"info","message":"Fechando browser...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:13:15"}
 {"level":"info","message":"Browser fechado com sucesso","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:13:15"}
 {"level":"info","message":"PortfolioMonitor cleanup concluído","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:13:15"}
+{"level":"info","message":"Iniciando auditoria multi-página WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:17"}
+{"baseUrl":"https://www.untile.pt","level":"info","message":"Iniciando auditoria multi-página","options":{"auditType":"simple","crawlOptions":{"excludePatterns":["/admin","/login","/logout","/api/",".pdf",".jpg",".png",".gif",".zip","/wp-admin","/wp-content","#","/search","/cart","/checkout","/account","/password","/signin","/signup","/register","/auth"],"includeExternal":false,"maxDepth":3,"maxPages":20},"crawlStrategy":"comprehensive","delayBetweenPages":8000,"maxConcurrent":1,"maxRetries":2,"retryFailedPages":true,"useSharedSession":false},"service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:17"}
+{"level":"info","message":"🕷️ Fase 1: Descobrindo páginas...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:17"}
+{"baseUrl":"https://www.untile.pt","level":"info","message":"Iniciando descoberta de páginas: comprehensive","options":{"excludePatterns":["/admin","/login","/logout","/api/",".pdf",".jpg",".png",".gif",".zip","/wp-admin","/wp-content","#","/search","/cart","/checkout","/account","/password","/signin","/signup","/register","/auth"],"includeExternal":false,"includePatterns":[],"maxDepth":3,"maxPages":20,"timeout":30000},"service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:17"}
+{"level":"info","message":"🚀 Iniciando crawling abrangente com múltiplas estratégias...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:17"}
+{"level":"info","message":"🗺️ Tentando descoberta via sitemap...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:17"}
+{"level":"info","message":"📋 Sitemap: 0 URLs descobertas","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:19"}
+{"level":"info","message":"🤖 Tentando descoberta via robots.txt...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:19"}
+{"level":"info","message":"🤖 Robots.txt: 1 URLs descobertas","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:20"}
+{"level":"info","message":"🕷️ Iniciando crawling automático aprofundado...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:20"}
+{"level":"info","message":"Crawling página: https://www.untile.pt (profundidade: 0)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:20"}
+{"level":"info","message":"Crawling página: https://www.untile.pt/ (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:21"}
+{"level":"info","message":"Crawling página: https://www.untile.pt/services (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:21"}
+{"level":"info","message":"Crawling página: https://www.untile.pt/about-us (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:21"}
+{"level":"info","message":"Crawling página: https://www.untile.pt/case-studies (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:21"}
+{"level":"info","message":"Crawling página: https://www.untile.pt/careers (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:21"}
+{"level":"info","message":"Crawling página: https://www.untile.pt/culture-people (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:22"}
+{"level":"info","message":"Crawling página: https://www.untile.pt/blog (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:22"}
+{"level":"info","message":"Crawling página: https://www.untile.pt/get-in-touch (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:22"}
+{"level":"info","message":"Crawling página: https://www.untile.pt/case-studies/from-concept-to-reality-the-strategic-mvp-that-brought-buzz-me-up-to-life (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:22"}
+{"level":"info","message":"Crawling página: https://www.untile.pt/case-studies/popcast-podcast-power-competitive-marketing (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:23"}
+{"level":"info","message":"Crawling página: https://www.untile.pt/case-studies/ecommerce-api-data-sync-barkyn (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:23"}
+{"level":"info","message":"Crawling página: https://www.untile.pt/blog/ensuring-product-compliance-in-regulated-sectors-a-guide-for-corporates-in-fintech (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:23"}
+{"level":"info","message":"Crawling página: https://www.untile.pt/blog/creating-a-high-impact-mvp-without-an-internal-team-smarter-leaner-and-better (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:23"}
+{"level":"info","message":"Crawling página: https://www.untile.pt/blog/digital-product-design-services (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:23"}
+{"level":"info","message":"Crawling página: https://www.untile.pt/contact (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:23"}
+{"level":"info","message":"Crawling página: https://www.untile.pt/recognitions (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:24"}
+{"level":"info","message":"Crawling página: https://www.untile.pt/blog-categories/business-strategy (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:24"}
+{"level":"info","message":"Crawling página: https://www.untile.pt/blog-categories/guides (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:24"}
+{"level":"info","message":"Crawling concluído: 50 páginas descobertas","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:24"}
+{"level":"info","message":"🕷️ Crawling: 50 URLs descobertas","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:24"}
+{"level":"info","message":"🔍 Tentando descoberta por padrões comuns...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:24"}
+{"level":"info","message":"🔍 Padrões: 0 URLs descobertas","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:25"}
+{"level":"info","message":"✅ Crawling abrangente concluído: 32 páginas válidas de 33 descobertas","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:25"}
+{"level":"info","message":"📋 Descobertas 20 páginas para auditoria","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:25"}
+{"level":"info","message":"🔍 Fase 2: Auditando páginas descobertas...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:25"}
+{"level":"info","message":"🔍 Iniciando auditoria de 20 páginas válidas","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:25"}
+{"level":"info","message":"🔍 Auditando página 1/20: https://www.untile.pt/sitemap.xml</pre></body></html>","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:25"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt/sitemap.xml</pre></body></html>","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:25"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt/sitemap.xml</pre></body></html> (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:25"}
+{"level":"info","message":"Browser não inicializado, tentando inicializar...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:25"}
+{"level":"info","message":"🚀 Inicializando Playwright (estratégia otimizada)...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:25"}
+{"level":"info","message":"✅ Playwright inicializado com sucesso","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:25"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:25"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:25"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:25"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/sitemap.xml</pre></body></html>","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:25"}
+{"level":"info","message":"Página carregada: \"Not Found - Untile | Simplifying life, digitally\" em https://www.untile.pt/sitemap.xml%3C/pre%3E%3C/body%3E%3C/html%3E","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:25"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:28"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:28"}
+{"level":"info","message":"Total de violações axe-core: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:28"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:28"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:28"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:28"}
+{"level":"info","message":"Total de violações processadas: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:28"}
+{"level":"info","message":"✅ Página 1 concluída: https://www.untile.pt/sitemap.xml</pre></body></html> (Score: 90)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:28"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:28"}
+{"level":"info","message":"🔍 Auditando página 2/20: https://www.untile.pt","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:36"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:36"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:36"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:36"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:36"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:36"}
+{"level":"info","message":"Navegando para: https://www.untile.pt","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:36"}
+{"level":"info","message":"Página carregada: \"Untile | Digital Product Development Studio\" em https://www.untile.pt/","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:37"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:39"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:40"}
+{"level":"info","message":"Total de violações axe-core: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:40"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:40"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:40"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:40"}
+{"level":"info","message":"Total de violações processadas: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:40"}
+{"level":"info","message":"✅ Página 2 concluída: https://www.untile.pt (Score: 91)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:40"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:40"}
+{"level":"info","message":"🔍 Auditando página 3/20: https://www.untile.pt/","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:48"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt/","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:48"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt/ (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:48"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:48"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:48"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:48"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:48"}
+{"level":"info","message":"Página carregada: \"Untile | Digital Product Development Studio\" em https://www.untile.pt/","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:49"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:51"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:52"}
+{"level":"info","message":"Total de violações axe-core: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:52"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:52"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:52"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:52"}
+{"level":"info","message":"Total de violações processadas: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:52"}
+{"level":"info","message":"✅ Página 3 concluída: https://www.untile.pt/ (Score: 91)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:52"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:47:52"}
+{"level":"info","message":"🔍 Auditando página 4/20: https://www.untile.pt/services","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:00"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt/services","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:00"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt/services (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:00"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:00"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:00"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:00"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/services","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:00"}
+{"level":"info","message":"Página carregada: \"Services - Untile | Simplifying life, digitally\" em https://www.untile.pt/services","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:00"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:03"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:03"}
+{"level":"info","message":"Total de violações axe-core: 2","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:03"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:03"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:03"}
+{"level":"info","message":"Total de violações processadas: 2","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:03"}
+{"level":"info","message":"✅ Página 4 concluída: https://www.untile.pt/services (Score: 91)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:03"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:03"}
+{"level":"info","message":"🔍 Auditando página 5/20: https://www.untile.pt/about-us","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:11"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt/about-us","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:11"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt/about-us (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:11"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:11"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:11"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:11"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/about-us","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:11"}
+{"level":"info","message":"Página carregada: \"About us - Untile | Simplifying life, digitally\" em https://www.untile.pt/about-us","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:12"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:15"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:15"}
+{"level":"info","message":"Total de violações axe-core: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:15"}
+{"level":"info","message":"Violação axe-core: aria-allowed-attr - critical - Ensures ARIA attributes are allowed for an element's role","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:15"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:15"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:15"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:15"}
+{"level":"info","message":"Total de violações processadas: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:15"}
+{"level":"info","message":"✅ Página 5 concluída: https://www.untile.pt/about-us (Score: 85)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:15"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:15"}
+{"level":"info","message":"🔍 Auditando página 6/20: https://www.untile.pt/case-studies","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:23"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt/case-studies","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:23"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt/case-studies (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:23"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:23"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:23"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:23"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/case-studies","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:23"}
+{"level":"info","message":"Página carregada: \"Case Studies - Untile | Simplifying life, digitally\" em https://www.untile.pt/case-studies","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:23"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:26"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:26"}
+{"level":"info","message":"Total de violações axe-core: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:26"}
+{"level":"info","message":"Violação axe-core: aria-required-children - critical - Ensures elements with an ARIA role that require child roles contain them","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:26"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:26"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:26"}
+{"level":"info","message":"Violação axe-core: heading-order - moderate - Ensures the order of headings is semantically correct","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:26"}
+{"level":"info","message":"Total de violações processadas: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:26"}
+{"level":"info","message":"✅ Página 6 concluída: https://www.untile.pt/case-studies (Score: 84)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:26"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:26"}
+{"level":"info","message":"🔍 Auditando página 7/20: https://www.untile.pt/careers","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:34"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt/careers","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:34"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt/careers (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:34"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:34"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:34"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:34"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/careers","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:34"}
+{"level":"info","message":"Página carregada: \"Careers - Untile | Simplifying life, digitally\" em https://www.untile.pt/careers","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:35"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:38"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:38"}
+{"level":"info","message":"Total de violações axe-core: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:38"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:38"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:38"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:38"}
+{"level":"info","message":"Total de violações processadas: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:38"}
+{"level":"info","message":"✅ Página 7 concluída: https://www.untile.pt/careers (Score: 91)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:38"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:38"}
+{"level":"info","message":"🔍 Auditando página 8/20: https://www.untile.pt/culture-people","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:46"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt/culture-people","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:46"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt/culture-people (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:46"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:46"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:46"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:46"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/culture-people","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:46"}
+{"level":"info","message":"Página carregada: \"Culture & People - Untile | Simplifying life, digitally\" em https://www.untile.pt/culture-people","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:47"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:50"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:50"}
+{"level":"info","message":"Total de violações axe-core: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:50"}
+{"level":"info","message":"Violação axe-core: aria-allowed-attr - critical - Ensures ARIA attributes are allowed for an element's role","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:50"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:50"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:50"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:50"}
+{"level":"info","message":"Total de violações processadas: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:50"}
+{"level":"info","message":"✅ Página 8 concluída: https://www.untile.pt/culture-people (Score: 85)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:50"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:50"}
+{"level":"info","message":"🔍 Auditando página 9/20: https://www.untile.pt/blog","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:58"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt/blog","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:58"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt/blog (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:58"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:58"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:58"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:58"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/blog","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:59"}
+{"level":"info","message":"Página carregada: \"Blog & Insights - Untile | Simplifying life, digitally\" em https://www.untile.pt/blog","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:48:59"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:02"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:02"}
+{"level":"info","message":"Total de violações axe-core: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:02"}
+{"level":"info","message":"Violação axe-core: aria-required-children - critical - Ensures elements with an ARIA role that require child roles contain them","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:02"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:02"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:02"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:02"}
+{"level":"info","message":"Total de violações processadas: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:02"}
+{"level":"info","message":"✅ Página 9 concluída: https://www.untile.pt/blog (Score: 85)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:02"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:02"}
+{"level":"info","message":"🔍 Auditando página 10/20: https://www.untile.pt/get-in-touch","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:10"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt/get-in-touch","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:10"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt/get-in-touch (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:10"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:10"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:10"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:10"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/get-in-touch","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:10"}
+{"level":"info","message":"Página carregada: \"Get in Touch - Untile | Simplifying life, digitally\" em https://www.untile.pt/get-in-touch","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:11"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:13"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:13"}
+{"level":"info","message":"Total de violações axe-core: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:13"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:13"}
+{"level":"info","message":"Violação axe-core: input-button-name - critical - Ensures input buttons have discernible text","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:13"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:13"}
+{"level":"info","message":"Total de violações processadas: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:13"}
+{"level":"info","message":"✅ Página 10 concluída: https://www.untile.pt/get-in-touch (Score: 87)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:13"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:13"}
+{"level":"info","message":"🔍 Auditando página 11/20: https://www.untile.pt/case-studies/from-concept-to-reality-the-strategic-mvp-that-brought-buzz-me-up-to-life","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:21"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt/case-studies/from-concept-to-reality-the-strategic-mvp-that-brought-buzz-me-up-to-life","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:21"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt/case-studies/from-concept-to-reality-the-strategic-mvp-that-brought-buzz-me-up-to-life (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:21"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:21"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:21"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:21"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/case-studies/from-concept-to-reality-the-strategic-mvp-that-brought-buzz-me-up-to-life","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:21"}
+{"level":"info","message":"Página carregada: \"From concept to reality: The strategic MVP that brought Buzz Me Up to life - Untile | Simplifying life, digitally\" em https://www.untile.pt/case-studies/from-concept-to-reality-the-strategic-mvp-that-brought-buzz-me-up-to-life","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:22"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:25"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:25"}
+{"level":"info","message":"Total de violações axe-core: 2","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:25"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:25"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:25"}
+{"level":"info","message":"Total de violações processadas: 2","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:25"}
+{"level":"info","message":"✅ Página 11 concluída: https://www.untile.pt/case-studies/from-concept-to-reality-the-strategic-mvp-that-brought-buzz-me-up-to-life (Score: 91)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:25"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:49:25"}
+{"level":"info","message":"🔍 Auditando página 12/20: https://www.untile.pt/case-studies/popcast-podcast-power-competitive-marketing","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:50"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt/case-studies/popcast-podcast-power-competitive-marketing","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:50"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt/case-studies/popcast-podcast-power-competitive-marketing (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:50"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:50"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:50"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:50"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/case-studies/popcast-podcast-power-competitive-marketing","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:50"}
+{"level":"warn","message":"Primeira tentativa de navegação falhou, tentando estratégia alternativa:","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:50"}
+{"level":"warn","message":"Segunda tentativa também falhou, usando estratégia básica:","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:51"}
+{"level":"warn","message":"Tentativa 1 falhou: page.goto: Navigation to \"https://www.untile.pt/case-studies/popcast-podcast-power-competitive-marketing\" is interrupted by another navigation to \"https://www.untile.pt/case-studies/popcast-podcast-power-competitive-marketing\"\nCall log:\n\u001b[2m  - navigating to \"https://www.untile.pt/case-studies/popcast-podcast-power-competitive-marketing\", waiting until \"load\"\u001b[22m\n","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:51"}
+{"level":"info","message":"Aguardando 3000ms antes da próxima tentativa...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:51"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 2/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:54"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/case-studies/popcast-podcast-power-competitive-marketing","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:54"}
+{"level":"info","message":"Página carregada: \"Podcast power: How  to enter a competitive market without an infinite budget - Untile | Simplifying life, digitally\" em https://www.untile.pt/case-studies/popcast-podcast-power-competitive-marketing","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:55"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:57"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:58"}
+{"level":"info","message":"Total de violações axe-core: 2","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:58"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:58"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:58"}
+{"level":"info","message":"Total de violações processadas: 2","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:58"}
+{"level":"info","message":"✅ Página 12 concluída: https://www.untile.pt/case-studies/popcast-podcast-power-competitive-marketing (Score: 91)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:58"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:52:58"}
+{"level":"info","message":"🔍 Auditando página 13/20: https://www.untile.pt/case-studies/ecommerce-api-data-sync-barkyn","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:06"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt/case-studies/ecommerce-api-data-sync-barkyn","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:06"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt/case-studies/ecommerce-api-data-sync-barkyn (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:06"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:06"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:06"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:06"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/case-studies/ecommerce-api-data-sync-barkyn","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:06"}
+{"level":"info","message":"Página carregada: \"Unlocking e-commerce potential: a case study on Barkyn's API-driven data synchronization - Untile | Simplifying life, digitally\" em https://www.untile.pt/case-studies/ecommerce-api-data-sync-barkyn","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:06"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:09"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:09"}
+{"level":"info","message":"Total de violações axe-core: 2","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:09"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:09"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:09"}
+{"level":"info","message":"Total de violações processadas: 2","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:09"}
+{"level":"info","message":"✅ Página 13 concluída: https://www.untile.pt/case-studies/ecommerce-api-data-sync-barkyn (Score: 91)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:09"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:09"}
+{"level":"info","message":"🔍 Auditando página 14/20: https://www.untile.pt/blog/ensuring-product-compliance-in-regulated-sectors-a-guide-for-corporates-in-fintech","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:17"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt/blog/ensuring-product-compliance-in-regulated-sectors-a-guide-for-corporates-in-fintech","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:17"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt/blog/ensuring-product-compliance-in-regulated-sectors-a-guide-for-corporates-in-fintech (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:17"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:17"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:17"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:17"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/blog/ensuring-product-compliance-in-regulated-sectors-a-guide-for-corporates-in-fintech","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:17"}
+{"level":"info","message":"Página carregada: \"Ensuring product compliance in regulated sectors: a guide for corporates in Fintech - Untile | Simplifying life, digitally\" em https://www.untile.pt/blog/ensuring-product-compliance-in-regulated-sectors-a-guide-for-corporates-in-fintech","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:18"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:21"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:21"}
+{"level":"info","message":"Total de violações axe-core: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:21"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:21"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:21"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:21"}
+{"level":"info","message":"Total de violações processadas: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:21"}
+{"level":"info","message":"✅ Página 14 concluída: https://www.untile.pt/blog/ensuring-product-compliance-in-regulated-sectors-a-guide-for-corporates-in-fintech (Score: 91)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:21"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:21"}
+{"level":"info","message":"🔍 Auditando página 15/20: https://www.untile.pt/blog/creating-a-high-impact-mvp-without-an-internal-team-smarter-leaner-and-better","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:29"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt/blog/creating-a-high-impact-mvp-without-an-internal-team-smarter-leaner-and-better","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:29"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt/blog/creating-a-high-impact-mvp-without-an-internal-team-smarter-leaner-and-better (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:29"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:29"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:29"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:29"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/blog/creating-a-high-impact-mvp-without-an-internal-team-smarter-leaner-and-better","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:29"}
+{"level":"info","message":"Página carregada: \"Creating a high-impact MVP without an internal team: smarter, leaner and better - Untile | Simplifying life, digitally\" em https://www.untile.pt/blog/creating-a-high-impact-mvp-without-an-internal-team-smarter-leaner-and-better","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:29"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:32"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:32"}
+{"level":"info","message":"Total de violações axe-core: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:32"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:32"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:32"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:32"}
+{"level":"info","message":"Violação axe-core: heading-order - moderate - Ensures the order of headings is semantically correct","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:32"}
+{"level":"info","message":"Total de violações processadas: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:32"}
+{"level":"info","message":"✅ Página 15 concluída: https://www.untile.pt/blog/creating-a-high-impact-mvp-without-an-internal-team-smarter-leaner-and-better (Score: 90)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:32"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:32"}
+{"level":"info","message":"🔍 Auditando página 16/20: https://www.untile.pt/blog/digital-product-design-services","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:40"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt/blog/digital-product-design-services","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:40"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt/blog/digital-product-design-services (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:40"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:40"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:40"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:40"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/blog/digital-product-design-services","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:40"}
+{"level":"info","message":"Página carregada: \"Digital Product Design Services - Untile | Simplifying life, digitally\" em https://www.untile.pt/blog/digital-product-design-services","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:41"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:44"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:44"}
+{"level":"info","message":"Total de violações axe-core: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:44"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:44"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:44"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:44"}
+{"level":"info","message":"Total de violações processadas: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:44"}
+{"level":"info","message":"✅ Página 16 concluída: https://www.untile.pt/blog/digital-product-design-services (Score: 91)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:44"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:44"}
+{"level":"info","message":"🔍 Auditando página 17/20: https://www.untile.pt/recognitions","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:52"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt/recognitions","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:52"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt/recognitions (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:52"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:52"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:52"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:52"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/recognitions","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:52"}
+{"level":"info","message":"Página carregada: \"Recognitions - Untile | Simplifying life, digitally\" em https://www.untile.pt/recognitions","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:52"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:55"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:55"}
+{"level":"info","message":"Total de violações axe-core: 2","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:55"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:55"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:55"}
+{"level":"info","message":"Total de violações processadas: 2","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:55"}
+{"level":"info","message":"✅ Página 17 concluída: https://www.untile.pt/recognitions (Score: 91)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:55"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:53:55"}
+{"level":"info","message":"🔍 Auditando página 18/20: https://www.untile.pt/blog-categories/business-strategy","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:03"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt/blog-categories/business-strategy","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:03"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt/blog-categories/business-strategy (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:03"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:03"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:03"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:03"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/blog-categories/business-strategy","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:03"}
+{"level":"info","message":"Página carregada: \"Blog & Insights - Untile | Simplifying life, digitally\" em https://www.untile.pt/blog?categories=Business+%26+Strategy","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:04"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:07"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:07"}
+{"level":"info","message":"Total de violações axe-core: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:07"}
+{"level":"info","message":"Violação axe-core: aria-required-children - critical - Ensures elements with an ARIA role that require child roles contain them","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:07"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:07"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:07"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:07"}
+{"level":"info","message":"Total de violações processadas: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:07"}
+{"level":"info","message":"✅ Página 18 concluída: https://www.untile.pt/blog-categories/business-strategy (Score: 85)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:07"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:07"}
+{"level":"info","message":"🔍 Auditando página 19/20: https://www.untile.pt/blog-categories/guides","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:15"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt/blog-categories/guides","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:15"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt/blog-categories/guides (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:15"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:15"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:15"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:15"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/blog-categories/guides","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:15"}
+{"level":"info","message":"Página carregada: \"Blog & Insights - Untile | Simplifying life, digitally\" em https://www.untile.pt/blog?categories=Guides","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:16"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:19"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:19"}
+{"level":"info","message":"Total de violações axe-core: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:19"}
+{"level":"info","message":"Violação axe-core: aria-required-children - critical - Ensures elements with an ARIA role that require child roles contain them","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:19"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:19"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:19"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:19"}
+{"level":"info","message":"Total de violações processadas: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:19"}
+{"level":"info","message":"✅ Página 19 concluída: https://www.untile.pt/blog-categories/guides (Score: 85)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:19"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:19"}
+{"level":"info","message":"🔍 Auditando página 20/20: https://www.untile.pt/blog-categories/tools-workflows","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:27"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.untile.pt/blog-categories/tools-workflows","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:27"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.untile.pt/blog-categories/tools-workflows (simples)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:27"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:27"}
+{"level":"info","message":"Executando auditoria simples - apenas critérios prioritários","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:27"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - simple","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:27"}
+{"level":"info","message":"Navegando para: https://www.untile.pt/blog-categories/tools-workflows","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:27"}
+{"level":"info","message":"Página carregada: \"Blog & Insights - Untile | Simplifying life, digitally\" em https://www.untile.pt/blog?categories=Tools+%26+Workflows","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:28"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:30"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (simple - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:30"}
+{"level":"info","message":"Total de violações axe-core: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:30"}
+{"level":"info","message":"Violação axe-core: aria-required-children - critical - Ensures elements with an ARIA role that require child roles contain them","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:30"}
+{"level":"info","message":"Violação axe-core: aria-valid-attr-value - critical - Ensures all ARIA attributes have valid values","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:30"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:30"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:30"}
+{"level":"info","message":"Total de violações processadas: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:30"}
+{"level":"info","message":"✅ Página 20 concluída: https://www.untile.pt/blog-categories/tools-workflows (Score: 85)","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:30"}
+{"level":"info","message":"📊 Auditoria concluída: 20/20 páginas bem-sucedidas","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:30"}
+{"level":"info","message":"📊 Fase 3: Gerando análise consolidada...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:30"}
+{"averageScore":89,"level":"info","message":"✅ Auditoria multi-página concluída em 433170ms","pagesAudited":20,"pagesDiscovered":20,"service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:30"}
+{"level":"info","message":"Fechando browser...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:30"}
+{"level":"info","message":"Browser fechado com sucesso","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:31"}
