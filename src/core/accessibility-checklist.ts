@@ -30,73 +30,73 @@ export class AccessibilityChecklist {
     this.checklist = [
       {
         id: 'checklist-1',
-        title: 'Navegação por teclado',
-        description: 'Todos os elementos interativos são acessíveis via teclado',
-        wcagCriteria: ['2.1.1', '2.1.2', '2.4.1'],
-        testFunction: this.testKeyboardNavigation.bind(this)
+        title: 'Menus de Navegação',
+        description: 'Menu estruturado como lista, navegação por teclado, imagens-link com alt',
+        wcagCriteria: ['1.3.1', '2.1.1', '2.1.2', '2.4.1'],
+        testFunction: this.testNavigationMenus.bind(this)
       },
       {
         id: 'checklist-2',
-        title: 'Contraste de cores',
-        description: 'Contraste suficiente entre texto e fundo (mínimo 4.5:1)',
-        wcagCriteria: ['1.4.3'],
-        testFunction: this.testColorContrast.bind(this)
+        title: 'Títulos e Subtítulos',
+        description: 'Existência de h1 e hierarquia lógica de cabeçalhos',
+        wcagCriteria: ['1.3.1', '2.4.10'],
+        testFunction: this.testTitlesAndSubtitles.bind(this)
       },
       {
         id: 'checklist-3',
-        title: 'Textos alternativos',
-        description: 'Todas as imagens têm texto alternativo adequado',
-        wcagCriteria: ['1.1.1'],
-        testFunction: this.testAltText.bind(this)
+        title: 'Tabelas de Dados',
+        description: 'Cabeçalhos de tabela e associações adequadas',
+        wcagCriteria: ['1.3.1'],
+        testFunction: this.testDataTables.bind(this)
       },
       {
         id: 'checklist-4',
-        title: 'Estrutura de cabeçalhos',
-        description: 'Hierarquia lógica de cabeçalhos (h1, h2, h3...)',
-        wcagCriteria: ['1.3.1', '2.4.10'],
-        testFunction: this.testHeadingStructure.bind(this)
+        title: 'Formulários',
+        description: 'Labels associados, validação e botões de submissão',
+        wcagCriteria: ['1.3.1', '3.3.2', '4.1.2'],
+        testFunction: this.testForms.bind(this)
       },
       {
         id: 'checklist-5',
-        title: 'Formulários acessíveis',
-        description: 'Campos de formulário têm labels associados',
-        wcagCriteria: ['1.3.1', '3.3.2', '4.1.2'],
-        testFunction: this.testFormAccessibility.bind(this)
+        title: 'Gráficos e Imagens-Link',
+        description: 'Textos alternativos adequados para imagens e gráficos',
+        wcagCriteria: ['1.1.1'],
+        testFunction: this.testGraphicsAndImages.bind(this)
       },
       {
         id: 'checklist-6',
-        title: 'Links descritivos',
-        description: 'Links têm texto descritivo fora do contexto',
-        wcagCriteria: ['2.4.4'],
-        testFunction: this.testDescriptiveLinks.bind(this)
+        title: 'Contraste',
+        description: 'Relação de contraste adequada entre texto e fundo',
+        wcagCriteria: ['1.4.3'],
+        testFunction: this.testContrast.bind(this)
       },
       {
         id: 'checklist-7',
-        title: 'Idioma da página',
-        description: 'Idioma principal da página está declarado',
-        wcagCriteria: ['3.1.1'],
-        testFunction: this.testLanguageDeclaration.bind(this)
+        title: 'Players',
+        description: 'Controles de media acessíveis',
+        wcagCriteria: ['1.2.1', '1.2.2', '1.2.3'],
+        testFunction: this.testMediaPlayers.bind(this)
       },
       {
         id: 'checklist-8',
-        title: 'Título da página',
-        description: 'Página tem título descritivo e único',
-        wcagCriteria: ['2.4.2'],
-        testFunction: this.testPageTitle.bind(this)
+        title: 'Estrutura da Página',
+        description: 'Landmarks semânticos e navegação estruturada',
+        wcagCriteria: ['1.3.1', '2.4.1'],
+        testFunction: this.testPageStructure.bind(this)
       },
       {
         id: 'checklist-9',
-        title: 'Skip links',
-        description: 'Links para saltar para o conteúdo principal',
-        wcagCriteria: ['2.4.1'],
-        testFunction: this.testSkipLinks.bind(this)
+        title: 'Modais',
+        description: 'Acessibilidade de diálogos e janelas modais',
+        wcagCriteria: ['1.3.1', '2.4.1', '4.1.2'],
+        testFunction: this.testModals.bind(this)
       },
       {
         id: 'checklist-10',
-        title: 'Validação HTML',
-        description: 'HTML válido sem erros críticos',
-        wcagCriteria: ['4.1.1'],
-        testFunction: this.testHTMLValidity.bind(this)
+        title: 'Ficheiros PDF',
+        description: 'Acessibilidade de documentos PDF',
+        wcagCriteria: ['1.1.1', '1.3.1'],
+        testFunction: this.testPDFFiles.bind(this)
       }
     ];
   }
@@ -149,263 +149,511 @@ export class AccessibilityChecklist {
     };
   }
 
-  // Métodos de teste individuais
-  private async testKeyboardNavigation(page: any): Promise<ChecklistResult> {
-    return await page.evaluate(() => {
-      const interactiveElements = (globalThis as any).document.querySelectorAll(
-        'a, button, input, select, textarea, [role="button"], [role="link"], [tabindex]'
-      );
-      
-      let accessibleElements = 0;
-      const totalElements = interactiveElements.length;
-      
-      interactiveElements.forEach((element: any) => {
-        const tabIndex = element.getAttribute('tabindex');
-        const role = element.getAttribute('role');
+  // Métodos de teste dos 10 aspetos críticos oficiais
+  private async testNavigationMenus(page: any): Promise<ChecklistResult> {
+    try {
+      const result = await page.evaluate(() => {
+        const navs = (globalThis as any).document.querySelectorAll('nav, [role="navigation"]');
+        let structuredMenus = 0;
+        let keyboardAccessible = 0;
+        let imagesWithAlt = 0;
+        const totalNavs = navs.length;
         
-        // Verificar se é acessível via teclado
-        if (tabIndex !== '-1' || 
-            (role && ['button', 'link'].includes(role)) ||
-            ['a', 'button', 'input', 'select', 'textarea'].includes(element.tagName.toLowerCase())) {
-          accessibleElements++;
-        }
-      });
-      
-      const score = totalElements > 0 ? Math.round((accessibleElements / totalElements) * 100) : 100;
-      const passed = score >= 90; // Pelo menos 90% dos elementos devem ser acessíveis
-      
-      return {
-        passed,
-        score,
-        details: `${accessibleElements}/${totalElements} elementos interativos são acessíveis via teclado`
-      };
-    });
-  }
-
-  private async testColorContrast(page: any): Promise<ChecklistResult> {
-    return await page.evaluate(() => {
-      const textElements = (globalThis as any).document.querySelectorAll(
-        'p, span, div, h1, h2, h3, h4, h5, h6, a, button, input, label'
-      );
-      
-      let goodContrastElements = 0;
-      const totalElements = textElements.length;
-      
-      textElements.forEach((element: any) => {
-        const style = (globalThis as any).window.getComputedStyle(element);
-        const color = style.color;
-        const backgroundColor = style.backgroundColor;
+        navs.forEach((nav: any) => {
+          // Verificar se tem estrutura de lista
+          const lists = nav.querySelectorAll('ul, ol');
+          if (lists.length > 0) structuredMenus++;
+          
+          // Verificar navegação por teclado
+          const interactiveElements = nav.querySelectorAll('a, button, [tabindex]');
+          let hasKeyboardAccess = false;
+          interactiveElements.forEach((el: any) => {
+            if (el.hasAttribute('tabindex') || el.tagName === 'A' || el.tagName === 'BUTTON') {
+              hasKeyboardAccess = true;
+            }
+          });
+          if (hasKeyboardAccess) keyboardAccessible++;
+          
+          // Verificar imagens-link com alt
+          const imageLinks = nav.querySelectorAll('a img');
+          let imagesWithAltCount = 0;
+          imageLinks.forEach((img: any) => {
+            if (img.alt && img.alt.trim() !== '') imagesWithAltCount++;
+          });
+          if (imagesWithAltCount === imageLinks.length) imagesWithAlt++;
+        });
         
-        // Verificação simplificada de contraste
-        if (color && backgroundColor && 
-            color !== backgroundColor && 
-            color !== 'transparent' && 
-            backgroundColor !== 'transparent') {
-          goodContrastElements++;
-        }
+        return { structuredMenus, keyboardAccessible, imagesWithAlt, totalNavs };
       });
       
-      const score = totalElements > 0 ? Math.round((goodContrastElements / totalElements) * 100) : 100;
-      const passed = score >= 85; // Pelo menos 85% dos elementos devem ter bom contraste
+      const score = result.totalNavs > 0 ? 
+        Math.round(((result.structuredMenus + result.keyboardAccessible + result.imagesWithAlt) / (result.totalNavs * 3)) * 100) : 100;
       
       return {
-        passed,
+        passed: score >= 80,
         score,
-        details: `${goodContrastElements}/${totalElements} elementos têm contraste adequado`
+        details: `Menus: ${result.structuredMenus}/${result.totalNavs} estruturados, ${result.keyboardAccessible}/${result.totalNavs} com teclado, ${result.imagesWithAlt}/${result.totalNavs} com alt`
       };
-    });
-  }
-
-  private async testAltText(page: any): Promise<ChecklistResult> {
-    return await page.evaluate(() => {
-      const images = (globalThis as any).document.querySelectorAll('img');
-      
-      let imagesWithAlt = 0;
-      const totalImages = images.length;
-      
-      images.forEach((img: any) => {
-        const alt = img.getAttribute('alt');
-        if (alt !== null && alt !== undefined) {
-          imagesWithAlt++;
-        }
-      });
-      
-      const score = totalImages > 0 ? Math.round((imagesWithAlt / totalImages) * 100) : 100;
-      const passed = score >= 95; // Pelo menos 95% das imagens devem ter alt
-      
+    } catch (error) {
       return {
-        passed,
-        score,
-        details: `${imagesWithAlt}/${totalImages} imagens têm texto alternativo`
+        passed: false,
+        score: 0,
+        details: 'Erro ao testar menus de navegação'
       };
-    });
+    }
   }
 
-  private async testHeadingStructure(page: any): Promise<ChecklistResult> {
-    return await page.evaluate(() => {
-      const headings = (globalThis as any).document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-      
-      let validStructure = 0;
-      const totalHeadings = headings.length;
-      
-      for (let i = 1; i < headings.length; i++) {
-        const currentLevel = parseInt(headings[i].tagName.charAt(1));
-        const previousLevel = parseInt(headings[i-1].tagName.charAt(1));
+  private async testTitlesAndSubtitles(page: any): Promise<ChecklistResult> {
+    try {
+      const result = await page.evaluate(() => {
+        const headings = (globalThis as any).document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+        const h1s = (globalThis as any).document.querySelectorAll('h1');
         
-        if (currentLevel - previousLevel <= 1) {
-          validStructure++;
-        }
-      }
-      
-      const score = totalHeadings > 1 ? Math.round((validStructure / (totalHeadings - 1)) * 100) : 100;
-      const passed = score >= 90; // Pelo menos 90% da estrutura deve ser válida
-      
-      return {
-        passed,
-        score,
-        details: `${validStructure}/${Math.max(1, totalHeadings - 1)} transições de cabeçalho são válidas`
-      };
-    });
-  }
-
-  private async testFormAccessibility(page: any): Promise<ChecklistResult> {
-    return await page.evaluate(() => {
-      const formControls = (globalThis as any).document.querySelectorAll(
-        'input, select, textarea, button'
-      );
-      
-      let accessibleControls = 0;
-      const totalControls = formControls.length;
-      
-      formControls.forEach((control: any) => {
-        const id = control.getAttribute('id');
-        const name = control.getAttribute('name');
-        const ariaLabel = control.getAttribute('aria-label');
-        const ariaLabelledby = control.getAttribute('aria-labelledby');
+        let validStructure = 0;
+        const totalHeadings = headings.length;
         
-        // Verificar se tem identificação acessível
-        if (id || name || ariaLabel || ariaLabelledby) {
-          accessibleControls++;
-        }
-      });
-      
-      const score = totalControls > 0 ? Math.round((accessibleControls / totalControls) * 100) : 100;
-      const passed = score >= 95; // Pelo menos 95% dos controles devem ser acessíveis
-      
-      return {
-        passed,
-        score,
-        details: `${accessibleControls}/${totalControls} controles de formulário são acessíveis`
-      };
-    });
-  }
-
-  private async testDescriptiveLinks(page: any): Promise<ChecklistResult> {
-    return await page.evaluate(() => {
-      const links = (globalThis as any).document.querySelectorAll('a[href]');
-      
-      let descriptiveLinks = 0;
-      const totalLinks = links.length;
-      
-      links.forEach((link: any) => {
-        const text = link.textContent?.trim() || '';
-        const ariaLabel = link.getAttribute('aria-label') || '';
-        const title = link.getAttribute('title') || '';
+        // Verificar se existe exatamente um h1
+        if (h1s.length === 1) validStructure++;
         
-        // Verificar se o link tem texto descritivo
-        if (text.length > 3 || ariaLabel.length > 3 || title.length > 3) {
-          descriptiveLinks++;
+        // Verificar hierarquia lógica
+        if (totalHeadings > 0) {
+          let previousLevel = 0;
+          let hasValidHierarchy = true;
+          
+          headings.forEach((heading: any) => {
+            const level = parseInt(heading.tagName.charAt(1));
+            if (level > previousLevel + 1) {
+              hasValidHierarchy = false;
+            }
+            previousLevel = level;
+          });
+          
+          if (hasValidHierarchy) validStructure++;
         }
+        
+        return { validStructure, totalHeadings, h1Count: h1s.length };
       });
       
-      const score = totalLinks > 0 ? Math.round((descriptiveLinks / totalLinks) * 100) : 100;
-      const passed = score >= 90; // Pelo menos 90% dos links devem ser descritivos
+      const score = result.totalHeadings > 0 ? 
+        Math.round((result.validStructure / 2) * 100) : 100;
       
       return {
-        passed,
+        passed: score >= 80,
         score,
-        details: `${descriptiveLinks}/${totalLinks} links têm texto descritivo`
+        details: `H1: ${result.h1Count}/1, Hierarquia: ${result.validStructure}/2 critérios válidos`
       };
-    });
-  }
-
-  private async testLanguageDeclaration(page: any): Promise<ChecklistResult> {
-    return await page.evaluate(() => {
-      const html = (globalThis as any).document.documentElement;
-      const lang = html.getAttribute('lang');
-      
-      const passed = !!lang && lang.length > 0;
-      const score = passed ? 100 : 0;
-      
+    } catch (error) {
       return {
-        passed,
-        score,
-        details: passed ? `Idioma declarado: ${lang}` : 'Idioma da página não declarado'
+        passed: false,
+        score: 0,
+        details: 'Erro ao testar títulos e subtítulos'
       };
-    });
+    }
   }
 
-  private async testPageTitle(page: any): Promise<ChecklistResult> {
-    return await page.evaluate(() => {
-      const title = (globalThis as any).document.title;
-      
-      const passed = !!title && title.length > 0 && title.length < 60;
-      const score = passed ? 100 : 0;
-      
-      return {
-        passed,
-        score,
-        details: passed ? `Título: "${title}"` : 'Título da página ausente ou muito longo'
-      };
-    });
-  }
-
-  private async testSkipLinks(page: any): Promise<ChecklistResult> {
-    return await page.evaluate(() => {
-      const links = (globalThis as any).document.querySelectorAll('a[href^="#"]');
-      
-      let hasSkipLink = false;
-      
-      links.forEach((link: any) => {
-        const href = link.getAttribute('href');
-        if (href && (href === '#main' || href === '#content' || href === '#main-content')) {
-          hasSkipLink = true;
-        }
+  private async testDataTables(page: any): Promise<ChecklistResult> {
+    try {
+      const result = await page.evaluate(() => {
+        const tables = (globalThis as any).document.querySelectorAll('table');
+        let validTables = 0;
+        const totalTables = tables.length;
+        
+        tables.forEach((table: any) => {
+          let hasHeaders = false;
+          let hasAssociations = false;
+          
+          // Verificar se tem cabeçalhos
+          const headers = table.querySelectorAll('th');
+          if (headers.length > 0) hasHeaders = true;
+          
+          // Verificar associações (scope, headers, id)
+          const cells = table.querySelectorAll('td');
+          if (cells.length > 0) {
+            const hasScope = Array.from(cells).some((cell: any) => cell.hasAttribute('scope'));
+            const hasHeaders = Array.from(cells).some((cell: any) => cell.hasAttribute('headers'));
+            if (hasScope || hasHeaders) hasAssociations = true;
+          }
+          
+          if (hasHeaders && hasAssociations) validTables++;
+        });
+        
+        return { validTables, totalTables };
       });
       
-      const passed = hasSkipLink;
-      const score = passed ? 100 : 0;
+      const score = result.totalTables > 0 ? 
+        Math.round((result.validTables / result.totalTables) * 100) : 100;
       
       return {
-        passed,
+        passed: score >= 80,
         score,
-        details: passed ? 'Skip link encontrado' : 'Skip link não encontrado'
+        details: `${result.validTables}/${result.totalTables} tabelas têm cabeçalhos e associações adequadas`
       };
-    });
+    } catch (error) {
+      return {
+        passed: false,
+        score: 0,
+        details: 'Erro ao testar tabelas de dados'
+      };
+    }
   }
 
-  private async testHTMLValidity(page: any): Promise<ChecklistResult> {
-    return await page.evaluate(() => {
-      // Verificação simplificada de HTML válido
-      const html = (globalThis as any).document.documentElement;
-      const body = (globalThis as any).document.body;
+  private async testForms(page: any): Promise<ChecklistResult> {
+    try {
+      const result = await page.evaluate(() => {
+        const forms = (globalThis as any).document.querySelectorAll('form');
+        let validForms = 0;
+        const totalForms = forms.length;
+        
+        forms.forEach((form: any) => {
+          let hasLabels = false;
+          let hasSubmitButton = false;
+          
+          // Verificar se tem labels associados
+          const inputs = form.querySelectorAll('input, select, textarea');
+          if (inputs.length > 0) {
+            const inputsWithLabels = Array.from(inputs).filter((input: any) => {
+              const id = input.getAttribute('id');
+              const name = input.getAttribute('name');
+              const label = form.querySelector(`label[for="${id}"]`) || 
+                           form.querySelector(`label:has(input[name="${name}"])`);
+              return label !== null;
+            });
+            if (inputsWithLabels.length === inputs.length) hasLabels = true;
+          }
+          
+          // Verificar se tem validação
+          const requiredInputs = form.querySelectorAll('[required], [aria-required="true"]');
+          if (requiredInputs.length > 0) {
+            // hasValidation = true; // Removido - não usado
+          }
+          
+          // Verificar se tem botão de submissão
+          const submitButtons = form.querySelectorAll('button[type="submit"], input[type="submit"]');
+          if (submitButtons.length > 0) hasSubmitButton = true;
+          
+          if (hasLabels && hasSubmitButton) validForms++;
+        });
+        
+        return { validForms, totalForms };
+      });
       
-      // Verificar se tem estrutura básica
-      const hasValidStructure = html && body && html.tagName === 'HTML' && body.tagName === 'BODY';
-      
-      // Verificar se não há erros óbvios
-      const hasNoObviousErrors = !(globalThis as any).document.querySelector('script[src=""]') &&
-                                 !(globalThis as any).document.querySelector('img[src=""]');
-      
-      const passed = hasValidStructure && hasNoObviousErrors;
-      const score = passed ? 100 : 50;
+      const score = result.totalForms > 0 ? 
+        Math.round((result.validForms / result.totalForms) * 100) : 100;
       
       return {
-        passed,
+        passed: score >= 80,
         score,
-        details: passed ? 'HTML parece válido' : 'Problemas de HTML detectados'
+        details: `${result.validForms}/${result.totalForms} formulários têm labels e botões de submissão`
       };
-    });
+    } catch (error) {
+      return {
+        passed: false,
+        score: 0,
+        details: 'Erro ao testar formulários'
+      };
+    }
+  }
+
+  private async testGraphicsAndImages(page: any): Promise<ChecklistResult> {
+    try {
+      const result = await page.evaluate(() => {
+        const images = (globalThis as any).document.querySelectorAll('img');
+        const graphics = (globalThis as any).document.querySelectorAll('svg, canvas, [role="img"]');
+        
+        let imagesWithAlt = 0;
+        let graphicsWithAlt = 0;
+        const totalImages = images.length;
+        const totalGraphics = graphics.length;
+        
+        // Verificar imagens com alt
+        images.forEach((img: any) => {
+          const alt = img.getAttribute('alt');
+          if (alt !== null && alt !== undefined && alt.trim() !== '') {
+            imagesWithAlt++;
+          }
+        });
+        
+        // Verificar gráficos com alt ou aria-label
+        graphics.forEach((graphic: any) => {
+          const alt = graphic.getAttribute('alt');
+          const ariaLabel = graphic.getAttribute('aria-label');
+          const title = graphic.getAttribute('title');
+          if (alt || ariaLabel || title) {
+            graphicsWithAlt++;
+          }
+        });
+        
+        return { imagesWithAlt, graphicsWithAlt, totalImages, totalGraphics };
+      });
+      
+      const imageScore = result.totalImages > 0 ? 
+        Math.round((result.imagesWithAlt / result.totalImages) * 100) : 100;
+      const graphicScore = result.totalGraphics > 0 ? 
+        Math.round((result.graphicsWithAlt / result.totalGraphics) * 100) : 100;
+      
+      const overallScore = Math.round((imageScore + graphicScore) / 2);
+      
+      return {
+        passed: overallScore >= 90,
+        score: overallScore,
+        details: `Imagens: ${result.imagesWithAlt}/${result.totalImages} com alt, Gráficos: ${result.graphicsWithAlt}/${result.totalGraphics} com descrição`
+      };
+    } catch (error) {
+      return {
+        passed: false,
+        score: 0,
+        details: 'Erro ao testar gráficos e imagens'
+      };
+    }
+  }
+
+  private async testContrast(page: any): Promise<ChecklistResult> {
+    try {
+      const result = await page.evaluate(() => {
+        const textElements = (globalThis as any).document.querySelectorAll(
+          'p, span, div, h1, h2, h3, h4, h5, h6, a, button, input, label'
+        );
+        
+        let goodContrastElements = 0;
+        const totalElements = textElements.length;
+        
+        textElements.forEach((element: any) => {
+          const style = (globalThis as any).window.getComputedStyle(element);
+          const color = style.color;
+          const backgroundColor = style.backgroundColor;
+          
+          // Verificação simplificada de contraste
+          if (color && backgroundColor && 
+              color !== backgroundColor && 
+              color !== 'transparent' && 
+              backgroundColor !== 'transparent' &&
+              color !== 'rgba(0, 0, 0, 0)' &&
+              backgroundColor !== 'rgba(0, 0, 0, 0)') {
+            goodContrastElements++;
+          }
+        });
+        
+        return { goodContrastElements, totalElements };
+      });
+      
+      const score = result.totalElements > 0 ? 
+        Math.round((result.goodContrastElements / result.totalElements) * 100) : 100;
+      
+      return {
+        passed: score >= 85,
+        score,
+        details: `${result.goodContrastElements}/${result.totalElements} elementos têm contraste adequado`
+      };
+    } catch (error) {
+      return {
+        passed: false,
+        score: 0,
+        details: 'Erro ao testar contraste'
+      };
+    }
+  }
+
+  private async testMediaPlayers(page: any): Promise<ChecklistResult> {
+    try {
+      const result = await page.evaluate(() => {
+        const videos = (globalThis as any).document.querySelectorAll('video');
+        const audios = (globalThis as any).document.querySelectorAll('audio');
+        const iframes = (globalThis as any).document.querySelectorAll('iframe[src*="youtube"], iframe[src*="vimeo"]');
+        
+        let accessibleVideos = 0;
+        let accessibleAudios = 0;
+        let accessibleIframes = 0;
+        
+        // Verificar vídeos com controles
+        videos.forEach((video: any) => {
+          if (video.controls || video.hasAttribute('aria-label') || video.hasAttribute('title')) {
+            accessibleVideos++;
+          }
+        });
+        
+        // Verificar áudios com controles
+        audios.forEach((audio: any) => {
+          if (audio.controls || audio.hasAttribute('aria-label') || audio.hasAttribute('title')) {
+            accessibleAudios++;
+          }
+        });
+        
+        // Verificar iframes com título
+        iframes.forEach((iframe: any) => {
+          if (iframe.hasAttribute('title') || iframe.hasAttribute('aria-label')) {
+            accessibleIframes++;
+          }
+        });
+        
+        const totalMedia = videos.length + audios.length + iframes.length;
+        const totalAccessible = accessibleVideos + accessibleAudios + accessibleIframes;
+        
+        return { totalMedia, totalAccessible, accessibleVideos, accessibleAudios, accessibleIframes };
+      });
+      
+      const score = result.totalMedia > 0 ? 
+        Math.round((result.totalAccessible / result.totalMedia) * 100) : 100;
+      
+      return {
+        passed: score >= 80,
+        score,
+        details: `${result.totalAccessible}/${result.totalMedia} elementos de media são acessíveis`
+      };
+    } catch (error) {
+      return {
+        passed: false,
+        score: 0,
+        details: 'Erro ao testar players de media'
+      };
+    }
+  }
+
+  private async testPageStructure(page: any): Promise<ChecklistResult> {
+    try {
+      const result = await page.evaluate(() => {
+        const landmarks = (globalThis as any).document.querySelectorAll(
+          '[role="banner"], [role="main"], [role="contentinfo"], [role="navigation"], [role="complementary"], [role="search"]'
+        );
+        const mainContent = (globalThis as any).document.querySelectorAll('main, [role="main"]');
+        const skipLinks = (globalThis as any).document.querySelectorAll('a[href^="#"]');
+        
+        const hasLandmarks = landmarks.length > 0;
+        const hasMainContent = mainContent.length > 0;
+        let hasSkipLinks = false;
+        
+        // Verificar skip links
+        skipLinks.forEach((link: any) => {
+          const href = link.getAttribute('href');
+          if (href && (href === '#main' || href === '#content' || href === '#main-content')) {
+            hasSkipLinks = true;
+          }
+        });
+        
+        const totalCriteria = 3;
+        let passedCriteria = 0;
+        if (hasLandmarks) passedCriteria++;
+        if (hasMainContent) passedCriteria++;
+        if (hasSkipLinks) passedCriteria++;
+        
+        return { passedCriteria, totalCriteria, hasLandmarks, hasMainContent, hasSkipLinks };
+      });
+      
+      const score = Math.round((result.passedCriteria / result.totalCriteria) * 100);
+      
+      return {
+        passed: score >= 80,
+        score,
+        details: `${result.passedCriteria}/${result.totalCriteria} critérios de estrutura: landmarks=${result.hasLandmarks}, main=${result.hasMainContent}, skip=${result.hasSkipLinks}`
+      };
+    } catch (error) {
+      return {
+        passed: false,
+        score: 0,
+        details: 'Erro ao testar estrutura da página'
+      };
+    }
+  }
+
+  private async testModals(page: any): Promise<ChecklistResult> {
+    try {
+      const result = await page.evaluate(() => {
+        const modals = (globalThis as any).document.querySelectorAll(
+          '[role="dialog"], [role="alertdialog"], .modal, .popup, [aria-modal="true"]'
+        );
+        
+        let accessibleModals = 0;
+        const totalModals = modals.length;
+        
+        modals.forEach((modal: any) => {
+          let hasRole = false;
+          let hasAriaLabel = false;
+          
+          // Verificar role
+          if (modal.hasAttribute('role') && ['dialog', 'alertdialog'].includes(modal.getAttribute('role'))) {
+            hasRole = true;
+          }
+          
+          // Verificar aria-label ou aria-labelledby
+          if (modal.hasAttribute('aria-label') || modal.hasAttribute('aria-labelledby')) {
+            hasAriaLabel = true;
+          }
+          
+          // Verificar gestão de foco (tabindex ou focusable)
+          if (modal.hasAttribute('tabindex') || modal.hasAttribute('aria-hidden') === 'false') {
+            // hasFocusManagement = true; // Removido - não usado
+          }
+          
+          if (hasRole && hasAriaLabel) accessibleModals++;
+        });
+        
+        return { accessibleModals, totalModals };
+      });
+      
+      const score = result.totalModals > 0 ? 
+        Math.round((result.accessibleModals / result.totalModals) * 100) : 100;
+      
+      return {
+        passed: score >= 80,
+        score,
+        details: `${result.accessibleModals}/${result.totalModals} modais são acessíveis`
+      };
+    } catch (error) {
+      return {
+        passed: false,
+        score: 0,
+        details: 'Erro ao testar modais'
+      };
+    }
+  }
+
+  private async testPDFFiles(page: any): Promise<ChecklistResult> {
+    try {
+      const result = await page.evaluate(() => {
+        const pdfLinks = (globalThis as any).document.querySelectorAll('a[href$=".pdf"], a[href*=".pdf"]');
+        const pdfEmbeds = (globalThis as any).document.querySelectorAll('embed[src*=".pdf"], object[data*=".pdf"]');
+        
+        let accessiblePDFs = 0;
+        const totalPDFs = pdfLinks.length + pdfEmbeds.length;
+        
+        // Verificar links para PDFs com descrição
+        pdfLinks.forEach((link: any) => {
+          const text = link.textContent?.trim() || '';
+          const ariaLabel = link.getAttribute('aria-label') || '';
+          const title = link.getAttribute('title') || '';
+          
+          if (text.length > 3 || ariaLabel.length > 3 || title.length > 3) {
+            accessiblePDFs++;
+          }
+        });
+        
+        // Verificar embeds de PDF com descrição
+        pdfEmbeds.forEach((embed: any) => {
+          const ariaLabel = embed.getAttribute('aria-label') || '';
+          const title = embed.getAttribute('title') || '';
+          
+          if (ariaLabel.length > 3 || title.length > 3) {
+            accessiblePDFs++;
+          }
+        });
+        
+        return { accessiblePDFs, totalPDFs };
+      });
+      
+      const score = result.totalPDFs > 0 ? 
+        Math.round((result.accessiblePDFs / result.totalPDFs) * 100) : 100;
+      
+      return {
+        passed: score >= 80,
+        score,
+        details: `${result.accessiblePDFs}/${result.totalPDFs} ficheiros PDF são acessíveis`
+      };
+    } catch (error) {
+      return {
+        passed: false,
+        score: 0,
+        details: 'Erro ao testar ficheiros PDF'
+      };
+    }
   }
 
   getChecklistItems(): ChecklistItem[] {
