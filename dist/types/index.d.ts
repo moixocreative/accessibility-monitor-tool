@@ -64,6 +64,19 @@ export interface AuditResult {
         seriousViolations: number;
         priorityViolations: number;
     };
+    checklistResults?: {
+        totalItems: number;
+        passedItems: number;
+        percentage: number;
+        overallScore: number;
+        results: {
+            [key: string]: {
+                passed: boolean;
+                score: number;
+                details: string;
+            };
+        };
+    };
 }
 export interface EmergencyIncident {
     id: string;

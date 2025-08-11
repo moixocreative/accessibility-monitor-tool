@@ -1,9 +1,0 @@
-{"level":"info","message":"Auditoria iniciada para Welligence Website","timestamp":"2025-08-04T11:55:18.678Z","url":"https://welligence.pt"}
-{"level":"info","message":"Auditoria iniciada para Welligence Website","timestamp":"2025-08-09T23:06:00.235Z","url":"https://solutions.welligence.com"}
-{"criticalViolations":3,"level":"info","message":"Auditoria concluída para Welligence Website","score":84,"timestamp":"2025-08-09T23:06:05.328Z","violations":6}
-{"level":"info","message":"Auditoria iniciada para UNTILE Corporate","timestamp":"2025-08-09T23:06:05.328Z","url":"https://untile.pt"}
-{"criticalViolations":2,"level":"info","message":"Auditoria concluída para UNTILE Corporate","score":91,"timestamp":"2025-08-09T23:06:09.438Z","violations":3}
-{"level":"info","message":"Auditoria iniciada para Welligence Website","timestamp":"2025-08-09T23:12:36.895Z","url":"https://solutions.welligence.com"}
-{"criticalViolations":3,"level":"info","message":"Auditoria concluída para Welligence Website","score":84,"timestamp":"2025-08-09T23:12:41.149Z","violations":6}
-{"level":"info","message":"Auditoria iniciada para UNTILE Corporate","timestamp":"2025-08-09T23:12:41.149Z","url":"https://untile.pt"}
-{"criticalViolations":2,"level":"info","message":"Auditoria concluída para UNTILE Corporate","score":91,"timestamp":"2025-08-09T23:12:45.390Z","violations":3}

@@ -72,21 +72,22 @@ export class MultiPageValidator {
     const auditId = `multi_audit_${Date.now()}`;
 
     const defaultOptions: MultiPageAuditOptions = {
-      crawlStrategy: 'comprehensive',
+      ...options,
+      crawlStrategy: options.crawlStrategy || 'comprehensive',
       crawlOptions: {
         maxPages: 50,
         maxDepth: 3,
-        includeExternal: false
+        includeExternal: false,
+        ...options.crawlOptions
       },
-      maxConcurrent: 1, // Mais conservador para evitar detecção
-      delayBetweenPages: 5000, // 5 segundos entre páginas
-      retryFailedPages: true,
-      maxRetries: 2,
-      useSharedSession: true,
-      useStandardFormula: false,
-      criteriaSet: 'untile',
-      customCriteria: [],
-      ...options
+      maxConcurrent: options.maxConcurrent || 1, // Mais conservador para evitar detecção
+      delayBetweenPages: options.delayBetweenPages || 5000, // 5 segundos entre páginas
+      retryFailedPages: options.retryFailedPages !== undefined ? options.retryFailedPages : true,
+      maxRetries: options.maxRetries || 2,
+      useSharedSession: options.useSharedSession !== undefined ? options.useSharedSession : true,
+      useStandardFormula: options.useStandardFormula !== undefined ? options.useStandardFormula : false,
+      criteriaSet: options.criteriaSet || 'untile',
+      customCriteria: options.customCriteria || []
     };
 
     logger.info('Iniciando auditoria multi-página', { 

@@ -10,13 +10,19 @@ const playwright_1 = require("playwright");
 const puppeteer_real_browser_1 = require("puppeteer-real-browser");
 const logger_1 = require("../utils/logger");
 const wcag_criteria_1 = require("../core/wcag-criteria");
+const accessibility_checklist_1 = require("../core/accessibility-checklist");
+const html_report_generator_1 = require("../reports/html-report-generator");
 class WCAGValidator {
     browser = null;
     useRealBrowser = false;
     usePlaywright = false;
+    checklist;
+    reportGenerator;
     constructor() {
         puppeteer_extra_1.default.use((0, puppeteer_extra_plugin_stealth_1.default)());
         this.browser = null;
+        this.checklist = new accessibility_checklist_1.AccessibilityChecklist();
+        this.reportGenerator = new html_report_generator_1.HTMLReportGenerator();
     }
     async initBrowser() {
         if (this.browser) {
@@ -153,6 +159,17 @@ class WCAGValidator {
             }
             const violations = this.analyzeViolations(axeResult, url);
             const wcagScore = this.calculateWCAGScoreFromAxe(axeResult, useStandardFormula);
+            let checklistResults = null;
+            try {
+                const page = await this.getPage();
+                if (page) {
+                    checklistResults = await this.checklist.runChecklist(page);
+                    logger_1.logger.info(`📋 Checklist: ${checklistResults.passedItems}/${checklistResults.totalItems} itens passaram (${checklistResults.percentage}%)`);
+                }
+            }
+            catch (error) {
+                logger_1.logger.warn('Erro ao executar checklist:', error);
+            }
             const legalRiskMetrics = this.calculateLegalRiskMetrics(violations);
             const summary = this.generateSummary(violations, wcagScore);
             const lighthouseScore = {
@@ -161,7 +178,7 @@ class WCAGValidator {
                 seo: 80,
                 bestPractices: 90
             };
-            return {
+            const result = {
                 id: `audit_${Date.now()}`,
                 siteId,
                 timestamp: new Date(),
@@ -170,8 +187,17 @@ class WCAGValidator {
                 lighthouseScore,
                 axeResults: axeResult,
                 summary,
-                legalRiskMetrics
+                legalRiskMetrics,
+                ...(checklistResults && { checklistResults })
             };
+            try {
+                const reportPath = await this.reportGenerator.generateSinglePageReport(result);
+                logger_1.logger.info(`📄 Relatório HTML gerado: ${reportPath}`);
+            }
+            catch (error) {
+                logger_1.logger.warn('Erro ao gerar relatório HTML:', error);
+            }
+            return result;
         }
         catch (error) {
             logger_1.logger.error('Erro na auditoria WCAG:', error);
@@ -412,7 +438,7 @@ class WCAGValidator {
                     throw new Error('axe-core não foi carregado corretamente após 5 segundos');
                 }
                 logger_1.logger.info('axe-core carregado, iniciando execução...');
-                const axeResult = await page.evaluate((auditType) => {
+                const axeResult = await page.evaluate((criteriaSet) => {
                     return new Promise((resolve, reject) => {
                         const timeout = setTimeout(() => {
                             reject(new Error('Axe-core execution timeout (30s)'));
@@ -428,18 +454,7 @@ class WCAGValidator {
                                 resultTypes: ['violations', 'passes']
                             };
                             if (criteriaSet === 'gov-pt') {
-                                axeConfig.rules = {
-                                    'color-contrast': { enabled: true },
-                                    'image-alt': { enabled: true },
-                                    'keyboard': { enabled: true },
-                                    'bypass': { enabled: true },
-                                    'focus-visible': { enabled: true },
-                                    'label': { enabled: true },
-                                    'name-role-value': { enabled: true },
-                                    'info-and-relationships': { enabled: true },
-                                    'timing-adjustable': { enabled: true },
-                                    'error-identification': { enabled: true }
-                                };
+                                axeConfig.tags = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
                             }
                             else if (criteriaSet === 'untile') {
                                 axeConfig.tags = ['wcag2a', 'wcag2aa'];
@@ -474,6 +489,11 @@ class WCAGValidator {
                         }
                     });
                 }, criteriaSet);
+                const accessMonitorViolations = await this.detectAccessMonitorViolations(page);
+                const combinedResult = {
+                    ...axeResult,
+                    violations: [...(axeResult.violations || []), ...accessMonitorViolations]
+                };
                 if (this.usePlaywright) {
                     await page.close();
                     await context.close();
@@ -482,7 +502,7 @@ class WCAGValidator {
                     await page.close();
                 }
                 logger_1.logger.info(`Axe-core otimizado executado com sucesso (${criteriaSet} - tentativa ${attempt})`);
-                return axeResult;
+                return combinedResult;
             }
             catch (error) {
                 lastError = error;
@@ -604,13 +624,14 @@ class WCAGValidator {
                 });
                 logger_1.logger.info('Axe-core executado com sucesso');
                 const customViolations = await this.detectCustomViolationsInPage(page);
+                const accessMonitorViolations = await this.detectAccessMonitorViolations(page);
                 if (page)
                     await page.close();
                 if (context)
                     await context.close();
                 const combinedResult = {
                     ...axeResult,
-                    violations: [...(axeResult.violations || []), ...customViolations]
+                    violations: [...(axeResult.violations || []), ...customViolations, ...accessMonitorViolations]
                 };
                 return combinedResult;
             }
@@ -1019,7 +1040,7 @@ class WCAGValidator {
             const wcagCriteria = this.mapAxeRuleToWCAG(violation.id);
             if (wcagCriteria) {
                 const accessibilityViolation = {
-                    id: `violation_${Date.now()}_${Math.random()}`,
+                    id: violation.id || `violation_${Date.now()}_${Math.random()}`,
                     criteria: wcagCriteria,
                     severity: this.mapSeverity(violation.impact),
                     description: violation.description,
@@ -1045,7 +1066,7 @@ class WCAGValidator {
                     }
                 };
                 const accessibilityViolation = {
-                    id: `violation_${Date.now()}_${Math.random()}`,
+                    id: violation.id || `violation_${Date.now()}_${Math.random()}`,
                     criteria: genericCriteria,
                     severity: this.mapSeverity(violation.impact),
                     description: violation.description,
@@ -1107,6 +1128,245 @@ class WCAGValidator {
             logger_1.logger.info(`Violações personalizadas detectadas: ${customViolations.length}`);
         }
         return customViolations;
+    }
+    async detectAccessMonitorViolations(page) {
+        const accessMonitorViolations = [];
+        try {
+            const skipLinkViolations = await this.detectSkipLinks(page);
+            accessMonitorViolations.push(...skipLinkViolations);
+            const headingSequenceViolations = await this.detectHeadingSequenceIssues(page);
+            accessMonitorViolations.push(...headingSequenceViolations);
+            const brSequenceViolations = await this.detectBrSequenceIssues(page);
+            accessMonitorViolations.push(...brSequenceViolations);
+            const multipleH1Violations = await this.detectMultipleH1Issues(page);
+            accessMonitorViolations.push(...multipleH1Violations);
+            const contrastViolations = await this.detectContrastIssues(page);
+            accessMonitorViolations.push(...contrastViolations);
+            const duplicateIdViolations = await this.detectDuplicateIds(page);
+            accessMonitorViolations.push(...duplicateIdViolations);
+            const interactiveViolations = await this.detectInteractiveElementIssues(page);
+            accessMonitorViolations.push(...interactiveViolations);
+            const landmarkViolations = await this.detectLandmarkIssues(page);
+            accessMonitorViolations.push(...landmarkViolations);
+        }
+        catch (error) {
+            logger_1.logger.warn('Erro ao detectar violações do AccessMonitor:', error);
+        }
+        return accessMonitorViolations;
+    }
+    async detectSkipLinks(page) {
+        return await page.evaluate(() => {
+            const violations = [];
+            const links = globalThis.document.querySelectorAll('a[href^="#"]');
+            let hasValidSkipLink = false;
+            links.forEach((link) => {
+                const href = link.getAttribute('href');
+                if (href && (href === '#main' || href === '#content' || href === '#main-content')) {
+                    hasValidSkipLink = true;
+                }
+            });
+            if (!hasValidSkipLink) {
+                violations.push({
+                    id: 'accessmonitor-skip-link',
+                    description: '1 Primeira hiperligação não permite saltar para área do conteúdo principal',
+                    help: 'Adicionar skip link válido (#main, #content, #main-content)',
+                    impact: 'serious',
+                    tags: ['wcag2a', 'wcag241'],
+                    nodes: [{
+                            html: '<a href="#">Primeiro link da página</a>',
+                            target: ['a']
+                        }]
+                });
+            }
+            return violations;
+        });
+    }
+    async detectHeadingSequenceIssues(page) {
+        return await page.evaluate(() => {
+            const violations = [];
+            const headings = globalThis.document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+            let sequenceViolations = 0;
+            for (let i = 1; i < headings.length; i++) {
+                const currentLevel = parseInt(headings[i].tagName.charAt(1));
+                const previousLevel = parseInt(headings[i - 1].tagName.charAt(1));
+                if (currentLevel - previousLevel > 1) {
+                    sequenceViolations++;
+                }
+            }
+            if (sequenceViolations > 0) {
+                violations.push({
+                    id: 'accessmonitor-heading-sequence',
+                    description: `${sequenceViolations} caso(s) em que se viola a sequência hierárquica dos níveis de cabeçalho`,
+                    help: 'Garantir sequência hierárquica correta dos cabeçalhos (h1, h2, h3, etc.)',
+                    impact: 'serious',
+                    tags: ['wcag2aaa', 'wcag131', 'wcag2410'],
+                    nodes: [{
+                            html: '<h3>Heading sem h2 anterior</h3>',
+                            target: ['h3']
+                        }]
+                });
+            }
+            return violations;
+        });
+    }
+    async detectBrSequenceIssues(page) {
+        return await page.evaluate(() => {
+            const violations = [];
+            const brElements = globalThis.document.querySelectorAll('br');
+            let sequenceCount = 0;
+            for (let i = 0; i < brElements.length - 2; i++) {
+                if (brElements[i].nextElementSibling === brElements[i + 1] &&
+                    brElements[i + 1].nextElementSibling === brElements[i + 2]) {
+                    sequenceCount++;
+                }
+            }
+            if (sequenceCount > 0) {
+                violations.push({
+                    id: 'accessmonitor-br-sequence',
+                    description: `${sequenceCount} sequência(s) composta(s) por 3 ou mais elementos br`,
+                    help: 'Não usar elementos br para criar listas, usar elementos ul/li',
+                    impact: 'serious',
+                    tags: ['wcag2a', 'wcag131'],
+                    nodes: [{
+                            html: '<br><br><br>',
+                            target: ['br']
+                        }]
+                });
+            }
+            return violations;
+        });
+    }
+    async detectMultipleH1Issues(page) {
+        return await page.evaluate(() => {
+            const violations = [];
+            const h1Elements = globalThis.document.querySelectorAll('h1');
+            if (h1Elements.length > 1) {
+                violations.push({
+                    id: 'accessmonitor-heading-h1',
+                    description: `${h1Elements.length} cabeçalho(s) de nível 1 (devia haver um)`,
+                    help: 'Deve haver apenas um cabeçalho h1 por página',
+                    impact: 'serious',
+                    tags: ['wcag2a', 'wcag131'],
+                    nodes: [{
+                            html: '<h1>Múltiplos h1</h1>',
+                            target: ['h1']
+                        }]
+                });
+            }
+            return violations;
+        });
+    }
+    async detectContrastIssues(page) {
+        return await page.evaluate(() => {
+            const violations = [];
+            const textElements = globalThis.document.querySelectorAll('p, span, div, h1, h2, h3, h4, h5, h6, a, button, input, label');
+            let contrastIssues = 0;
+            textElements.forEach((element) => {
+                const style = globalThis.window.getComputedStyle(element);
+                const color = style.color;
+                const backgroundColor = style.backgroundColor;
+                if (color === backgroundColor || color === 'transparent' || backgroundColor === 'transparent') {
+                    contrastIssues++;
+                }
+            });
+            if (contrastIssues > 0) {
+                violations.push({
+                    id: 'accessmonitor-contrast',
+                    description: `${contrastIssues} combinações de cor cuja relação de contraste é inferior ao rácio mínimo de contraste permitido pelas WCAG`,
+                    help: 'Melhorar contraste para pelo menos 4.5:1 para texto normal',
+                    impact: 'serious',
+                    tags: ['wcag2aa', 'wcag143'],
+                    nodes: [{
+                            html: '<span>Texto com contraste insuficiente</span>',
+                            target: ['span']
+                        }]
+                });
+            }
+            return violations;
+        });
+    }
+    async detectDuplicateIds(page) {
+        return await page.evaluate(() => {
+            const violations = [];
+            const elementsWithId = globalThis.document.querySelectorAll('[id]');
+            const idCounts = {};
+            elementsWithId.forEach((element) => {
+                const id = element.getAttribute('id');
+                idCounts[id] = (idCounts[id] || 0) + 1;
+            });
+            const duplicateIds = Object.values(idCounts).filter(count => count > 1).length;
+            if (duplicateIds > 0) {
+                violations.push({
+                    id: 'accessmonitor-duplicate-ids',
+                    description: `${duplicateIds} atributo(s) id(s) repetido(s)`,
+                    help: 'Cada ID deve ser único na página',
+                    impact: 'serious',
+                    tags: ['wcag2a', 'wcag411'],
+                    nodes: [{
+                            html: '<div id="duplicate">Elemento com ID duplicado</div>',
+                            target: ['[id="duplicate"]']
+                        }]
+                });
+            }
+            return violations;
+        });
+    }
+    async detectInteractiveElementIssues(page) {
+        return await page.evaluate(() => {
+            const violations = [];
+            const interactiveElements = globalThis.document.querySelectorAll('button, a, input, select, textarea, [role="button"], [role="link"]');
+            let problematicElements = 0;
+            interactiveElements.forEach((element) => {
+                const visibleText = element.textContent?.trim() || '';
+                const ariaLabel = element.getAttribute('aria-label') || '';
+                const title = element.getAttribute('title') || '';
+                if (visibleText && !ariaLabel.includes(visibleText) && !title.includes(visibleText)) {
+                    problematicElements++;
+                }
+            });
+            if (problematicElements > 0) {
+                violations.push({
+                    id: 'accessmonitor-interactive-names',
+                    description: `${problematicElements} elemento(s) interativo(s) que têm texto visível das suas etiquetas que não faz parte dos seus nomes acessíveis`,
+                    help: 'Garantir que o texto visível está incluído no nome acessível',
+                    impact: 'serious',
+                    tags: ['wcag2a', 'wcag253'],
+                    nodes: [{
+                            html: '<button>Texto visível</button>',
+                            target: ['button']
+                        }]
+                });
+            }
+            return violations;
+        });
+    }
+    async detectLandmarkIssues(page) {
+        return await page.evaluate(() => {
+            const violations = [];
+            const contentinfoElements = globalThis.document.querySelectorAll('[role="contentinfo"], footer');
+            contentinfoElements.forEach((element) => {
+                let parent = element.parentElement;
+                while (parent) {
+                    if (parent.hasAttribute('role') || parent.tagName === 'HEADER' || parent.tagName === 'NAV' ||
+                        parent.tagName === 'MAIN' || parent.tagName === 'ASIDE' || parent.tagName === 'SECTION') {
+                        violations.push({
+                            id: 'accessmonitor-landmark-contentinfo',
+                            description: '1 elemento com a semântica de contentinfo está contido dentro de um elemento com outra semântica',
+                            help: 'Elementos contentinfo não devem estar dentro de outros landmarks',
+                            impact: 'serious',
+                            tags: ['wcag2aa'],
+                            nodes: [{
+                                    html: element.outerHTML,
+                                    target: [element.tagName.toLowerCase()]
+                                }]
+                        });
+                        break;
+                    }
+                    parent = parent.parentElement;
+                }
+            });
+            return violations;
+        });
     }
     mapAxeRuleToWCAG(axeRuleId) {
         const ruleMapping = {
@@ -1207,9 +1467,19 @@ class WCAGValidator {
         const moderateViolations = axeResult.violations?.filter((v) => v.impact === 'moderate').length || 0;
         const minorViolations = axeResult.violations?.filter((v) => v.impact === 'minor').length || 0;
         if (useStandardFormula) {
-            const totalViolations = criticalViolations + seriousViolations + moderateViolations + minorViolations;
-            const standardScore = Math.max(0, 100 - (totalViolations * 2));
-            return Math.round(standardScore * 100) / 100;
+            let accessMonitorScore = 10.0;
+            const accessMonitorViolationCount = axeResult.violations?.filter((v) => v.id && v.id.includes('accessmonitor')).length || 0;
+            const totalViolations = accessMonitorViolationCount + criticalViolations + seriousViolations + moderateViolations + minorViolations;
+            let penaltyFactor = 0.1;
+            if (accessMonitorViolationCount > 0) {
+                penaltyFactor = 0.15;
+            }
+            if (criticalViolations > 0) {
+                penaltyFactor = 0.25;
+            }
+            accessMonitorScore = 10.0 - (totalViolations * penaltyFactor);
+            accessMonitorScore = Math.max(0, accessMonitorScore);
+            return Math.round(accessMonitorScore * 100) / 100;
         }
         else {
             const criticalPenalty = criticalViolations * 6;
@@ -1262,6 +1532,24 @@ class WCAGValidator {
             priorityViolations,
             compliancePercentage: wcagScore
         };
+    }
+    async getPage() {
+        if (!this.browser) {
+            return null;
+        }
+        try {
+            if (this.usePlaywright) {
+                const context = await this.browser.newContext();
+                return await context.newPage();
+            }
+            else {
+                return await this.browser.newPage();
+            }
+        }
+        catch (error) {
+            logger_1.logger.warn('Erro ao obter página:', error);
+            return null;
+        }
     }
     async close() {
         if (this.browser) {
