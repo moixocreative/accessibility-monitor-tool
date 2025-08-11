@@ -1554,3 +1554,393 @@
 {"averageScore":89,"level":"info","message":"✅ Auditoria multi-página concluída em 433170ms","pagesAudited":20,"pagesDiscovered":20,"service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:30"}
 {"level":"info","message":"Fechando browser...","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:30"}
 {"level":"info","message":"Browser fechado com sucesso","service":"untile-accessibility-monitoring","timestamp":"2025-08-10 00:54:31"}
+{"level":"info","message":"Iniciando auditoria multi-página WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:42"}
+{"baseUrl":"https://www.casadeinvestimentos.pt","level":"info","message":"Iniciando auditoria multi-página","options":{"auditType":"complete","crawlOptions":{"excludePatterns":["/admin","/login","/logout","/api/",".pdf",".jpg",".png",".gif",".zip","/wp-admin","/wp-content","#","/search","/cart","/checkout","/account","/password","/signin","/signup","/register","/auth"],"includeExternal":false,"maxDepth":3,"maxPages":20},"crawlStrategy":"comprehensive","delayBetweenPages":8000,"maxConcurrent":1,"maxRetries":2,"retryFailedPages":true,"useSharedSession":false},"service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:42"}
+{"level":"info","message":"🕷️ Fase 1: Descobrindo páginas...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:42"}
+{"baseUrl":"https://www.casadeinvestimentos.pt","level":"info","message":"Iniciando descoberta de páginas: comprehensive","options":{"excludePatterns":["/admin","/login","/logout","/api/",".pdf",".jpg",".png",".gif",".zip","/wp-admin","/wp-content","#","/search","/cart","/checkout","/account","/password","/signin","/signup","/register","/auth"],"includeExternal":false,"includePatterns":[],"maxDepth":3,"maxPages":20,"timeout":30000},"service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:42"}
+{"level":"info","message":"🚀 Iniciando crawling abrangente com múltiplas estratégias...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:42"}
+{"level":"info","message":"🗺️ Tentando descoberta via sitemap...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:42"}
+{"level":"info","message":"📋 Sitemap: 0 URLs descobertas","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:46"}
+{"level":"info","message":"🤖 Tentando descoberta via robots.txt...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:46"}
+{"level":"info","message":"🤖 Robots.txt: 1 URLs descobertas","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:46"}
+{"level":"info","message":"🕷️ Iniciando crawling automático aprofundado...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:46"}
+{"level":"info","message":"Crawling página: https://www.casadeinvestimentos.pt (profundidade: 0)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:47"}
+{"level":"info","message":"Crawling página: https://www.casadeinvestimentos.pt/historia (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:48"}
+{"level":"info","message":"Crawling página: https://www.casadeinvestimentos.pt/equipa (profundidade: 2)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:48"}
+{"level":"info","message":"Crawling concluído: 50 páginas descobertas","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:48"}
+{"level":"info","message":"🕷️ Crawling: 50 URLs descobertas","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:48"}
+{"level":"info","message":"🔍 Tentando descoberta por padrões comuns...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:48"}
+{"level":"info","message":"🔍 Padrões: 0 URLs descobertas","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:48"}
+{"level":"info","message":"✅ Crawling abrangente concluído: 47 páginas válidas de 49 descobertas","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:48"}
+{"level":"info","message":"📋 Descobertas 20 páginas para auditoria","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:48"}
+{"level":"info","message":"🔍 Fase 2: Auditando páginas descobertas...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:48"}
+{"level":"info","message":"🔍 Iniciando auditoria de 20 páginas válidas","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:48"}
+{"level":"info","message":"🔍 Auditando página 1/20: https://www.casadeinvestimentos.pt/sitemap.xml</pre></body></html>","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:48"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt/sitemap.xml</pre></body></html>","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:48"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt/sitemap.xml</pre></body></html> (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:48"}
+{"level":"info","message":"Browser não inicializado, tentando inicializar...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:48"}
+{"level":"info","message":"🚀 Inicializando Playwright (estratégia otimizada)...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:48"}
+{"level":"info","message":"✅ Playwright inicializado com sucesso","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:48"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:48"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:48"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:48"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt/sitemap.xml</pre></body></html>","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:49"}
+{"level":"info","message":"Página carregada: \"Not Found\" em https://www.casadeinvestimentos.pt/sitemap.xml%3C/pre%3E%3C/body%3E%3C/html%3E","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:49"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:52"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:52"}
+{"level":"info","message":"Total de violações axe-core: 1","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:52"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:52"}
+{"level":"info","message":"Total de violações processadas: 1","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:52"}
+{"level":"info","message":"✅ Página 1 concluída: https://www.casadeinvestimentos.pt/sitemap.xml</pre></body></html> (Score: 99)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:52"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:43:52"}
+{"level":"info","message":"🔍 Auditando página 2/20: https://www.casadeinvestimentos.pt","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:00"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:00"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:00"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:00"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:00"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:00"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:00"}
+{"level":"info","message":"Página carregada: \"Casa de Investimentos - Gestão de Patrimónios e Fundos de Investimento\" em https://www.casadeinvestimentos.pt/","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:01"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:04"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:04"}
+{"level":"info","message":"Total de violações axe-core: 6","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:04"}
+{"level":"info","message":"Violação axe-core: aria-required-children - critical - Ensures elements with an ARIA role that require child roles contain them","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:04"}
+{"level":"info","message":"Violação axe-core: duplicate-id-active - serious - Ensures every id attribute value of active elements is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:04"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:04"}
+{"level":"info","message":"Violação axe-core: empty-table-header - minor - Ensures table headers have discernible text","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:04"}
+{"level":"info","message":"Violação axe-core: link-name - serious - Ensures links have discernible text","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:04"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:04"}
+{"level":"info","message":"Total de violações processadas: 6","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:04"}
+{"level":"info","message":"✅ Página 2 concluída: https://www.casadeinvestimentos.pt (Score: 86)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:04"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:04"}
+{"level":"info","message":"🔍 Auditando página 3/20: https://www.casadeinvestimentos.pt/historia","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:12"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt/historia","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:12"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt/historia (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:12"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:12"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:12"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:12"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt/historia","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:12"}
+{"level":"info","message":"Página carregada: \"História | Casa de Investimentos\" em https://www.casadeinvestimentos.pt/historia","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:13"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:16"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:16"}
+{"level":"info","message":"Total de violações axe-core: 5","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:16"}
+{"level":"info","message":"Violação axe-core: aria-required-children - critical - Ensures elements with an ARIA role that require child roles contain them","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:16"}
+{"level":"info","message":"Violação axe-core: duplicate-id-active - serious - Ensures every id attribute value of active elements is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:16"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:16"}
+{"level":"info","message":"Violação axe-core: heading-order - moderate - Ensures the order of headings is semantically correct","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:16"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:16"}
+{"level":"info","message":"Total de violações processadas: 5","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:16"}
+{"level":"info","message":"✅ Página 3 concluída: https://www.casadeinvestimentos.pt/historia (Score: 89)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:16"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:16"}
+{"level":"info","message":"🔍 Auditando página 4/20: https://www.casadeinvestimentos.pt/equipa","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:24"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt/equipa","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:24"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt/equipa (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:24"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:24"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:24"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:24"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt/equipa","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:24"}
+{"level":"info","message":"Página carregada: \"Equipa | Casa de Investimentos\" em https://www.casadeinvestimentos.pt/equipa","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:25"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:28"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:28"}
+{"level":"info","message":"Total de violações axe-core: 2","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:28"}
+{"level":"info","message":"Violação axe-core: duplicate-id-active - serious - Ensures every id attribute value of active elements is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:28"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:28"}
+{"level":"info","message":"Total de violações processadas: 2","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:28"}
+{"level":"info","message":"✅ Página 4 concluída: https://www.casadeinvestimentos.pt/equipa (Score: 96)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:28"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:28"}
+{"level":"info","message":"🔍 Auditando página 5/20: https://www.casadeinvestimentos.pt/filosofia-e-processo-de-investimento","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:36"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt/filosofia-e-processo-de-investimento","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:36"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt/filosofia-e-processo-de-investimento (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:36"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:36"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:36"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:36"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt/filosofia-e-processo-de-investimento","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:36"}
+{"level":"info","message":"Página carregada: \"Filosofia e processo de investimento | Casa de Investimentos\" em https://www.casadeinvestimentos.pt/filosofia-e-processo-de-investimento","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:37"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:39"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:39"}
+{"level":"info","message":"Total de violações axe-core: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:39"}
+{"level":"info","message":"Violação axe-core: duplicate-id-active - serious - Ensures every id attribute value of active elements is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:39"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:39"}
+{"level":"info","message":"Violação axe-core: heading-order - moderate - Ensures the order of headings is semantically correct","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:39"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:39"}
+{"level":"info","message":"Total de violações processadas: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:39"}
+{"level":"info","message":"✅ Página 5 concluída: https://www.casadeinvestimentos.pt/filosofia-e-processo-de-investimento (Score: 95)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:39"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:39"}
+{"level":"info","message":"🔍 Auditando página 6/20: https://www.casadeinvestimentos.pt/save-and-grow","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:47"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt/save-and-grow","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:47"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt/save-and-grow (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:47"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:47"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:47"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:47"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt/save-and-grow","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:47"}
+{"level":"info","message":"Página carregada: \"Save & Grow | Casa de Investimentos\" em https://www.casadeinvestimentos.pt/save-and-grow","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:48"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:51"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:52"}
+{"level":"info","message":"Total de violações axe-core: 9","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:52"}
+{"level":"info","message":"Violação axe-core: aria-required-children - critical - Ensures elements with an ARIA role that require child roles contain them","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:52"}
+{"level":"info","message":"Violação axe-core: aria-required-parent - critical - Ensures elements with an ARIA role that require parent roles are contained by them","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:52"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:52"}
+{"level":"info","message":"Violação axe-core: duplicate-id-active - serious - Ensures every id attribute value of active elements is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:52"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:52"}
+{"level":"info","message":"Violação axe-core: empty-table-header - minor - Ensures table headers have discernible text","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:52"}
+{"level":"info","message":"Violação axe-core: heading-order - moderate - Ensures the order of headings is semantically correct","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:52"}
+{"level":"info","message":"Violação axe-core: landmark-one-main - moderate - Ensures the document has a main landmark","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:52"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:52"}
+{"level":"info","message":"Total de violações processadas: 9","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:52"}
+{"level":"info","message":"✅ Página 6 concluída: https://www.casadeinvestimentos.pt/save-and-grow (Score: 78)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:52"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:44:52"}
+{"level":"info","message":"🔍 Auditando página 7/20: https://www.casadeinvestimentos.pt/podcast","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:00"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt/podcast","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:00"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt/podcast (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:00"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:00"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:00"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:00"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt/podcast","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:00"}
+{"level":"info","message":"Página carregada: \"Podcast - Investidor Inteligente | Casa de Investimentos\" em https://www.casadeinvestimentos.pt/podcast","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:01"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:03"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:04"}
+{"level":"info","message":"Total de violações axe-core: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:04"}
+{"level":"info","message":"Violação axe-core: duplicate-id-active - serious - Ensures every id attribute value of active elements is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:04"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:04"}
+{"level":"info","message":"Violação axe-core: heading-order - moderate - Ensures the order of headings is semantically correct","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:04"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:04"}
+{"level":"info","message":"Total de violações processadas: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:04"}
+{"level":"info","message":"✅ Página 7 concluída: https://www.casadeinvestimentos.pt/podcast (Score: 95)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:04"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:04"}
+{"level":"info","message":"🔍 Auditando página 8/20: https://www.casadeinvestimentos.pt/newsletter","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:12"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt/newsletter","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:12"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt/newsletter (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:12"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:12"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:12"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:12"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt/newsletter","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:12"}
+{"level":"info","message":"Página carregada: \"Newsletter - Investidor Inteligente | Casa de Investimentos\" em https://www.casadeinvestimentos.pt/newsletter","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:13"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:15"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:15"}
+{"level":"info","message":"Total de violações axe-core: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:15"}
+{"level":"info","message":"Violação axe-core: duplicate-id-active - serious - Ensures every id attribute value of active elements is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:15"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:15"}
+{"level":"info","message":"Violação axe-core: heading-order - moderate - Ensures the order of headings is semantically correct","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:15"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:15"}
+{"level":"info","message":"Total de violações processadas: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:15"}
+{"level":"info","message":"✅ Página 8 concluída: https://www.casadeinvestimentos.pt/newsletter (Score: 95)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:15"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:15"}
+{"level":"info","message":"🔍 Auditando página 9/20: https://www.casadeinvestimentos.pt/blog","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:23"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt/blog","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:23"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt/blog (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:23"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:23"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:23"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:23"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt/blog","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:24"}
+{"level":"info","message":"Página carregada: \"Blog - Investidor Inteligente | Casa de Investimentos\" em https://www.casadeinvestimentos.pt/blog","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:25"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:28"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:28"}
+{"level":"info","message":"Total de violações axe-core: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:28"}
+{"level":"info","message":"Violação axe-core: duplicate-id-active - serious - Ensures every id attribute value of active elements is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:28"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:28"}
+{"level":"info","message":"Violação axe-core: heading-order - moderate - Ensures the order of headings is semantically correct","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:28"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:28"}
+{"level":"info","message":"Total de violações processadas: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:28"}
+{"level":"info","message":"✅ Página 9 concluída: https://www.casadeinvestimentos.pt/blog (Score: 95)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:28"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:28"}
+{"level":"info","message":"🔍 Auditando página 10/20: https://www.casadeinvestimentos.pt/media","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:36"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt/media","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:36"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt/media (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:36"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:36"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:36"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:36"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt/media","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:36"}
+{"level":"info","message":"Página carregada: \"Media - Investidor Inteligente | Casa de Investimentos\" em https://www.casadeinvestimentos.pt/media","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:37"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:40"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:40"}
+{"level":"info","message":"Total de violações axe-core: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:40"}
+{"level":"info","message":"Violação axe-core: duplicate-id-active - serious - Ensures every id attribute value of active elements is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:40"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:40"}
+{"level":"info","message":"Violação axe-core: heading-order - moderate - Ensures the order of headings is semantically correct","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:40"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:40"}
+{"level":"info","message":"Total de violações processadas: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:40"}
+{"level":"info","message":"✅ Página 10 concluída: https://www.casadeinvestimentos.pt/media (Score: 95)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:40"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:40"}
+{"level":"info","message":"🔍 Auditando página 11/20: https://www.casadeinvestimentos.pt/biblioteca-da-casa","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:48"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt/biblioteca-da-casa","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:48"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt/biblioteca-da-casa (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:48"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:48"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:48"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:48"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt/biblioteca-da-casa","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:48"}
+{"level":"info","message":"Página carregada: \"Biblioteca da casa - Investidor Inteligente | Casa de Investimentos\" em https://www.casadeinvestimentos.pt/biblioteca-da-casa","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:49"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:52"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:52"}
+{"level":"info","message":"Total de violações axe-core: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:52"}
+{"level":"info","message":"Violação axe-core: duplicate-id-active - serious - Ensures every id attribute value of active elements is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:52"}
+{"level":"info","message":"Violação axe-core: heading-order - moderate - Ensures the order of headings is semantically correct","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:52"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:52"}
+{"level":"info","message":"Total de violações processadas: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:52"}
+{"level":"info","message":"✅ Página 11 concluída: https://www.casadeinvestimentos.pt/biblioteca-da-casa (Score: 95)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:52"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:45:52"}
+{"level":"info","message":"🔍 Auditando página 12/20: https://www.casadeinvestimentos.pt/videoteca","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:00"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt/videoteca","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:00"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt/videoteca (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:00"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:00"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:00"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:00"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt/videoteca","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:00"}
+{"level":"info","message":"Página carregada: \"Videoteca - Investidor Inteligente | Casa de Investimentos\" em https://www.casadeinvestimentos.pt/videoteca","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:01"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:03"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:04"}
+{"level":"info","message":"Total de violações axe-core: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:04"}
+{"level":"info","message":"Violação axe-core: duplicate-id-active - serious - Ensures every id attribute value of active elements is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:04"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:04"}
+{"level":"info","message":"Violação axe-core: heading-order - moderate - Ensures the order of headings is semantically correct","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:04"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:04"}
+{"level":"info","message":"Total de violações processadas: 4","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:04"}
+{"level":"info","message":"✅ Página 12 concluída: https://www.casadeinvestimentos.pt/videoteca (Score: 95)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:04"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:04"}
+{"level":"info","message":"🔍 Auditando página 13/20: https://www.casadeinvestimentos.pt/glossario","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:12"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt/glossario","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:12"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt/glossario (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:12"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:12"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:12"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:12"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt/glossario","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:12"}
+{"level":"info","message":"Página carregada: \"Glossário - Investidor Inteligente | Casa de Investimentos\" em https://www.casadeinvestimentos.pt/glossario","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:13"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:15"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:16"}
+{"level":"info","message":"Total de violações axe-core: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:16"}
+{"level":"info","message":"Violação axe-core: duplicate-id-active - serious - Ensures every id attribute value of active elements is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:16"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:16"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:16"}
+{"level":"info","message":"Total de violações processadas: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:16"}
+{"level":"info","message":"✅ Página 13 concluída: https://www.casadeinvestimentos.pt/glossario (Score: 96)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:16"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:16"}
+{"level":"info","message":"🔍 Auditando página 14/20: https://www.casadeinvestimentos.pt/supervisao","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:24"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt/supervisao","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:24"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt/supervisao (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:24"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:24"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:24"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:24"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt/supervisao","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:24"}
+{"level":"info","message":"Página carregada: \"Supervisão | Casa de Investimentos\" em https://www.casadeinvestimentos.pt/supervisao","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:24"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:27"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:27"}
+{"level":"info","message":"Total de violações axe-core: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:27"}
+{"level":"info","message":"Violação axe-core: duplicate-id-active - serious - Ensures every id attribute value of active elements is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:27"}
+{"level":"info","message":"Violação axe-core: heading-order - moderate - Ensures the order of headings is semantically correct","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:27"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:27"}
+{"level":"info","message":"Total de violações processadas: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:27"}
+{"level":"info","message":"✅ Página 14 concluída: https://www.casadeinvestimentos.pt/supervisao (Score: 95)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:27"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:27"}
+{"level":"info","message":"🔍 Auditando página 15/20: https://www.casadeinvestimentos.pt/termos-e-condicoes","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:35"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt/termos-e-condicoes","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:35"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt/termos-e-condicoes (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:35"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:35"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:35"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:35"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt/termos-e-condicoes","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:35"}
+{"level":"info","message":"Página carregada: \"Termos e condições | Casa de Investimentos\" em https://www.casadeinvestimentos.pt/termos-e-condicoes","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:36"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:39"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:39"}
+{"level":"info","message":"Total de violações axe-core: 2","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:39"}
+{"level":"info","message":"Violação axe-core: duplicate-id-active - serious - Ensures every id attribute value of active elements is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:39"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:39"}
+{"level":"info","message":"Total de violações processadas: 2","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:39"}
+{"level":"info","message":"✅ Página 15 concluída: https://www.casadeinvestimentos.pt/termos-e-condicoes (Score: 96)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:39"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:39"}
+{"level":"info","message":"🔍 Auditando página 16/20: https://www.casadeinvestimentos.pt/aviso-sobre-protecao-de-dados-pessoais","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:47"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt/aviso-sobre-protecao-de-dados-pessoais","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:47"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt/aviso-sobre-protecao-de-dados-pessoais (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:47"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:47"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:47"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:47"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt/aviso-sobre-protecao-de-dados-pessoais","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:47"}
+{"level":"info","message":"Página carregada: \"Aviso sobre Proteção de Dados Pessoais | Casa de Investimentos\" em https://www.casadeinvestimentos.pt/aviso-sobre-protecao-de-dados-pessoais","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:48"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:50"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:50"}
+{"level":"info","message":"Total de violações axe-core: 2","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:50"}
+{"level":"info","message":"Violação axe-core: duplicate-id-active - serious - Ensures every id attribute value of active elements is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:50"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:50"}
+{"level":"info","message":"Total de violações processadas: 2","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:50"}
+{"level":"info","message":"✅ Página 16 concluída: https://www.casadeinvestimentos.pt/aviso-sobre-protecao-de-dados-pessoais (Score: 96)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:50"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:50"}
+{"level":"info","message":"🔍 Auditando página 17/20: https://www.casadeinvestimentos.pt/","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:58"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt/","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:58"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt/ (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:58"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:58"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:58"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:58"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt/","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:58"}
+{"level":"info","message":"Página carregada: \"Casa de Investimentos - Gestão de Patrimónios e Fundos de Investimento\" em https://www.casadeinvestimentos.pt/","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:46:59"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:02"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:02"}
+{"level":"info","message":"Total de violações axe-core: 6","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:02"}
+{"level":"info","message":"Violação axe-core: aria-required-children - critical - Ensures elements with an ARIA role that require child roles contain them","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:02"}
+{"level":"info","message":"Violação axe-core: duplicate-id-active - serious - Ensures every id attribute value of active elements is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:02"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:02"}
+{"level":"info","message":"Violação axe-core: empty-table-header - minor - Ensures table headers have discernible text","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:02"}
+{"level":"info","message":"Violação axe-core: link-name - serious - Ensures links have discernible text","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:02"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:02"}
+{"level":"info","message":"Total de violações processadas: 6","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:02"}
+{"level":"info","message":"✅ Página 17 concluída: https://www.casadeinvestimentos.pt/ (Score: 86)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:02"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:02"}
+{"level":"info","message":"🔍 Auditando página 18/20: https://www.casadeinvestimentos.pt/en","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:10"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt/en","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:10"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt/en (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:10"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:10"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:10"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:10"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt/en","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:10"}
+{"level":"info","message":"Página carregada: \"Casa de Investimentos - Wealth Management and Investment Funds, SGOIC, SA\" em https://www.casadeinvestimentos.pt/en","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:11"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:14"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:14"}
+{"level":"info","message":"Total de violações axe-core: 6","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:14"}
+{"level":"info","message":"Violação axe-core: aria-required-children - critical - Ensures elements with an ARIA role that require child roles contain them","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:14"}
+{"level":"info","message":"Violação axe-core: duplicate-id-active - serious - Ensures every id attribute value of active elements is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:14"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:14"}
+{"level":"info","message":"Violação axe-core: empty-table-header - minor - Ensures table headers have discernible text","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:14"}
+{"level":"info","message":"Violação axe-core: link-name - serious - Ensures links have discernible text","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:14"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:14"}
+{"level":"info","message":"Total de violações processadas: 6","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:14"}
+{"level":"info","message":"✅ Página 18 concluída: https://www.casadeinvestimentos.pt/en (Score: 86)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:14"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:14"}
+{"level":"info","message":"🔍 Auditando página 19/20: https://www.casadeinvestimentos.pt/pesquisa","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:22"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt/pesquisa","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:22"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt/pesquisa (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:22"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:22"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:22"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:22"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt/pesquisa","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:22"}
+{"level":"info","message":"Página carregada: \"Pesquisa | Casa de Investimentos\" em https://www.casadeinvestimentos.pt/pesquisa","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:24"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:27"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:27"}
+{"level":"info","message":"Total de violações axe-core: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:27"}
+{"level":"info","message":"Violação axe-core: label - critical - Ensures every form element has a label","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:27"}
+{"level":"info","message":"Violação axe-core: landmark-one-main - moderate - Ensures the document has a main landmark","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:27"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:27"}
+{"level":"info","message":"Total de violações processadas: 3","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:27"}
+{"level":"info","message":"✅ Página 19 concluída: https://www.casadeinvestimentos.pt/pesquisa (Score: 92)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:27"}
+{"level":"info","message":"⏳ Aguardando 8000ms antes da próxima página...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:27"}
+{"level":"info","message":"🔍 Auditando página 20/20: https://www.casadeinvestimentos.pt/blog/artigos/5-sinais-de-declinio-de-um-fosso-economico","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:35"}
+{"level":"info","message":"🎯 Tentativa 1 para https://www.casadeinvestimentos.pt/blog/artigos/5-sinais-de-declinio-de-um-fosso-economico","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:35"}
+{"level":"info","message":"Iniciando auditoria WCAG para https://www.casadeinvestimentos.pt/blog/artigos/5-sinais-de-declinio-de-um-fosso-economico (completa)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:35"}
+{"level":"info","message":"Browser disponível, executando axe-core...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:35"}
+{"level":"info","message":"Executando auditoria completa - todos os critérios WCAG 2.1 AA","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:35"}
+{"level":"info","message":"Executando axe-core otimizado (tentativa 1/2) - complete","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:35"}
+{"level":"info","message":"Navegando para: https://www.casadeinvestimentos.pt/blog/artigos/5-sinais-de-declinio-de-um-fosso-economico","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:35"}
+{"level":"info","message":"Página carregada: \"5 sinais de declínio de um fosso económico | Casa de Investimentos\" em https://www.casadeinvestimentos.pt/blog/artigos/5-sinais-de-declinio-de-um-fosso-economico","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:36"}
+{"level":"info","message":"axe-core carregado, iniciando execução...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:39"}
+{"level":"info","message":"Axe-core otimizado executado com sucesso (complete - tentativa 1)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:39"}
+{"level":"info","message":"Total de violações axe-core: 7","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:39"}
+{"level":"info","message":"Violação axe-core: aria-required-children - critical - Ensures elements with an ARIA role that require child roles contain them","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:39"}
+{"level":"info","message":"Violação axe-core: color-contrast - serious - Ensures the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:39"}
+{"level":"info","message":"Violação axe-core: duplicate-id-active - serious - Ensures every id attribute value of active elements is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:39"}
+{"level":"info","message":"Violação axe-core: duplicate-id - minor - Ensures every id attribute value is unique","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:39"}
+{"level":"info","message":"Violação axe-core: heading-order - moderate - Ensures the order of headings is semantically correct","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:39"}
+{"level":"info","message":"Violação axe-core: link-name - serious - Ensures links have discernible text","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:39"}
+{"level":"info","message":"Violação axe-core: region - moderate - Ensures all page content is contained by landmarks","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:39"}
+{"level":"info","message":"Total de violações processadas: 7","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:39"}
+{"level":"info","message":"✅ Página 20 concluída: https://www.casadeinvestimentos.pt/blog/artigos/5-sinais-de-declinio-de-um-fosso-economico (Score: 83)","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:39"}
+{"level":"info","message":"📊 Auditoria concluída: 20/20 páginas bem-sucedidas","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:39"}
+{"level":"info","message":"📊 Fase 3: Gerando análise consolidada...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:39"}
+{"averageScore":92,"level":"info","message":"✅ Auditoria multi-página concluída em 236594ms","pagesAudited":20,"pagesDiscovered":20,"service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:39"}
+{"level":"info","message":"Fechando browser...","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:39"}
+{"level":"info","message":"Browser fechado com sucesso","service":"untile-accessibility-monitoring","timestamp":"2025-08-11 11:47:39"}
