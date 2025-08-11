@@ -124,9 +124,15 @@ class WCAGValidator {
             this.browser = null;
         }
     }
-    async auditSite(url, siteId, isCompleteAudit = false) {
+    async auditSite(url, siteId, isCompleteAudit = false, useStandardFormula = false, criteriaSet = 'untile', customCriteria) {
+        logger_1.logger.info(`Iniciando auditoria de ${url} (${isCompleteAudit ? 'completa' : 'prioritária'})`);
         try {
-            logger_1.logger.info(`Iniciando auditoria WCAG para ${url} (${isCompleteAudit ? 'completa' : 'simples'})`);
+            const { getCriteriaBySet } = require('../core/wcag-criteria');
+            const selectedCriteria = getCriteriaBySet(criteriaSet, customCriteria);
+            logger_1.logger.info(`Usando conjunto de critérios: ${criteriaSet} (${selectedCriteria.length} critérios)`);
+            if (criteriaSet === 'custom' && customCriteria) {
+                logger_1.logger.info(`Critérios personalizados: ${customCriteria.join(', ')}`);
+            }
             let axeResult = { violations: [], passes: [], incomplete: [], inapplicable: [] };
             if (!this.browser) {
                 logger_1.logger.info('Browser não inicializado, tentando inicializar...');
@@ -135,14 +141,8 @@ class WCAGValidator {
             if (this.browser) {
                 logger_1.logger.info('Browser disponível, executando axe-core...');
                 try {
-                    if (isCompleteAudit) {
-                        logger_1.logger.info('Executando auditoria completa - todos os critérios WCAG 2.1 AA');
-                        axeResult = await this.runAxeCoreOptimized(url, 'complete');
-                    }
-                    else {
-                        logger_1.logger.info('Executando auditoria simples - apenas critérios prioritários');
-                        axeResult = await this.runAxeCoreOptimized(url, 'simple');
-                    }
+                    logger_1.logger.info(`Executando auditoria com critérios: ${criteriaSet}`);
+                    axeResult = await this.runAxeCoreOptimized(url, criteriaSet);
                 }
                 catch (error) {
                     logger_1.logger.warn('Erro ao executar axe-core, continuando sem validação detalhada:', error);
@@ -152,7 +152,7 @@ class WCAGValidator {
                 logger_1.logger.warn('Browser não disponível, pulando validação axe-core');
             }
             const violations = this.analyzeViolations(axeResult, url);
-            const wcagScore = this.calculateWCAGScoreFromAxe(axeResult);
+            const wcagScore = this.calculateWCAGScoreFromAxe(axeResult, useStandardFormula);
             const legalRiskMetrics = this.calculateLegalRiskMetrics(violations);
             const summary = this.generateSummary(violations, wcagScore);
             const lighthouseScore = {
@@ -304,7 +304,7 @@ class WCAGValidator {
                 inapplicable: []
             };
         }
-        return this.runAxeCoreOptimized(url, 'simple');
+        return this.runAxeCoreOptimized(url, 'untile');
     }
     async runAxeCoreComplete(url) {
         if (!this.browser) {
@@ -319,13 +319,13 @@ class WCAGValidator {
                 inapplicable: []
             };
         }
-        return this.runAxeCoreOptimized(url, 'complete');
+        return this.runAxeCoreOptimized(url, 'untile');
     }
-    async runAxeCoreOptimized(url, auditType) {
+    async runAxeCoreOptimized(url, criteriaSet = 'untile') {
         const maxRetries = 2;
         let lastError = null;
         for (let attempt = 1; attempt <= maxRetries; attempt++) {
-            logger_1.logger.info(`Executando axe-core otimizado (tentativa ${attempt}/${maxRetries}) - ${auditType}`);
+            logger_1.logger.info(`Executando axe-core otimizado (tentativa ${attempt}/${maxRetries}) - ${criteriaSet}`);
             let page = null;
             let context = null;
             try {
@@ -333,7 +333,7 @@ class WCAGValidator {
                     context = await this.browser.newContext({
                         viewport: { width: 1280, height: 720 },
                         extraHTTPHeaders: {
-                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9',
                             'Accept-Language': 'en-US,en;q=0.5',
                             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
                         }
@@ -347,7 +347,7 @@ class WCAGValidator {
                     page.setDefaultTimeout(45000);
                     page.setDefaultNavigationTimeout(60000);
                     await page.setExtraHTTPHeaders({
-                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9',
                         'Accept-Language': 'en-US,en;q=0.5',
                         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
                     });
@@ -427,11 +427,25 @@ class WCAGValidator {
                             const axeConfig = {
                                 resultTypes: ['violations', 'passes']
                             };
-                            if (auditType === 'simple') {
+                            if (criteriaSet === 'gov-pt') {
+                                axeConfig.rules = {
+                                    'color-contrast': { enabled: true },
+                                    'image-alt': { enabled: true },
+                                    'keyboard': { enabled: true },
+                                    'bypass': { enabled: true },
+                                    'focus-visible': { enabled: true },
+                                    'label': { enabled: true },
+                                    'name-role-value': { enabled: true },
+                                    'info-and-relationships': { enabled: true },
+                                    'timing-adjustable': { enabled: true },
+                                    'error-identification': { enabled: true }
+                                };
+                            }
+                            else if (criteriaSet === 'untile') {
                                 axeConfig.tags = ['wcag2a', 'wcag2aa'];
                             }
                             else {
-                                axeConfig.tags = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
+                                axeConfig.tags = ['wcag2a', 'wcag2aa'];
                             }
                             console.log('Iniciando axe.run com configuração:', JSON.stringify(axeConfig));
                             console.log('Documento disponível:', typeof globalThis.document !== 'undefined');
@@ -459,7 +473,7 @@ class WCAGValidator {
                             reject(new Error(`Erro ao executar axe-core: ${error}`));
                         }
                     });
-                }, auditType);
+                }, criteriaSet);
                 if (this.usePlaywright) {
                     await page.close();
                     await context.close();
@@ -467,7 +481,7 @@ class WCAGValidator {
                 else {
                     await page.close();
                 }
-                logger_1.logger.info(`Axe-core otimizado executado com sucesso (${auditType} - tentativa ${attempt})`);
+                logger_1.logger.info(`Axe-core otimizado executado com sucesso (${criteriaSet} - tentativa ${attempt})`);
                 return axeResult;
             }
             catch (error) {
@@ -492,7 +506,7 @@ class WCAGValidator {
                 }
             }
         }
-        logger_1.logger.error(`Todas as tentativas falharam para axe-core otimizado (${auditType})`);
+        logger_1.logger.error(`Todas as tentativas falharam para axe-core otimizado (${criteriaSet})`);
         logger_1.logger.error('Último erro:', lastError?.message || 'Erro desconhecido');
         return {
             violations: [],
@@ -1183,7 +1197,7 @@ class WCAGValidator {
                 return 'moderate';
         }
     }
-    calculateWCAGScoreFromAxe(axeResult) {
+    calculateWCAGScoreFromAxe(axeResult, useStandardFormula = false) {
         if (!axeResult.violations || axeResult.violations.length === 0) {
             logger_1.logger.warn('Dados do axe-core não disponíveis, score WCAG não calculado');
             return -1;
@@ -1192,13 +1206,20 @@ class WCAGValidator {
         const seriousViolations = axeResult.violations?.filter((v) => v.impact === 'serious').length || 0;
         const moderateViolations = axeResult.violations?.filter((v) => v.impact === 'moderate').length || 0;
         const minorViolations = axeResult.violations?.filter((v) => v.impact === 'minor').length || 0;
-        const criticalPenalty = criticalViolations * 6;
-        const seriousPenalty = seriousViolations * 3;
-        const moderatePenalty = moderateViolations * 1;
-        const minorPenalty = minorViolations * 0.5;
-        const totalPenalty = criticalPenalty + seriousPenalty + moderatePenalty + minorPenalty;
-        const axeScore = Math.max(0, 100 - totalPenalty);
-        return Math.round(axeScore);
+        if (useStandardFormula) {
+            const totalViolations = criticalViolations + seriousViolations + moderateViolations + minorViolations;
+            const standardScore = Math.max(0, 100 - (totalViolations * 2));
+            return Math.round(standardScore * 100) / 100;
+        }
+        else {
+            const criticalPenalty = criticalViolations * 6;
+            const seriousPenalty = seriousViolations * 3;
+            const moderatePenalty = moderateViolations * 1;
+            const minorPenalty = minorViolations * 0.5;
+            const totalPenalty = criticalPenalty + seriousPenalty + moderatePenalty + minorPenalty;
+            const axeScore = Math.max(0, 100 - totalPenalty);
+            return Math.round(axeScore * 100) / 100;
+        }
     }
     calculateWCAGScore(lighthouseResult, axeResult) {
         const lighthouseScore = lighthouseResult.accessibility * 0.35;
@@ -1210,7 +1231,7 @@ class WCAGValidator {
         const otherPenalty = (totalViolations - criticalViolations - seriousViolations) * 0.5;
         const totalPenalty = criticalPenalty + seriousPenalty + otherPenalty;
         const axeScore = Math.max(0, 100 - totalPenalty) * 0.65;
-        return Math.round(lighthouseScore + axeScore);
+        return Math.round((lighthouseScore + axeScore) * 100) / 100;
     }
     calculateLegalRiskMetrics(violations) {
         const criticalViolations = violations.filter(v => v.severity === 'critical').length;

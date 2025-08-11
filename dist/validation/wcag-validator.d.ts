@@ -5,7 +5,7 @@ export declare class WCAGValidator {
     private usePlaywright;
     constructor();
     private initBrowser;
-    auditSite(url: string, siteId: string, isCompleteAudit?: boolean): Promise<AuditResult>;
+    auditSite(url: string, siteId: string, isCompleteAudit?: boolean, useStandardFormula?: boolean, criteriaSet?: 'untile' | 'gov-pt' | 'custom', customCriteria?: string[]): Promise<AuditResult>;
     private runLighthouse;
     private runAxeCore;
     private runAxeCoreComplete;

@@ -21,16 +21,16 @@ yarn audit:wcag <URL> [tipo] [formato]
 **Exemplos:**
 ```bash
 # Análise básica (15 critérios críticos)
-yarn audit:wcag https://www.example.com simple console
+yarn audit:wcag https://www.example.com console
 
 # Análise completa (50+ critérios) 
-yarn audit:wcag https://www.example.com complete html
+yarn audit:wcag https://www.example.com html
 
 # Exportar como JSON
-yarn audit:wcag https://www.example.com simple json
+yarn audit:wcag https://www.example.com json
 
 # Relatório em Markdown
-yarn audit:wcag https://www.example.com simple markdown
+yarn audit:wcag https://www.example.com markdown
 ```
 
 **⏱️ Tempo estimado:**
@@ -47,10 +47,10 @@ Para auditorias que usem os 10 critérios críticos oficiais do governo portugu�
 
 ```bash
 # Auditoria básica com critérios Gov.pt
-yarn audit:wcag https://www.example.com simple console
+yarn audit:wcag https://www.example.com console
 
 # Auditoria completa com critérios Gov.pt
-yarn audit:wcag https://www.example.com complete html
+yarn audit:wcag https://www.example.com html
 ```
 
 **Nota:** O comando `yarn audit:wcag` usa sempre os critérios UNTILE por padrão. Para critérios Gov.pt, use `yarn audit:multi` com uma única página.
@@ -59,13 +59,13 @@ yarn audit:wcag https://www.example.com complete html
 
 ```bash
 # Auditoria de uma página com critérios Gov.pt
-yarn audit:multi https://www.example.com manual simple html 1 false gov-pt
+yarn audit:multi https://www.example.com manual html 1 false gov-pt
 
 # Auditoria de múltiplas páginas com critérios Gov.pt
-yarn audit:multi https://www.example.com auto simple html 20 false gov-pt
+yarn audit:multi https://www.example.com auto html 20 false gov-pt
 
 # Auditoria completa com critérios Gov.pt
-yarn audit:multi https://www.example.com comprehensive complete html 50 false gov-pt
+yarn audit:multi https://www.example.com comprehensive html 50 false gov-pt
 ```
 
 ### **Critérios Incluídos (acessibilidade.gov.pt):**
@@ -101,7 +101,6 @@ yarn audit:multi <URL> [estratégia] [tipo] [formato] [max-páginas] [fórmula-p
   - `auto` - Discovery automático
   - `sitemap` - Apenas sitemap.xml
   - `manual` - Apenas a URL fornecida
-- `[tipo]` - `simple` (padrão) ou `complete`
 - `[formato]` - `console` (padrão), `json`, `html`, `markdown`
 - `[max-páginas]` - Número máximo de páginas (padrão: 20)
 - `[fórmula-padrão]` - `true` para fórmula axe-core, `false` para UNTILE (padrão: false)
@@ -113,17 +112,17 @@ yarn audit:multi <URL> [estratégia] [tipo] [formato] [max-páginas] [fórmula-p
 #### **1. Critérios UNTILE (Padrão)**
 - **15 critérios prioritários** baseados em dados empíricos WebAIM Million 2024
 - **Foco:** Portfolio UNTILE e casos de uso específicos
-- **Uso:** `yarn audit:multi https://example.com auto simple html 20 false untile`
+- **Uso:** `yarn audit:multi https://example.com auto html 20 false untile`
 
 #### **2. Critérios acessibilidade.gov.pt**
 - **10 critérios críticos** oficiais do governo português
 - **Foco:** Conformidade com padrões oficiais nacionais
-- **Uso:** `yarn audit:multi https://example.com auto simple html 20 false gov-pt`
+- **Uso:** `yarn audit:multi https://example.com auto html 20 false gov-pt`
 
 #### **3. Critérios Personalizados**
 - **Critérios específicos** escolhidos pelo utilizador
 - **Foco:** Auditorias direcionadas e específicas
-- **Uso:** `yarn audit:multi https://example.com auto simple html 20 false custom "1.1.1,1.4.3,2.1.1"`
+- **Uso:** `yarn audit:multi https://example.com auto html 20 false custom "1.1.1,1.4.3,2.1.1"`
 
 **Exemplos:**
 ```bash
@@ -131,19 +130,19 @@ yarn audit:multi <URL> [estratégia] [tipo] [formato] [max-páginas] [fórmula-p
 yarn audit:multi https://www.example.com
 
 # Análise com critérios Gov.pt
-yarn audit:multi https://www.example.com auto simple html 20 false gov-pt
+yarn audit:multi https://www.example.com auto html 20 false gov-pt
 
 # Análise com critérios personalizados
-yarn audit:multi https://www.example.com auto simple html 20 false custom "1.1.1,1.4.3,2.1.1,2.4.1,4.1.2"
+yarn audit:multi https://www.example.com auto html 20 false custom "1.1.1,1.4.3,2.1.1,2.4.1,4.1.2"
 
 # Análise completa de até 50 páginas com critérios Gov.pt
-yarn audit:multi https://www.example.com comprehensive complete html 50 false gov-pt
+yarn audit:multi https://www.example.com comprehensive html 50 false gov-pt
 
 # Apenas páginas do sitemap.xml com critérios personalizados
-yarn audit:multi https://www.example.com sitemap simple json 10 false custom "1.1.1,1.4.3"
+yarn audit:multi https://www.example.com sitemap json 10 false custom "1.1.1,1.4.3"
 
 # Discovery automático rápido com critérios Gov.pt
-yarn audit:multi https://www.example.com auto simple console 5 false gov-pt
+yarn audit:multi https://www.example.com auto console 5 false gov-pt
 ```
 
 **🔧 Melhorias recentes:**
@@ -380,7 +379,7 @@ yarn report --deploy
 - ❌ **Desvantagens**: Não persistente, difícil de partilhar
 
 ```bash
-yarn audit:wcag https://example.com simple console
+yarn audit:wcag https://example.com console
 ```
 
 ### JSON
@@ -388,7 +387,7 @@ yarn audit:wcag https://example.com simple console
 - ❌ **Desvantagens**: Não human-readable
 
 ```bash
-yarn audit:wcag https://example.com simple json
+yarn audit:wcag https://example.com json
 ```
 
 ### HTML
@@ -396,7 +395,7 @@ yarn audit:wcag https://example.com simple json
 - ❌ **Desvantagens**: Maior tamanho de arquivo
 
 ```bash
-yarn audit:wcag https://example.com simple html
+yarn audit:wcag https://example.com html
 ```
 
 ### Markdown
@@ -404,7 +403,7 @@ yarn audit:wcag https://example.com simple html
 - ❌ **Desvantagens**: Funcionalidades limitadas
 
 ```bash
-yarn audit:wcag https://example.com simple markdown
+yarn audit:wcag https://example.com markdown
 ```
 
 ---
@@ -435,25 +434,25 @@ SEND_EMAILS=false yarn emergency --test
 ### Workflow Básico (QA Testing)
 ```bash
 # 1. Teste rápido com critérios UNTILE
-yarn audit:wcag https://staging.example.com simple console
+yarn audit:wcag https://staging.example.com console
 
 # 2. Análise completa se necessário
-yarn audit:wcag https://staging.example.com complete html
+yarn audit:wcag https://staging.example.com html
 
 # 3. Verificar todo o site antes do deploy
-yarn audit:multi https://staging.example.com comprehensive simple console 10
+yarn audit:multi https://staging.example.com comprehensive console 10
 ```
 
 ### Workflow com Critérios Gov.pt
 ```bash
 # 1. Teste rápido com critérios oficiais
-yarn audit:wcag https://staging.example.com simple console
+yarn audit:wcag https://staging.example.com console
 
 # 2. Análise multi-página com critérios Gov.pt
-yarn audit:multi https://staging.example.com auto simple html 20 false gov-pt
+yarn audit:multi https://staging.example.com auto html 20 false gov-pt
 
 # 3. Verificar conformidade com padrões nacionais
-yarn audit:multi https://staging.example.com comprehensive simple html 50 false gov-pt
+yarn audit:multi https://staging.example.com comprehensive html 50 false gov-pt
 ```
 
 ### Workflow CI/CD
@@ -465,10 +464,10 @@ yarn build
 yarn test
 
 # 3. Análise de acessibilidade com critérios UNTILE
-yarn audit:wcag https://staging.example.com simple json
+yarn audit:wcag https://staging.example.com json
 
 # 4. Análise com critérios Gov.pt para conformidade nacional
-yarn audit:multi https://staging.example.com auto simple json 10 false gov-pt
+yarn audit:multi https://staging.example.com auto json 10 false gov-pt
 
 # 5. Validar sistema de emergência
 yarn emergency --validate
@@ -483,7 +482,7 @@ yarn emergency --validate
 yarn audit:portfolio html
 
 # 3. Executar análise com critérios Gov.pt
-yarn audit:multi https://example.com comprehensive simple html 50 false gov-pt
+yarn audit:multi https://example.com comprehensive html 50 false gov-pt
 
 # 4. Verificar relatórios
 # (Abrir arquivos HTML gerados)
@@ -508,13 +507,13 @@ yarn monitor:test:gov-pt
 ```bash
 # 1. Definir critérios específicos para o projeto
 # Exemplo: apenas critérios críticos de navegação
-yarn audit:multi https://example.com auto simple html 20 false custom "2.1.1,2.4.1,2.4.7"
+yarn audit:multi https://example.com auto html 20 false custom "2.1.1,2.4.1,2.4.7"
 
 # 2. Auditoria com critérios de formulários
-yarn audit:multi https://example.com auto simple html 20 false custom "3.3.1,3.3.2,4.1.2"
+yarn audit:multi https://example.com auto html 20 false custom "3.3.1,3.3.2,4.1.2"
 
 # 3. Auditoria com critérios de conteúdo
-yarn audit:multi https://example.com auto simple html 20 false custom "1.1.1,1.4.3,1.3.1"
+yarn audit:multi https://example.com auto html 20 false custom "1.1.1,1.4.3,1.3.1"
 ```
 
 ---
@@ -536,10 +535,10 @@ tail -f logs/error.log
 ### Debug Mode
 ```bash
 # Executar com logs detalhados
-LOG_LEVEL=debug yarn audit:wcag https://example.com simple console
+LOG_LEVEL=debug yarn audit:wcag https://example.com console
 
 # Ver execução step-by-step
-DEBUG=* yarn audit:wcag https://example.com simple console
+DEBUG=* yarn audit:wcag https://example.com console
 ```
 
 ---

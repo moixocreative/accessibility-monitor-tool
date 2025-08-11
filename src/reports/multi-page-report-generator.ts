@@ -31,8 +31,11 @@ export interface MultiPageSummary {
   criticalViolations: number;
   pagesWithIssues: number;
   compliance: {
-    percentage: number;
-    status: 'compliant' | 'partial' | 'non-compliant';
+    level: 'Plenamente conforme' | 'Parcialmente conforme' | 'Não conforme';
+    score: number;
+    criteriaPassRate: number;
+    reasons: string[];
+    recommendations: string[];
   };
 }
 
@@ -72,7 +75,7 @@ export class MultiPageReportGenerator {
     report += `• Base URL: ${results.baseUrl}\n`;
     report += `• Pages Audited: ${results.auditedPages}/${results.totalPages}\n`;
     report += `• Overall Score: ${summary.averageScore.toFixed(1)}/100\n`;
-    report += `• Compliance: ${summary.compliance.percentage.toFixed(1)}% (${summary.compliance.status})\n`;
+    report += `• Compliance: ${summary.compliance.level} (${summary.compliance.score.toFixed(1)}/10)\n`;
     report += `• Total Violations: ${summary.totalViolations}\n`;
     report += `• Critical Issues: ${summary.criticalViolations}\n\n`;
     
@@ -551,9 +554,9 @@ export class MultiPageReportGenerator {
                 <div class="metric-value">${summary.averageScore.toFixed(1)}</div>
                 <div class="metric-label">Pontuação Geral</div>
             </div>
-            <div class="metric-card ${this.getScoreClass(summary.compliance.percentage)}">
-                <div class="metric-value">${summary.compliance.percentage.toFixed(1)}%</div>
-                <div class="metric-label">Conformidade</div>
+            <div class="metric-card ${this.getComplianceClass(summary.compliance.level)}">
+                <div class="metric-value">${summary.compliance.score.toFixed(1)}</div>
+                <div class="metric-label">${summary.compliance.level}</div>
             </div>
             <div class="metric-card ${this.getViolationClass(summary.totalViolations)}">
                 <div class="metric-value">${summary.totalViolations}</div>
@@ -594,15 +597,29 @@ export class MultiPageReportGenerator {
                 <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
                     <p><strong>Status de Conformidade:</strong> 
                         <span style="padding: 4px 12px; border-radius: 20px; font-weight: 600; 
-                        ${summary.compliance.status === 'compliant' ? 'background: #d4edda; color: #155724;' : 
-                          summary.compliance.status === 'partial' ? 'background: #fff3cd; color: #856404;' : 
+                        ${summary.compliance.level === 'Plenamente conforme' ? 'background: #d4edda; color: #155724;' : 
+                          summary.compliance.level === 'Parcialmente conforme' ? 'background: #fff3cd; color: #856404;' : 
                           'background: #f8d7da; color: #721c24;'}">
-                            ${summary.compliance.status === 'compliant' ? '✅ Conforme' : 
-                              summary.compliance.status === 'partial' ? '⚠️ Parcialmente Conforme' : 
+                            ${summary.compliance.level === 'Plenamente conforme' ? '✅ Plenamente Conforme' : 
+                              summary.compliance.level === 'Parcialmente conforme' ? '⚠️ Parcialmente Conforme' : 
                               '❌ Não Conforme'}
                         </span>
                     </p>
+                    <p><strong>Pontuação Média:</strong> ${summary.compliance.score.toFixed(1)}/10</p>
+                    <p><strong>Critérios Cumpridos:</strong> ${Math.round(summary.compliance.criteriaPassRate * 100)}%</p>
                     <p><strong>Páginas com Problemas:</strong> ${summary.pagesWithIssues} de ${results.auditedPages}</p>
+                </div>
+
+                <!-- Justificação da Conformidade -->
+                <h2>🔍 Justificação da Conformidade</h2>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                    ${summary.compliance.reasons.map(reason => `<p>• ${reason}</p>`).join('')}
+                </div>
+
+                <!-- Recomendações -->
+                <h2>💡 Recomendações</h2>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                    ${summary.compliance.recommendations.map(rec => `<p>• ${rec}</p>`).join('')}
                 </div>
             </div>
 
@@ -819,7 +836,7 @@ export class MultiPageReportGenerator {
     report += `- **Base URL:** ${results.baseUrl}\n`;
     report += `- **Pages Audited:** ${results.auditedPages}/${results.totalPages}\n`;
     report += `- **Overall Score:** ${summary.averageScore.toFixed(1)}/100\n`;
-    report += `- **Compliance:** ${summary.compliance.percentage.toFixed(1)}% (${summary.compliance.status})\n`;
+    report += `- **Compliance:** ${summary.compliance.level} (${summary.compliance.score.toFixed(1)}/10)\n`;
     report += `- **Total Violations:** ${summary.totalViolations}\n`;
     report += `- **Critical Issues:** ${summary.criticalViolations}\n\n`;
     
@@ -883,6 +900,19 @@ export class MultiPageReportGenerator {
     if (count < 10) return 'score-good';
     if (count < 20) return 'score-warning';
     return 'score-poor';
+  }
+
+  private getComplianceClass(level: string): string {
+    switch (level) {
+      case 'Plenamente conforme':
+        return 'score-excellent';
+      case 'Parcialmente conforme':
+        return 'score-warning';
+      case 'Não conforme':
+        return 'score-poor';
+      default:
+        return 'score-good';
+    }
   }
 
   private escapeHtml(text: string): string {
