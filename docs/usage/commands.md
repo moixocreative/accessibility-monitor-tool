@@ -39,6 +39,50 @@ yarn audit:wcag https://www.example.com complete markdown
 
 ---
 
+## 🇵🇹 Auditoria com Critérios acessibilidade.gov.pt
+
+### **Auditoria Individual com Critérios Oficiais**
+
+Para auditorias que usem os 10 critérios críticos oficiais do governo português:
+
+```bash
+# Auditoria básica com critérios Gov.pt
+yarn audit:wcag https://www.example.com simple console
+
+# Auditoria completa com critérios Gov.pt
+yarn audit:wcag https://www.example.com complete html
+```
+
+**Nota:** O comando `yarn audit:wcag` usa sempre os critérios UNTILE por padrão. Para critérios Gov.pt, use `yarn audit:multi` com uma única página.
+
+### **Auditoria Multi-página com Critérios Gov.pt**
+
+```bash
+# Auditoria de uma página com critérios Gov.pt
+yarn audit:multi https://www.example.com manual simple html 1 false gov-pt
+
+# Auditoria de múltiplas páginas com critérios Gov.pt
+yarn audit:multi https://www.example.com auto simple html 20 false gov-pt
+
+# Auditoria completa com critérios Gov.pt
+yarn audit:multi https://www.example.com comprehensive complete html 50 false gov-pt
+```
+
+### **Critérios Incluídos (acessibilidade.gov.pt):**
+
+1. **1.1.1** - Conteúdo Não-Textual
+2. **1.4.3** - Contraste (Mínimo)
+3. **2.1.1** - Teclado
+4. **2.4.1** - Saltar Blocos
+5. **2.4.7** - Foco Visível
+6. **3.3.2** - Rótulos ou Instruções
+7. **4.1.2** - Nome, Função, Valor
+8. **1.3.1** - Info e Relações
+9. **2.2.1** - Tempo Ajustável
+10. **3.3.1** - Identificação de Erro
+
+---
+
 ## 🕷️ Análise Multi-página
 
 ### `yarn audit:multi`
@@ -47,7 +91,7 @@ Descobre e analisa múltiplas páginas de um site automaticamente.
 
 **Sintaxe:**
 ```bash
-yarn audit:multi <URL> [estratégia] [tipo] [formato] [max-páginas]
+yarn audit:multi <URL> [estratégia] [tipo] [formato] [max-páginas] [fórmula-padrão] [conjunto-critérios] [critérios-personalizados]
 ```
 
 **Parâmetros:**
@@ -60,20 +104,46 @@ yarn audit:multi <URL> [estratégia] [tipo] [formato] [max-páginas]
 - `[tipo]` - `simple` (padrão) ou `complete`
 - `[formato]` - `console` (padrão), `json`, `html`, `markdown`
 - `[max-páginas]` - Número máximo de páginas (padrão: 20)
+- `[fórmula-padrão]` - `true` para fórmula axe-core, `false` para UNTILE (padrão: false)
+- `[conjunto-critérios]` - `untile`, `gov-pt`, ou `custom` (padrão: untile)
+- `[critérios-personalizados]` - Lista separada por vírgulas (ex: "1.1.1,1.4.3,2.1.1")
+
+**Conjuntos de Critérios Disponíveis:**
+
+#### **1. Critérios UNTILE (Padrão)**
+- **15 critérios prioritários** baseados em dados empíricos WebAIM Million 2024
+- **Foco:** Portfolio UNTILE e casos de uso específicos
+- **Uso:** `yarn audit:multi https://example.com auto simple html 20 false untile`
+
+#### **2. Critérios acessibilidade.gov.pt**
+- **10 critérios críticos** oficiais do governo português
+- **Foco:** Conformidade com padrões oficiais nacionais
+- **Uso:** `yarn audit:multi https://example.com auto simple html 20 false gov-pt`
+
+#### **3. Critérios Personalizados**
+- **Critérios específicos** escolhidos pelo utilizador
+- **Foco:** Auditorias direcionadas e específicas
+- **Uso:** `yarn audit:multi https://example.com auto simple html 20 false custom "1.1.1,1.4.3,2.1.1"`
 
 **Exemplos:**
 ```bash
-# Análise básica com discovery automático
+# Análise básica com critérios UNTILE (padrão)
 yarn audit:multi https://www.example.com
 
-# Análise completa de até 50 páginas
-yarn audit:multi https://www.example.com comprehensive complete html 50
+# Análise com critérios Gov.pt
+yarn audit:multi https://www.example.com auto simple html 20 false gov-pt
 
-# Apenas páginas do sitemap.xml
-yarn audit:multi https://www.example.com sitemap simple json 10
+# Análise com critérios personalizados
+yarn audit:multi https://www.example.com auto simple html 20 false custom "1.1.1,1.4.3,2.1.1,2.4.1,4.1.2"
 
-# Discovery automático rápido
-yarn audit:multi https://www.example.com auto simple console 5
+# Análise completa de até 50 páginas com critérios Gov.pt
+yarn audit:multi https://www.example.com comprehensive complete html 50 false gov-pt
+
+# Apenas páginas do sitemap.xml com critérios personalizados
+yarn audit:multi https://www.example.com sitemap simple json 10 false custom "1.1.1,1.4.3"
+
+# Discovery automático rápido com critérios Gov.pt
+yarn audit:multi https://www.example.com auto simple console 5 false gov-pt
 ```
 
 **🔧 Melhorias recentes:**
@@ -81,6 +151,8 @@ yarn audit:multi https://www.example.com auto simple console 5
 - ✅ Fallbacks automáticos para axe-core
 - ✅ Tratamento robusto de erros de rede
 - ✅ Timeouts configuráveis
+- ✅ **Novo:** Seleção de critérios WCAG configuráveis
+- ✅ **Novo:** Critérios oficiais acessibilidade.gov.pt
 
 **⏱️ Tempo estimado:**
 - **5 páginas**: 5-15 minutos

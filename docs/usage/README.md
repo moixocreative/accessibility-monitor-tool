@@ -34,6 +34,18 @@ yarn audit:wcag https://www.example.com simple console
 ```
 → Análise de 15 critérios críticos em 2-3 minutos
 
+### 🇵🇹 **Teste com critérios oficiais**
+```bash
+yarn audit:multi https://www.example.com auto simple html 20 false gov-pt
+```
+→ Análise com 10 critérios críticos acessibilidade.gov.pt
+
+### 🎛️ **Teste com critérios personalizados**
+```bash
+yarn audit:multi https://www.example.com auto simple html 20 false custom "1.1.1,1.4.3,2.1.1"
+```
+→ Auditoria direcionada aos critérios mais importantes
+
 ### 🔍 **Análise completa**
 ```bash
 yarn audit:wcag https://www.example.com complete html
@@ -65,6 +77,9 @@ Quer ver em ação? Teste estes comandos:
 ```bash
 # Teste básico (2 min)
 yarn audit:wcag https://www.untile.pt simple console
+
+# Análise com critérios Gov.pt (3 min)
+yarn audit:multi https://www.untile.pt auto simple html 10 false gov-pt
 
 # Análise completa com relatório (5 min)  
 yarn audit:wcag https://www.untile.pt complete html

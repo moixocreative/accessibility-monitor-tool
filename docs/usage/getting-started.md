@@ -91,6 +91,20 @@ yarn audit:multi https://www.untile.pt comprehensive simple console 5
 ```
 → Descobre e analisa 5 páginas do site
 
+### 🇵🇹 **Critérios acessibilidade.gov.pt**
+```bash
+# Usar critérios oficiais do governo português
+yarn audit:multi https://www.untile.pt auto simple html 10 false gov-pt
+```
+→ Alinhamento com padrões nacionais oficiais
+
+### 🎛️ **Critérios Personalizados**
+```bash
+# Definir critérios específicos para o seu projeto
+yarn audit:multi https://www.untile.pt auto simple html 10 false custom "1.1.1,1.4.3,2.1.1"
+```
+→ Auditoria direcionada aos critérios mais importantes
+
 ### 📊 **Formatos de Relatório**
 ```bash
 # JSON (para integração)
@@ -98,9 +112,6 @@ yarn audit:wcag https://www.untile.pt simple json
 
 # HTML (para apresentações)
 yarn audit:wcag https://www.untile.pt simple html
-
-# Markdown (para documentação)
-yarn audit:wcag https://www.untile.pt simple markdown
 ```
 
 ## 🔧 Problemas Comuns

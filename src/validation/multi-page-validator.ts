@@ -13,6 +13,8 @@ export interface MultiPageAuditOptions {
   maxRetries: number;
   useSharedSession: boolean;
   useStandardFormula?: boolean;
+  criteriaSet?: 'untile' | 'gov-pt' | 'custom';
+  customCriteria?: string[];
 }
 
 export interface MultiPageAuditResult {
@@ -81,6 +83,9 @@ export class MultiPageValidator {
       retryFailedPages: true,
       maxRetries: 2,
       useSharedSession: true,
+      useStandardFormula: false,
+      criteriaSet: 'untile',
+      customCriteria: [],
       ...options
     };
 
@@ -88,6 +93,9 @@ export class MultiPageValidator {
       baseUrl, 
       options: defaultOptions 
     });
+
+    // Log das opções de critérios
+    logger.info(`Conjunto de critérios: ${defaultOptions.criteriaSet}${defaultOptions.criteriaSet === 'custom' ? ` (${defaultOptions.customCriteria?.join(', ')})` : ''}`);
 
     try {
       // Fase 1: Descobrir páginas
@@ -193,7 +201,7 @@ export class MultiPageValidator {
 
     // Retry de páginas falhadas
     if (failedPages.length > 0 && options.retryFailedPages) {
-      logger.info(`🔄 Tentando novamente ${failedPages.length} páginas que falharam...`);
+      logger.info(`�� Tentando novamente ${failedPages.length} páginas que falharam...`);
       
       for (const page of failedPages) {
         try {
@@ -255,7 +263,9 @@ export class MultiPageValidator {
           page.url,
           siteId,
           isCompleteAudit,
-          options.useStandardFormula
+          options.useStandardFormula,
+          options.criteriaSet,
+          options.customCriteria
         );
         
         const auditTime = Date.now() - startTime;

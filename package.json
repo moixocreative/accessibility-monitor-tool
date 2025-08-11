@@ -4,23 +4,19 @@
   "description": "Sistema de monitorização de acessibilidade UNTILE - Conformidade WCAG 2.1 AA",
   "main": "src/index.ts",
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "dev": "nodemon src/index.ts",
+    "dev": "ts-node src/index.ts",
     "build": "tsc",
+    "start": "node dist/index.js",
     "test": "jest",
     "lint": "eslint src/**/*.ts",
-    "audit": "yarn audit:portfolio && yarn audit:wcag",
-    "audit:portfolio": "ts-node src/scripts/portfolio-audit.ts",
     "audit:wcag": "ts-node src/scripts/wcag-validation.ts",
-    "audit:url": "ts-node src/scripts/wcag-validation.ts",
     "audit:multi": "ts-node src/scripts/multi-page-audit.ts",
-    "monitor": "ts-node src/scripts/monitoring.ts",
+    "audit:portfolio": "ts-node src/scripts/portfolio-audit.ts",
+    "emergency": "ts-node src/scripts/emergency-response.ts",
     "monitor:start": "ts-node src/scripts/start-monitoring.ts",
     "monitor:test": "ts-node src/scripts/test-monitoring.ts",
-
-    "emergency": "ts-node src/scripts/emergency-response.ts",
-    "report": "ts-node src/scripts/generate-report.ts",
-    "pre-commit": "yarn lint && yarn test"
+    "monitor:start:gov-pt": "ts-node src/scripts/start-monitoring.ts gov-pt",
+    "monitor:test:gov-pt": "ts-node src/scripts/test-monitoring.ts gov-pt"
   },
   "keywords": [
     "accessibility",
