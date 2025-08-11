@@ -1,163 +1,162 @@
-# UNTILE Accessibility Monitor Tool
+# 🔍 AccessMonitor - Ferramenta de Auditoria de Acessibilidade
 
-> 🔍 **Ferramenta automatizada de monitorização de acessibilidade WCAG 2.1 AA para websites**
+Ferramenta de monitorização de acessibilidade web que reproduz **exatamente** os critérios e fórmula do [AccessMonitor](https://accessmonitor.acessibilidade.gov.pt/) (acessibilidade.gov.pt).
 
-[![Build Status](https://github.com/moixocreative/accessibility-monitor-tool/workflows/CI/badge.svg)](https://github.com/moixocreative/accessibility-monitor-tool/actions)
-[![Coverage](https://img.shields.io/badge/coverage-85%25-green.svg)](https://github.com/moixocreative/accessibility-monitor-tool)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+## 🎯 **Características**
 
-## 🚀 Quick Start (5 minutos)
+- ✅ **Reprodução exata** dos critérios do AccessMonitor
+- ✅ **Fórmula de pontuação idêntica** (2 pontos por violação)
+- ✅ **10 aspetos críticos** de acessibilidade funcional
+- ✅ **Classificação de conformidade** igual ao AccessMonitor
+- ✅ **Auditoria individual** ou **em lote** de múltiplos sites
+- ✅ **Relatórios** em console, HTML e JSON
+
+## 🚀 **Instalação**
 
 ```bash
-# 1. Clone e instale (1 min)
-git clone https://github.com/moixocreative/accessibility-monitor-tool.git
+# Clonar repositório
+git clone <repository-url>
 cd accessibility-monitor-tool
+
+# Instalar dependências
 yarn install
 
-# 2. Configure básico (2 min)
+# Configurar variáveis de ambiente
 cp .env.example .env
-# Edite .env com suas configurações básicas
-
-# 3. Primeiro teste (2 min)
-yarn audit:wcag https://www.example.com simple console
 ```
 
-## 📋 O que esta ferramenta faz?
+## 📋 **Uso Rápido**
 
-### ✅ **Dois tipos de análise WCAG**
-- **Simples**: 15 critérios críticos (análise rápida)
-- **Completa**: 50+ critérios WCAG 2.1 AA (análise abrangente)
-
-### 🕷️ **Análise completa de sites**
-- Crawling automático de todas as páginas
-- Análise individual por URL
-- Monitorização de portfolio (múltiplos sites)
-
-### 📊 **Relatórios detalhados**
-- Console, JSON, HTML, Markdown
-- Scoring realista baseado em violações
-- Recomendações específicas por site
-
-### 🔧 **Sistema robusto**
-- Múltiplas tentativas de navegação
-- Fallbacks automáticos para axe-core
-- Tratamento robusto de erros de rede
-- Configuração automática de ambiente
-
-### 🔄 **Monitorização Periódica**
-- Agendamento configurável (cron expressions)
-- Análise completa automática de todos os sites
-- Notificações de violações críticas
-- Relatórios periódicos
-
-## 🎯 Para quem é esta ferramenta?
-
-### 👨‍💻 **Developers** → [Development Guide](docs/development/)
-- Configurar ambiente de desenvolvimento
-- Contribuir para o projeto
-- Arquitetura e testes
-
-### 🧪 **QA Testers** → [Usage Guide](docs/usage/)
-- Executar testes de acessibilidade
-- Interpretar relatórios
-- Comandos principais
-
-### ⚙️ **DevOps/Admin** → [Configuration Guide](docs/configuration/)
-- Setup rápido em 5 minutos
-- Configurar SMTP/emails
-- Adicionar sites ao portfolio
-
-## 📊 Comandos Principais
-
+### Auditoria Individual
 ```bash
-# Análise individual
-yarn audit:wcag https://example.com simple console    # 15 critérios críticos
-yarn audit:wcag https://example.com complete html     # 50+ critérios completos
+# Auditoria básica
+yarn audit https://example.com
 
-# Análise multi-página  
-yarn audit:multi https://example.com comprehensive simple console 20
+# Com estratégia específica
+yarn audit https://example.com comprehensive html
 
-# Portfolio (múltiplos sites)
-yarn audit:portfolio console
-
-# Monitorização Periódica
-yarn monitor:start                    # Iniciar monitorização contínua (semanal)
-yarn monitor:test                     # Testar monitorização
-
-# Monitorização com Critérios Gov.pt
-yarn monitor:start:gov-pt            # Monitorização com critérios acessibilidade.gov.pt
-yarn monitor:test:gov-pt             # Testar monitorização Gov.pt
-
-# Validação de configuração
-yarn emergency --validate
+# Com limite de páginas
+yarn audit https://example.com sitemap json 50
 ```
 
-## 🎯 Critérios WCAG Configuráveis
-
-### **Conjuntos Disponíveis:**
-
-#### **1. Critérios UNTILE (Padrão)**
-- **15 critérios prioritários** baseados em dados empíricos WebAIM Million 2024
-- **Foco:** Portfolio UNTILE e casos de uso específicos
-- **Uso:** `yarn audit:multi https://example.com auto simple html 20 false untile`
-
-#### **2. Critérios acessibilidade.gov.pt**
-- **10 critérios críticos** oficiais do governo português
-- **Foco:** Conformidade com padrões oficiais nacionais
-- **Uso:** `yarn audit:multi https://example.com auto simple html 20 false gov-pt`
-
-#### **3. Critérios Personalizados**
-- **Critérios específicos** escolhidos pelo utilizador
-- **Foco:** Auditorias direcionadas e específicas
-- **Uso:** `yarn audit:multi https://example.com auto simple html 20 false custom "1.1.1,1.4.3,2.1.1"`
-
-### **Exemplos Completos:**
-
+### Auditoria em Lote
 ```bash
-# Auditoria com critérios UNTILE (padrão)
-yarn audit:multi https://example.com auto simple html 20 false untile
+# Usar configuração padrão
+yarn audit:batch
 
-# Auditoria com critérios Gov.pt
-yarn audit:multi https://example.com auto simple html 20 false gov-pt
-
-# Auditoria com critérios personalizados
-yarn audit:multi https://example.com auto simple html 20 false custom "1.1.1,1.4.3,2.1.1,2.4.1,4.1.2"
-
-# Monitorização periódica com critérios Gov.pt
-yarn monitor:start:gov-pt
+# Usar configuração personalizada
+yarn audit:batch my-sites.json
 ```
 
-## 🏗️ Arquitetura
+### Monitorização Periódica
+```bash
+# Iniciar monitorização (semanal às 0h de segunda-feira)
+yarn monitor:start
 
-```
-src/
-├── core/           # Critérios WCAG (UNTILE + Gov.pt + custom)
-├── validation/     # Validadores (axe-core + custom)
-├── crawler/        # Discovery automático de páginas
-├── reports/        # Geração de relatórios
-└── scripts/        # Comandos executáveis
+# Teste da monitorização
+yarn monitor:test
 ```
 
-## 📚 Documentação Completa
+## ⚙️ **Configuração**
 
-| Público | Documentação | Descrição |
-|---------|--------------|-----------|
-| **QA/Users** | [**Usage Guide**](docs/usage/) | Como usar a ferramenta |
-| **Developers** | [**Development Guide**](docs/development/) | Como contribuir |
-| **Admin/DevOps** | [**Configuration Guide**](docs/configuration/) | Como configurar |
+### Estratégias de Descoberta de Páginas
+- **`comprehensive`** (padrão): Usa todos os métodos
+- **`auto`**: Discovery automático
+- **`sitemap`**: Apenas sitemap.xml
+- **`manual`**: Apenas a URL fornecida
 
-## 🤝 Contribuição
+### Formatos de Relatório
+- **`console`** (padrão): Apenas console
+- **`html`**: Relatório HTML
+- **`json`**: Relatório JSON
+
+### Arquivo de Configuração para Lote
+```json
+{
+  "sites": [
+    {
+      "url": "https://example.com",
+      "name": "Example Site",
+      "description": "Descrição do site"
+    }
+  ],
+  "defaultSettings": {
+    "strategy": "comprehensive",
+    "maxPages": 20,
+    "outputFormat": "console"
+  }
+}
+```
+
+## 📊 **Classificação de Conformidade**
+
+### Plenamente Conforme
+- Todas as páginas com pontuação > 9.0 **E**
+- Passar ≥ 75% dos 10 aspetos críticos
+
+### Parcialmente Conforme
+- Todas as páginas com pontuação > 8.0 **E**
+- Passar entre 50% e 75% dos 10 aspetos críticos
+
+### Não Conforme
+- Qualquer página com pontuação ≤ 8.0 **OU**
+- Violar > 50% dos 10 aspetos críticos
+
+## 🔧 **Comandos Disponíveis**
+
+| Comando | Descrição |
+|---------|-----------|
+| `yarn audit <URL>` | Auditoria individual de um site |
+| `yarn audit:batch` | Auditoria em lote de múltiplos sites |
+| `yarn monitor:start` | Iniciar monitorização periódica |
+| `yarn monitor:test` | Teste da monitorização |
+| `yarn lint` | Verificar código |
+| `yarn build` | Compilar TypeScript |
+
+## 📁 **Estrutura de Relatórios**
+
+```
+reports/
+├── accessmonitor-example-2024-01-15.html
+├── accessmonitor-example-2024-01-15.json
+└── batch/
+    └── batch-report-2024-01-15.json
+```
+
+## 🎯 **Critérios Testados**
+
+A ferramenta testa os **10 aspetos críticos de acessibilidade funcional** definidos pelo acessibilidade.gov.pt:
+
+1. **1.1.1** - Conteúdo não textual
+2. **1.4.3** - Contraste (mínimo)
+3. **2.1.1** - Teclado
+4. **2.4.1** - Mecanismos de navegação
+5. **2.4.7** - Foco visível
+6. **3.3.2** - Rótulos ou instruções
+7. **4.1.2** - Nome, função e valor
+8. **1.3.1** - Informação e relações
+9. **2.2.1** - Ajustamento de tempo
+10. **3.3.1** - Identificação de erros
+
+## 🔍 **Fórmula de Pontuação**
+
+A ferramenta usa a **mesma fórmula do AccessMonitor**:
+- **Pontuação = 100 - (total de violações × 2)**
+- Cada violação penaliza 2 pontos
+- Pontuação mínima: 0
+
+## 📝 **Licença**
+
+MIT License - ver [LICENSE](LICENSE) para detalhes.
+
+## 🤝 **Contribuição**
 
 1. Fork o projeto
-2. Crie sua feature branch: `git checkout -b feature/amazing-feature`
-3. Commit suas mudanças: `git commit -m 'feat: add amazing feature'`
-4. Push para a branch: `git push origin feature/amazing-feature`
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
 5. Abra um Pull Request
-
-## 📄 Licença
-
-Este projeto está licenciado sob a MIT License - veja o arquivo [LICENSE](LICENSE) para detalhes.
 
 ---
 
-**Desenvolvido com ❤️ pela equipa UNTILE**
+**Desenvolvido para reproduzir exatamente os critérios do [AccessMonitor](https://accessmonitor.acessibilidade.gov.pt/)**

@@ -20,21 +20,19 @@ async function main() {
   // Obter parâmetros da linha de comando
   const baseUrl = process.argv[2] || 'https://www.untile.pt';
   const crawlStrategy = process.argv[3] || 'auto';
-  const auditType = process.argv[4] || 'simple';
-  const reportFormat = process.argv[5] || 'html';
-  const maxPages = parseInt(process.argv[6] || '20') || 20;
-  const useStandardFormula = process.argv[7] === 'true';
-  const criteriaSet = (process.argv[8] || 'untile') as 'untile' | 'gov-pt' | 'custom';
-  const customCriteria = process.argv[9] ? process.argv[9].split(',') : undefined;
+  const reportFormat = process.argv[4] || 'html';
+  const maxPages = parseInt(process.argv[5] || '20') || 20;
+  const useStandardFormula = process.argv[6] === 'true';
+  const criteriaSet = (process.argv[7] || 'untile') as 'untile' | 'gov-pt' | 'custom';
+  const customCriteria = process.argv[8] ? process.argv[8].split(',') : undefined;
 
   if (!baseUrl) {
     console.log('\n📝 URL não fornecida - usando URL padrão');
     console.log('==========================================');
-    console.log('Uso: yarn audit:multi <URL> [estratégia] [tipo] [formato] [max-páginas] [fórmula-padrão] [conjunto-critérios] [critérios-personalizados]');
+    console.log('Uso: yarn audit:multi <URL> [estratégia] [formato] [max-páginas] [fórmula-padrão] [conjunto-critérios] [critérios-personalizados]');
     console.log('\nParâmetros:');
     console.log('  URL                    - URL base do site a auditar');
     console.log('  estratégia             - auto, sitemap, manual, comprehensive (padrão: auto)');
-    console.log('  tipo                   - simple, comprehensive (padrão: simple)');
     console.log('  formato                - html, json, markdown, console (padrão: html)');
     console.log('  max-páginas            - Número máximo de páginas (padrão: 20)');
     console.log('  fórmula-padrão         - true/false para usar fórmula axe-core (padrão: false)');
@@ -73,14 +71,7 @@ async function main() {
     process.exit(1);
   }
 
-  const validAuditTypes = ['simple', 'complete'];
-  if (!validAuditTypes.includes(auditType)) {
-    console.log('\n❌ ERRO: Tipo de auditoria inválido');
-    console.log('================================');
-    console.log(`Tipo fornecido: ${auditType}`);
-    console.log(`Tipos válidos: ${validAuditTypes.join(', ')}`);
-    process.exit(1);
-  }
+
 
   const validFormats = ['console', 'json', 'html', 'markdown'];
   if (!validFormats.includes(reportFormat)) {
@@ -114,7 +105,7 @@ async function main() {
     console.log('=========================================');
     console.log(`🔗 Site Base: ${baseUrl}`);
     console.log(`🕷️ Estratégia: ${crawlStrategy.toUpperCase()}`);
-    console.log(`📋 Tipo: ${auditType.toUpperCase()}`);
+    console.log(`📋 Conjunto de Critérios: ${criteriaSet.toUpperCase()}`);
     console.log(`📄 Formato: ${reportFormat.toUpperCase()}`);
     console.log(`📊 Máx. Páginas: ${maxPages}`);
     console.log('');
@@ -154,7 +145,7 @@ async function main() {
         maxDepth: 3,
         includeExternal: false
       },
-      auditType: auditType as any,
+
       maxConcurrent: 1,
       delayBetweenPages: 5000,
       retryFailedPages: true,
@@ -192,11 +183,7 @@ async function main() {
         totalViolations: auditResult.summary.totalViolations,
         criticalViolations: auditResult.summary.violationsBySeverity.critical,
         pagesWithIssues: auditResult.pageResults.filter(p => p.auditResult.violations.length > 0).length,
-        compliance: {
-          percentage: Math.round(auditResult.summary.averageScore * 100) / 100,
-          status: (auditResult.summary.averageScore >= 80 ? 'compliant' : 
-                  auditResult.summary.averageScore >= 60 ? 'partial' : 'non-compliant') as 'compliant' | 'partial' | 'non-compliant'
-        }
+        compliance: auditResult.summary.compliance
       },
       commonIssues: auditResult.summary.commonIssues.map(issue => {
         // Determinar severidade baseada no tipo de critério WCAG
@@ -264,7 +251,7 @@ async function main() {
         'console': 'txt'
       }[reportFormat as 'html' | 'json' | 'markdown' | 'console'] || 'html';
       
-      const fileName = `multi-page-audit-${domainName}-${crawlStrategy}-${auditType}-${timestamp}.${fileExtension}`;
+      const fileName = `multi-page-audit-${domainName}-${crawlStrategy}-${criteriaSet}-${timestamp}.${fileExtension}`;
       const filePath = path.join(process.cwd(), 'reports', fileName);
       
       // Criar diretório de relatórios se não existir

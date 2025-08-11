@@ -2,11 +2,11 @@ import { WCAGValidator } from './wcag-validator';
 import { PageCrawler, CrawlResult, CrawlOptions } from '../crawler/page-crawler';
 import { AuditResult, AccessibilityViolation } from '../types';
 import { logger } from '../utils/logger';
+import { ComplianceValidator, ComplianceResult } from '../core/compliance-validator';
 
 export interface MultiPageAuditOptions {
   crawlStrategy: 'auto' | 'sitemap' | 'manual' | 'comprehensive';
   crawlOptions: Partial<CrawlOptions>;
-  auditType: 'simple' | 'complete';
   maxConcurrent: number;
   delayBetweenPages: number;
   retryFailedPages: boolean;
@@ -23,7 +23,7 @@ export interface MultiPageAuditResult {
   startTime: Date;
   endTime: Date;
   strategy: string;
-  auditType: string;
+  criteriaSet: string;
   pagesDiscovered: number;
   pagesAudited: number;
   pageResults: PageAuditResult[];
@@ -49,6 +49,7 @@ export interface MultiPageSummary {
   commonIssues: { criteria: string; count: number; pages: string[] }[];
   overallRiskLevel: string;
   averageLegalRisk: number;
+  compliance: ComplianceResult; // Adicionar resultado de conformidade
 }
 
 export class MultiPageValidator {
@@ -77,7 +78,6 @@ export class MultiPageValidator {
         maxDepth: 3,
         includeExternal: false
       },
-      auditType: 'simple',
       maxConcurrent: 1, // Mais conservador para evitar detecção
       delayBetweenPages: 5000, // 5 segundos entre páginas
       retryFailedPages: true,
@@ -117,7 +117,7 @@ export class MultiPageValidator {
 
       // Fase 3: Gerar sumário consolidado
       logger.info('📊 Fase 3: Gerando análise consolidada...');
-      const summary = this.generateMultiPageSummary(pageResults);
+      const summary = this.generateMultiPageSummary(pageResults, options.criteriaSet || 'untile');
       const crawlStats = this.pageCrawler.getStats();
 
       const endTime = new Date();
@@ -135,7 +135,7 @@ export class MultiPageValidator {
         startTime,
         endTime,
         strategy: defaultOptions.crawlStrategy,
-        auditType: defaultOptions.auditType,
+        criteriaSet: defaultOptions.criteriaSet || 'untile',
         pagesDiscovered: discoveredPages.length,
         pagesAudited: pageResults.length,
         pageResults,
@@ -239,7 +239,7 @@ export class MultiPageValidator {
     options: MultiPageAuditOptions
   ): Promise<PageAuditResult> {
     const startTime = Date.now();
-    const isCompleteAudit = options.auditType === 'complete';
+    const isCompleteAudit = options.criteriaSet === 'custom';
     
     let lastError: Error | null = null;
     
@@ -256,7 +256,11 @@ export class MultiPageValidator {
           await new Promise(resolve => setTimeout(resolve, 3000 * attempt));
           
           // Reinicializar browser a cada retry para evitar problemas de estado
-          await this.wcagValidator.close();
+          try {
+            await (this.wcagValidator as any).close();
+          } catch (error) {
+            logger.warn('Erro ao fechar browser:', error);
+          }
         }
         
         const auditResult = await this.wcagValidator.auditSite(
@@ -334,10 +338,13 @@ export class MultiPageValidator {
   /**
    * Gerar sumário consolidado de múltiplas páginas
    */
-  private generateMultiPageSummary(pageResults: PageAuditResult[]): MultiPageSummary {
+  private generateMultiPageSummary(pageResults: PageAuditResult[], criteriaSet: 'untile' | 'gov-pt' | 'custom' = 'untile'): MultiPageSummary {
     const validResults = pageResults.filter(result => result.auditResult.wcagScore >= 0);
     
     if (validResults.length === 0) {
+      // Validar conformidade mesmo sem resultados válidos
+      const compliance = ComplianceValidator.validateMultiPageCompliance([], criteriaSet);
+      
       return {
         totalViolations: 0,
         averageScore: 0,
@@ -347,7 +354,8 @@ export class MultiPageValidator {
         violationsBySeverity: { critical: 0, serious: 0, moderate: 0, minor: 0 },
         commonIssues: [],
         overallRiskLevel: 'UNKNOWN',
-        averageLegalRisk: 0
+        averageLegalRisk: 0,
+        compliance
       };
     }
 
@@ -424,6 +432,16 @@ export class MultiPageValidator {
     if (averageLegalRisk > 70) overallRiskLevel = 'ALTO';
     else if (averageLegalRisk > 40) overallRiskLevel = 'MÉDIO';
 
+    // Validar conformidade baseada nos critérios selecionados
+    const compliance = ComplianceValidator.validateMultiPageCompliance(
+      validResults.map(result => ({
+        url: result.url,
+        score: result.auditResult.wcagScore,
+        violations: result.auditResult.violations
+      })),
+      criteriaSet
+    );
+
     return {
       totalViolations: allViolations.length,
       averageScore,
@@ -433,7 +451,8 @@ export class MultiPageValidator {
       violationsBySeverity,
       commonIssues,
       overallRiskLevel,
-      averageLegalRisk
+      averageLegalRisk,
+      compliance
     };
   }
 
@@ -441,6 +460,10 @@ export class MultiPageValidator {
    * Fechar recursos
    */
   async close(): Promise<void> {
-    await this.wcagValidator.close();
+    try {
+      await (this.wcagValidator as any).close();
+    } catch (error) {
+      logger.warn('Erro ao fechar WCAGValidator:', error);
+    }
   }
 }
