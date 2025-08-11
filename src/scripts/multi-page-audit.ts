@@ -18,54 +18,38 @@ async function main() {
   }
 
   // Obter parâmetros da linha de comando
-  const baseUrl = process.argv[2];
-  const strategy = (process.argv[3]?.toLowerCase() as 'auto' | 'sitemap' | 'manual' | 'comprehensive') || 'comprehensive';
-  const auditType = (process.argv[4]?.toLowerCase() as 'simple' | 'complete') || 'simple';
-  const reportFormat = (process.argv[5]?.toLowerCase() as 'console' | 'json' | 'html' | 'markdown') || 'console';
+  const baseUrl = process.argv[2] || 'https://www.untile.pt';
+  const crawlStrategy = process.argv[3] || 'auto';
+  const auditType = process.argv[4] || 'simple';
+  const reportFormat = process.argv[5] || 'html';
   const maxPages = parseInt(process.argv[6] || '20') || 20;
   const useStandardFormula = process.argv[7] === 'true';
+  const criteriaSet = (process.argv[8] || 'untile') as 'untile' | 'gov-pt' | 'custom';
+  const customCriteria = process.argv[9] ? process.argv[9].split(',') : undefined;
 
   if (!baseUrl) {
-    console.log('\n📝 AUDITORIA MULTI-PÁGINA - WCAG 2.1 AA');
+    console.log('\n📝 URL não fornecida - usando URL padrão');
     console.log('==========================================');
-    console.log('Uso: yarn audit:multi <URL> [estratégia] [tipo] [formato] [max-páginas] [fórmula-padrão]');
-    console.log('');
-    console.log('Parâmetros:');
-    console.log('  URL         - URL base do site para auditar');
-    console.log('');
-    console.log('Estratégias disponíveis:');
-    console.log('  comprehensive - Descoberta máxima usando todos os métodos (padrão)');
-    console.log('  auto        - Descoberta automática de páginas');
-    console.log('  sitemap     - Usar sitemap.xml do site');
-    console.log('  manual      - Auditar apenas a URL fornecida');
-    console.log('');
-    console.log('Tipos de auditoria:');
-    console.log('  simple      - Apenas 15 critérios prioritários (padrão)');
-    console.log('  complete    - Todos os critérios WCAG 2.1 AA');
-    console.log('');
-    console.log('Formatos de relatório:');
-    console.log('  console     - Relatório no terminal (padrão)');
-    console.log('  json        - Exportar como JSON');
-    console.log('  html        - Exportar como HTML');
-    console.log('  markdown    - Exportar como Markdown');
-    console.log('');
-    console.log('Max páginas:');
-    console.log('  número      - Máximo de páginas para auditar (padrão: 20)');
-    console.log('');
-    console.log('Fórmula padrão:');
-    console.log('  true        - Usar fórmula padrão do axe-core (como acessibilidade.gov.pt)');
-    console.log('  false       - Usar fórmula personalizada UNTILE (padrão)');
-    console.log('');
-    console.log('Exemplos:');
-    console.log('  yarn audit:multi https://example.com');
-    console.log('  yarn audit:multi https://example.com comprehensive complete html 50');
-    console.log('  yarn audit:multi https://example.com auto simple json 15');
-    console.log('  yarn audit:multi https://example.com sitemap simple console 10');
-    console.log('  yarn audit:multi https://example.com auto simple html 20 true');
-    console.log('');
-    console.log('💡 A auditoria multi-página pode demorar vários minutos dependendo');
-    console.log('   do número de páginas e da estratégia escolhida.');
-    process.exit(1);
+    console.log('Uso: yarn audit:multi <URL> [estratégia] [tipo] [formato] [max-páginas] [fórmula-padrão] [conjunto-critérios] [critérios-personalizados]');
+    console.log('\nParâmetros:');
+    console.log('  URL                    - URL base do site a auditar');
+    console.log('  estratégia             - auto, sitemap, manual, comprehensive (padrão: auto)');
+    console.log('  tipo                   - simple, comprehensive (padrão: simple)');
+    console.log('  formato                - html, json, markdown, console (padrão: html)');
+    console.log('  max-páginas            - Número máximo de páginas (padrão: 20)');
+    console.log('  fórmula-padrão         - true/false para usar fórmula axe-core (padrão: false)');
+    console.log('  conjunto-critérios     - untile, gov-pt, custom (padrão: untile)');
+    console.log('  critérios-personalizados - Lista separada por vírgulas (ex: "1.1.1,1.4.3,2.1.1")');
+    console.log('\nConjuntos de Critérios:');
+    console.log('  untile                 - 15 critérios prioritários UNTILE (padrão)');
+    console.log('  gov-pt                 - 10 critérios críticos acessibilidade.gov.pt');
+    console.log('  custom                 - Critérios personalizados especificados');
+    console.log('\nExemplos:');
+    console.log('  yarn audit:multi https://example.com auto simple html 20 false untile');
+    console.log('  yarn audit:multi https://example.com auto simple html 20 false gov-pt');
+    console.log('  yarn audit:multi https://example.com auto simple html 20 false custom "1.1.1,1.4.3,2.1.1"');
+    console.log('\n🔍 Testando com URL padrão: https://www.untile.pt');
+    console.log('💡 Para testar um site específico, forneça a URL como parâmetro');
   }
 
   // Validar URL
@@ -81,10 +65,10 @@ async function main() {
 
   // Validar parâmetros
   const validStrategies = ['auto', 'sitemap', 'manual', 'comprehensive'];
-  if (!validStrategies.includes(strategy)) {
+  if (!validStrategies.includes(crawlStrategy)) {
     console.log('\n❌ ERRO: Estratégia inválida');
     console.log('================================');
-    console.log(`Estratégia fornecida: ${strategy}`);
+    console.log(`Estratégia fornecida: ${crawlStrategy}`);
     console.log(`Estratégias válidas: ${validStrategies.join(', ')}`);
     process.exit(1);
   }
@@ -115,6 +99,13 @@ async function main() {
     process.exit(1);
   }
 
+  // Validar conjunto de critérios
+  if (criteriaSet === 'custom' && (!customCriteria || customCriteria.length === 0)) {
+    console.error('❌ Erro: Para critérios personalizados, deve especificar uma lista separada por vírgulas');
+    console.log('Exemplo: yarn audit:multi https://example.com auto simple html 20 false custom "1.1.1,1.4.3,2.1.1"');
+    process.exit(1);
+  }
+
   const validator = new MultiPageValidator();
 
   try {
@@ -122,24 +113,24 @@ async function main() {
     console.log('\n🌐 AUDITORIA MULTI-PÁGINA - WCAG 2.1 AA');
     console.log('=========================================');
     console.log(`🔗 Site Base: ${baseUrl}`);
-    console.log(`🕷️ Estratégia: ${strategy.toUpperCase()}`);
+    console.log(`🕷️ Estratégia: ${crawlStrategy.toUpperCase()}`);
     console.log(`📋 Tipo: ${auditType.toUpperCase()}`);
     console.log(`📄 Formato: ${reportFormat.toUpperCase()}`);
     console.log(`📊 Máx. Páginas: ${maxPages}`);
     console.log('');
 
-    if (strategy === 'comprehensive') {
+    if (crawlStrategy === 'comprehensive') {
       console.log('🚀 A descoberta abrangente irá usar TODOS os métodos:');
       console.log('   • Sitemap.xml e robots.txt');
       console.log('   • Crawling automático aprofundado');
       console.log('   • Padrões comuns (/sobre, /contacto, etc.)');
       console.log('   • Filtros automáticos para páginas protegidas');
-    } else if (strategy === 'auto') {
+    } else if (crawlStrategy === 'auto') {
       console.log('🤖 A descoberta automática pode encontrar:');
       console.log('   • Links na homepage');
       console.log('   • Páginas de navegação principal');
       console.log('   • Páginas importantes (sobre, contacto, etc.)');
-    } else if (strategy === 'sitemap') {
+    } else if (crawlStrategy === 'sitemap') {
       console.log('🗺️ A estratégia de sitemap irá:');
       console.log('   • Procurar sitemap.xml no domínio');
       console.log('   • Auditar páginas listadas no sitemap');
@@ -157,26 +148,21 @@ async function main() {
     console.log('🚀 Iniciando auditoria multi-página...');
     
     const auditResult = await validator.auditMultiplePages(baseUrl, {
-      crawlStrategy: strategy,
+      crawlStrategy: crawlStrategy as any,
       crawlOptions: {
         maxPages,
-        maxDepth: strategy === 'comprehensive' ? 3 : strategy === 'auto' ? 2 : 1,
-        includeExternal: false,
-        excludePatterns: [
-          '/admin', '/login', '/logout', '/api/', 
-          '.pdf', '.jpg', '.png', '.gif', '.zip',
-          '/wp-admin', '/wp-content', '#', '/search',
-          '/cart', '/checkout', '/account', '/password',
-          '/signin', '/signup', '/register', '/auth'
-        ]
+        maxDepth: 3,
+        includeExternal: false
       },
-      auditType,
-      maxConcurrent: 1, // Sequencial para máxima compatibilidade
-      delayBetweenPages: strategy === 'comprehensive' ? 8000 : 5000, // Delays maiores
+      auditType: auditType as any,
+      maxConcurrent: 1,
+      delayBetweenPages: 5000,
       retryFailedPages: true,
       maxRetries: 2,
-      useSharedSession: false, // Browser novo para cada página para evitar problemas de estado
-      useStandardFormula // Usar fórmula padrão do axe-core se especificado
+      useSharedSession: false,
+      useStandardFormula,
+      criteriaSet,
+      customCriteria: customCriteria || []
     });
 
     // Gerar relatório
@@ -259,7 +245,7 @@ async function main() {
       ]
     };
 
-    const report = reportGenerator.generateReport(reportData, reportFormat);
+    const report = reportGenerator.generateReport(reportData, reportFormat as 'console' | 'json' | 'html' | 'markdown');
 
     if (reportFormat === 'console') {
       console.log(report);
@@ -272,12 +258,13 @@ async function main() {
       const domainName = new URL(baseUrl).hostname.replace(/[^a-zA-Z0-9]/g, '-');
       
       const fileExtension = {
-        json: 'json',
-        html: 'html',
-        markdown: 'md'
-      }[reportFormat];
+        'html': 'html',
+        'json': 'json',
+        'markdown': 'md',
+        'console': 'txt'
+      }[reportFormat as 'html' | 'json' | 'markdown' | 'console'] || 'html';
       
-      const fileName = `multi-page-audit-${domainName}-${strategy}-${auditType}-${timestamp}.${fileExtension}`;
+      const fileName = `multi-page-audit-${domainName}-${crawlStrategy}-${auditType}-${timestamp}.${fileExtension}`;
       const filePath = path.join(process.cwd(), 'reports', fileName);
       
       // Criar diretório de relatórios se não existir

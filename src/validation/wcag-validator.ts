@@ -142,10 +142,19 @@ export class WCAGValidator {
   /**
    * Auditoria completa de um site
    */
-  async auditSite(url: string, siteId: string, isCompleteAudit: boolean = false, useStandardFormula: boolean = false): Promise<AuditResult> {
+  async auditSite(url: string, siteId: string, isCompleteAudit: boolean = false, useStandardFormula: boolean = false, criteriaSet: 'untile' | 'gov-pt' | 'custom' = 'untile', customCriteria?: string[]): Promise<AuditResult> {
+    logger.info(`Iniciando auditoria de ${url} (${isCompleteAudit ? 'completa' : 'prioritária'})`);
+
     try {
-      logger.info(`Iniciando auditoria WCAG para ${url} (${isCompleteAudit ? 'completa' : 'simples'})`);
+      // Obter critérios baseados no conjunto selecionado
+      const { getCriteriaBySet } = require('../core/wcag-criteria');
+      const selectedCriteria = getCriteriaBySet(criteriaSet, customCriteria);
       
+      logger.info(`Usando conjunto de critérios: ${criteriaSet} (${selectedCriteria.length} critérios)`);
+      if (criteriaSet === 'custom' && customCriteria) {
+        logger.info(`Critérios personalizados: ${customCriteria.join(', ')}`);
+      }
+
       // Executar axe-core
       let axeResult: any = { violations: [], passes: [], incomplete: [], inapplicable: [] };
       
@@ -417,7 +426,7 @@ export class WCAGValidator {
           context = await (this.browser as any).newContext({
             viewport: { width: 1280, height: 720 },
             extraHTTPHeaders: {
-              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9',
               'Accept-Language': 'en-US,en;q=0.5',
               'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
             }
@@ -436,7 +445,7 @@ export class WCAGValidator {
           
           // Headers otimizados
           await page.setExtraHTTPHeaders({
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9',
             'Accept-Language': 'en-US,en;q=0.5',
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
           });

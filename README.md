@@ -84,17 +84,54 @@ yarn audit:portfolio console
 yarn monitor:start                    # Iniciar monitorização contínua (semanal)
 yarn monitor:test                     # Testar monitorização
 
-
+# Monitorização com Critérios Gov.pt
+yarn monitor:start:gov-pt            # Monitorização com critérios acessibilidade.gov.pt
+yarn monitor:test:gov-pt             # Testar monitorização Gov.pt
 
 # Validação de configuração
 yarn emergency --validate
+```
+
+## 🎯 Critérios WCAG Configuráveis
+
+### **Conjuntos Disponíveis:**
+
+#### **1. Critérios UNTILE (Padrão)**
+- **15 critérios prioritários** baseados em dados empíricos WebAIM Million 2024
+- **Foco:** Portfolio UNTILE e casos de uso específicos
+- **Uso:** `yarn audit:multi https://example.com auto simple html 20 false untile`
+
+#### **2. Critérios acessibilidade.gov.pt**
+- **10 critérios críticos** oficiais do governo português
+- **Foco:** Conformidade com padrões oficiais nacionais
+- **Uso:** `yarn audit:multi https://example.com auto simple html 20 false gov-pt`
+
+#### **3. Critérios Personalizados**
+- **Critérios específicos** escolhidos pelo utilizador
+- **Foco:** Auditorias direcionadas e específicas
+- **Uso:** `yarn audit:multi https://example.com auto simple html 20 false custom "1.1.1,1.4.3,2.1.1"`
+
+### **Exemplos Completos:**
+
+```bash
+# Auditoria com critérios UNTILE (padrão)
+yarn audit:multi https://example.com auto simple html 20 false untile
+
+# Auditoria com critérios Gov.pt
+yarn audit:multi https://example.com auto simple html 20 false gov-pt
+
+# Auditoria com critérios personalizados
+yarn audit:multi https://example.com auto simple html 20 false custom "1.1.1,1.4.3,2.1.1,2.4.1,4.1.2"
+
+# Monitorização periódica com critérios Gov.pt
+yarn monitor:start:gov-pt
 ```
 
 ## 🏗️ Arquitetura
 
 ```
 src/
-├── core/           # 15 critérios WCAG prioritários
+├── core/           # Critérios WCAG (UNTILE + Gov.pt + custom)
 ├── validation/     # Validadores (axe-core + custom)
 ├── crawler/        # Discovery automático de páginas
 ├── reports/        # Geração de relatórios
