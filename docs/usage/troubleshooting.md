@@ -92,6 +92,108 @@ sudo chown -R $USER:$USER logs/ reports/
 
 ---
 
+## 🎯 Problemas com Critérios Personalizados
+
+### ❌ **Error: "Para critérios personalizados, deve especificar uma lista separada por vírgulas"**
+
+**Sintomas:**
+```bash
+yarn audit:multi https://example.com auto simple html 20 false custom
+# ❌ Erro: Para critérios personalizados, deve especificar uma lista separada por vírgulas
+```
+
+**Soluções:**
+```bash
+# ✅ Correto: Especificar critérios
+yarn audit:multi https://example.com auto simple html 20 false custom "1.1.1,1.4.3,2.1.1"
+
+# ✅ Correto: Usar critérios Gov.pt
+yarn audit:multi https://example.com auto simple html 20 false gov-pt
+
+# ✅ Correto: Usar critérios UNTILE (padrão)
+yarn audit:multi https://example.com auto simple html 20 false untile
+```
+
+**Critérios válidos:**
+```bash
+# Exemplos de critérios válidos
+"1.1.1,1.4.3,2.1.1"           # Conteúdo, contraste, teclado
+"2.4.1,2.4.7,3.3.2"           # Navegação e formulários
+"4.1.2,1.3.1,2.2.1"           # ARIA e estrutura
+```
+
+---
+
+### ❌ **Error: "Critérios personalizados inválidos"**
+
+**Sintomas:**
+```bash
+yarn audit:multi https://example.com auto simple html 20 false custom "invalid,1.1.1"
+# ❌ Erro: Critérios inválidos detectados
+```
+
+**Soluções:**
+```bash
+# ✅ Verificar formato dos critérios
+# Formato: "número.número.número"
+"1.1.1"     # ✅ Válido
+"1.4.3"     # ✅ Válido
+"2.1.1"     # ✅ Válido
+"invalid"   # ❌ Inválido
+"1.1"       # ❌ Inválido (falta terceiro número)
+"1.1.1.1"   # ❌ Inválido (demasiados números)
+
+# ✅ Lista de critérios válidos comuns
+"1.1.1,1.4.3,2.1.1,2.4.1,2.4.7,3.3.2,4.1.2,1.3.1,2.2.1,3.3.1"
+```
+
+---
+
+### ❌ **Error: "Conjunto de critérios não reconhecido"**
+
+**Sintomas:**
+```bash
+yarn audit:multi https://example.com auto simple html 20 false invalid-criteria
+# ❌ Erro: Conjunto de critérios inválido
+```
+
+**Soluções:**
+```bash
+# ✅ Conjuntos válidos disponíveis:
+untile       # 15 critérios prioritários UNTILE (padrão)
+gov-pt       # 10 critérios críticos acessibilidade.gov.pt
+custom       # Critérios personalizados especificados
+
+# ✅ Exemplos corretos:
+yarn audit:multi https://example.com auto simple html 20 false untile
+yarn audit:multi https://example.com auto simple html 20 false gov-pt
+yarn audit:multi https://example.com auto simple html 20 false custom "1.1.1,1.4.3"
+```
+
+---
+
+### ❌ **Error: "Fórmula padrão inválida"**
+
+**Sintomas:**
+```bash
+yarn audit:multi https://example.com auto simple html 20 invalid-formula gov-pt
+# ❌ Erro: Parâmetro de fórmula inválido
+```
+
+**Soluções:**
+```bash
+# ✅ Valores válidos para fórmula:
+false        # Fórmula UNTILE personalizada (padrão)
+true         # Fórmula padrão axe-core (como acessibilidade.gov.pt)
+
+# ✅ Exemplos corretos:
+yarn audit:multi https://example.com auto simple html 20 false gov-pt
+yarn audit:multi https://example.com auto simple html 20 true gov-pt
+yarn audit:multi https://example.com auto simple html 20 false untile
+```
+
+---
+
 ## 🌐 Problemas de Conectividade
 
 ### ❌ **Error: "ERR_NAME_NOT_RESOLVED" (DNS não resolve)**
