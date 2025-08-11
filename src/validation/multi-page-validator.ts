@@ -270,7 +270,9 @@ export class MultiPageValidator {
           isCompleteAudit,
           options.useStandardFormula,
           options.criteriaSet,
-          options.customCriteria
+          options.customCriteria,
+          false, // useAccessMonitor
+          false  // generateIndividualReport - não gerar relatórios individuais para auditorias multi-página
         );
         
         const auditTime = Date.now() - startTime;
@@ -309,6 +311,7 @@ export class MultiPageValidator {
       auditResult: {
         id: `error_${Date.now()}`,
         siteId: `page_error`,
+        url: page.url, // Adicionar URL da página testada
         timestamp: new Date(),
         wcagScore: -1,
         lighthouseScore: {

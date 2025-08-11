@@ -94,7 +94,7 @@ async function main() {
     const siteId = `audit_${Date.now()}`;
     
     // Executar auditoria real
-    const auditResult = await validator.auditSite(targetUrl, siteId, isCompleteAudit, useStandardFormula);
+    const auditResult = await validator.auditSite(targetUrl, siteId, isCompleteAudit, useStandardFormula, 'untile', undefined, false, true);
 
     // Gerar relatório melhorado
     const reportGenerator = new ReportGenerator();
