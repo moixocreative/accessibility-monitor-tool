@@ -1537,7 +1537,7 @@ export class WCAGValidator {
     const totalPenalty = criticalPenalty + seriousPenalty + moderatePenalty + minorPenalty;
     const axeScore = Math.max(0, 100 - totalPenalty);
     
-    return Math.round(axeScore);
+    return Math.round(axeScore * 100) / 100;
   }
 
   /**
@@ -1566,7 +1566,7 @@ export class WCAGValidator {
     const totalPenalty = criticalPenalty + seriousPenalty + otherPenalty;
     const axeScore = Math.max(0, 100 - totalPenalty) * 0.65;
     
-    return Math.round(lighthouseScore + axeScore);
+    return Math.round((lighthouseScore + axeScore) * 100) / 100;
   }
 
   /**

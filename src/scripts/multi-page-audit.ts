@@ -200,18 +200,51 @@ async function main() {
         criticalViolations: auditResult.summary.violationsBySeverity.critical,
         pagesWithIssues: auditResult.pageResults.filter(p => p.auditResult.violations.length > 0).length,
         compliance: {
-          percentage: auditResult.summary.averageScore,
+          percentage: Math.round(auditResult.summary.averageScore * 100) / 100,
           status: (auditResult.summary.averageScore >= 80 ? 'compliant' : 
                   auditResult.summary.averageScore >= 60 ? 'partial' : 'non-compliant') as 'compliant' | 'partial' | 'non-compliant'
         }
       },
-      commonIssues: auditResult.summary.commonIssues.map(issue => ({
-        criteria: issue.criteria,
-        count: issue.count,
-        pages: issue.pages,
-        severity: 'moderate' as const,
-        recommendation: `Corrigir ${issue.criteria} em ${issue.count} páginas`
-      })),
+      commonIssues: auditResult.summary.commonIssues.map(issue => {
+        // Determinar severidade baseada no tipo de critério WCAG
+        let severity: 'critical' | 'serious' | 'moderate' | 'minor' = 'moderate';
+        
+        // Critérios críticos (P0 - Bloqueiam completamente o acesso)
+        if (issue.criteria.includes('4.1.2') || // Nome, Função, Valor
+            issue.criteria.includes('3.3.2') || // Rótulos ou Instruções
+            issue.criteria.includes('label') || // Labels de formulário
+            issue.criteria.includes('input-button-name')) {
+          severity = 'critical';
+        }
+        // Critérios sérios (P1 - Dificultam significativamente o acesso)
+        else if (issue.criteria.includes('1.4.3') || // Contraste (Mínimo)
+                 issue.criteria.includes('color-contrast') || // Contraste de cor
+                 issue.criteria.includes('duplicate-id-active') || // IDs duplicados ativos
+                 issue.criteria.includes('aria-required-children') || // ARIA required children
+                 issue.criteria.includes('aria-required-parent')) {
+          severity = 'serious';
+        }
+        // Critérios moderados (P2 - Dificultam moderadamente o acesso)
+        else if (issue.criteria.includes('1.3.1') || // Info e Relações
+                 issue.criteria.includes('heading-order') || // Ordem de cabeçalhos
+                 issue.criteria.includes('region') || // Regiões da página
+                 issue.criteria.includes('landmark-one-main')) {
+          severity = 'moderate';
+        }
+        // Critérios menores (P3 - Melhoram a experiência mas não bloqueiam)
+        else if (issue.criteria.includes('duplicate-id') || // IDs duplicados
+                 issue.criteria.includes('empty-table-header')) { // Cabeçalhos de tabela vazios
+          severity = 'minor';
+        }
+        
+        return {
+          criteria: issue.criteria,
+          count: issue.count,
+          pages: issue.pages,
+          severity,
+          recommendation: `Corrigir ${issue.criteria} em ${issue.count} páginas`
+        };
+      }),
       recommendations: [
         'Revisar problemas críticos identificados',
         'Implementar testes automatizados de acessibilidade',
