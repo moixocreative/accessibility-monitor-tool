@@ -2,6 +2,7 @@
 
 import { WCAGValidator } from '../validation/wcag-validator';
 import { MultiPageValidator } from '../validation/multi-page-validator';
+import { HTMLReportGenerator } from '../reports/html-report-generator';
 import { logger } from '../utils/logger';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -13,7 +14,7 @@ interface SimpleAuditOptions {
   outputFormat?: 'console' | 'html' | 'json';
 }
 
-class SimpleAudit {
+export class SimpleAudit {
   private validator: WCAGValidator;
   private multiPageValidator: MultiPageValidator;
 
@@ -32,7 +33,7 @@ class SimpleAudit {
         useStandardFormula: true, // Fórmula padrão do axe-core (2 pontos por violação)
         criteriaSet: 'gov-pt' as const, // 10 aspetos críticos
         maxPages: options.maxPages || 20,
-        strategy: options.strategy
+        crawlStrategy: options.strategy
       };
 
       // Executar auditoria multi-página
@@ -101,17 +102,47 @@ class SimpleAudit {
   }
 
   private async generateHtmlReport(result: any, fileName: string): Promise<void> {
-    const htmlContent = this.generateHtmlContent(result);
-    const filePath = path.join(process.cwd(), 'reports', `${fileName}.html`);
-    
-    // Criar diretório se não existir
-    const dir = path.dirname(filePath);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
+    try {
+      const reportGenerator = new HTMLReportGenerator();
+      
+      // Preparar dados para o relatório multi-página
+      const reportData = {
+        baseUrl: result.baseUrl || result.url || '',
+        totalPages: result.summary?.totalPages || result.pageResults?.length || 0,
+        pagesAudited: result.pageResults?.length || 0,
+        startTime: result.startTime || new Date(),
+        endTime: result.endTime || new Date(),
+        pageResults: result.pageResults || [],
+        overallCompliance: result.summary?.compliance?.level || 'NÃO CONFORME',
+        complianceDetails: {
+          wcagScore: result.summary?.averageScore || 0,
+          checklistPercentage: Math.round((result.summary?.compliance?.criteriaPassRate || 0) * 100),
+          reason: result.summary?.compliance?.reasons?.join('; ') || ''
+        },
+        summary: {
+          averageScore: result.summary?.averageScore || 0,
+          totalViolations: result.summary?.totalViolations || 0,
+          violationsBySeverity: result.summary?.violationsBySeverity || {},
+          violationsByType: result.summary?.violationsByType || {}
+        }
+      };
+      
+      const reportPath = await reportGenerator.generateMultiPageReport(reportData);
+      logger.info(`📄 Relatório HTML gerado: ${reportPath}`);
+    } catch (error) {
+      logger.warn('Erro ao gerar relatório HTML:', error);
+      // Fallback para o método antigo
+      const htmlContent = this.generateHtmlContent(result);
+      const filePath = path.join(process.cwd(), 'reports', `${fileName}.html`);
+      
+      const dir = path.dirname(filePath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      
+      fs.writeFileSync(filePath, htmlContent);
+      logger.info(`📄 Relatório HTML fallback gerado: ${filePath}`);
     }
-    
-    fs.writeFileSync(filePath, htmlContent);
-    logger.info(`📄 Relatório HTML gerado: ${filePath}`);
   }
 
   private async generateJsonReport(result: any, fileName: string): Promise<void> {

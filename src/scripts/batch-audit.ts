@@ -45,6 +45,8 @@ class BatchAudit {
       const results = [];
       for (let i = 0; i < config.sites.length; i++) {
         const site = config.sites[i];
+        if (!site) continue;
+        
         logger.info(`\n📊 [${i + 1}/${config.sites.length}] Auditando: ${site.name} (${site.url})`);
 
         try {

@@ -70,6 +70,18 @@ export interface AuditResult {
     seriousViolations: number;
     priorityViolations: number;
   };
+  // CHECKLIST DE ACESSIBILIDADE FUNCIONAL
+  checklistResults?: {
+    totalItems: number;
+    passedItems: number;
+    percentage: number;
+    overallScore: number;
+    results: { [key: string]: {
+      passed: boolean;
+      score: number;
+      details: string;
+    }};
+  };
 }
 
 export interface EmergencyIncident {

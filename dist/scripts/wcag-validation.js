@@ -47,9 +47,11 @@ async function main() {
         console.log('⚠️  Browser não disponível - usando simulação');
         console.log('📊 Resultados serão simulados para teste');
     }
-    const url = process.argv[2];
-    const auditType = process.argv[3]?.toLowerCase();
-    const reportFormat = process.argv[4]?.toLowerCase() || 'console';
+    const args = process.argv.slice(2);
+    const url = args.find(arg => !arg.startsWith('--'));
+    const auditType = args.find(arg => !arg.startsWith('--') && arg !== url)?.toLowerCase();
+    const reportFormat = args.find(arg => !arg.startsWith('--') && arg !== url && arg !== auditType)?.toLowerCase() || 'console';
+    const useStandardFormula = args.includes('--useStandardFormula');
     if (!url) {
         console.log('\n📝 URL não fornecida - usando URL padrão');
         console.log('==========================================');
@@ -104,7 +106,7 @@ async function main() {
         console.log(`URL: ${targetUrl}`);
         console.log(`Tipo: ${auditTypeDisplay}`);
         const siteId = `audit_${Date.now()}`;
-        const auditResult = await validator.auditSite(targetUrl, siteId, isCompleteAudit);
+        const auditResult = await validator.auditSite(targetUrl, siteId, isCompleteAudit, useStandardFormula);
         const reportGenerator = new report_generator_1.ReportGenerator();
         const reportOptions = {
             format: reportFormat,
