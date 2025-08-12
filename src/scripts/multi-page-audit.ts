@@ -21,7 +21,7 @@ async function main() {
   const baseUrl = process.argv[2] || 'https://www.untile.pt';
   const crawlStrategy = process.argv[3] || 'auto';
   const reportFormat = process.argv[4] || 'html';
-  const maxPages = parseInt(process.argv[5] || '20') || 20;
+  const maxPages = parseInt(process.argv[5] || 'Infinity') || Infinity;
   const useStandardFormula = process.argv[6] === 'true';
   const criteriaSet = (process.argv[7] || 'untile') as 'untile' | 'gov-pt' | 'custom';
   const customCriteria = process.argv[8] ? process.argv[8].split(',') : undefined;
@@ -82,11 +82,11 @@ async function main() {
     process.exit(1);
   }
 
-  if (maxPages < 1 || maxPages > 100) {
+  if (maxPages < 1) {
     console.log('\n❌ ERRO: Número de páginas inválido');
     console.log('================================');
     console.log(`Páginas fornecidas: ${maxPages}`);
-    console.log('O número deve estar entre 1 e 100');
+    console.log('O número deve ser maior que 0');
     process.exit(1);
   }
 

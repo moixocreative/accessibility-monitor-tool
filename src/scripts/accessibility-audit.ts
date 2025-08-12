@@ -95,7 +95,6 @@ class AccessibilityAuditor {
     console.log(`🌐 Starting full site audit: ${baseUrl}`);
     
     const {
-      maxPages = 50,
       timeout = 30000,
       generateIndividualReports = false,
       strategy = 'comprehensive'
@@ -147,8 +146,8 @@ class AccessibilityAuditor {
       }
     }
     
-    const allPages = Array.from(discoveredPages).slice(0, maxPages);
-    console.log(`📊 Total de páginas descobertas: ${discoveredPages.size}, limitado a ${allPages.length} para auditoria`);
+    const allPages = Array.from(discoveredPages);
+    console.log(`📊 Total de páginas descobertas: ${discoveredPages.size} páginas para auditoria completa`);
     
     // Debug: mostrar as primeiras 10 URLs encontradas
     console.log(`🔍 Primeiras 10 URLs encontradas:`);
@@ -440,7 +439,7 @@ async function main() {
   const isSinglePage = args.includes('--single') || (process.argv[1] && process.argv[1].includes('single'));
   const generateIndividualReports = args.includes('--individual-reports');
   const maxPagesArg = args.find(arg => arg.startsWith('--max-pages='));
-  const maxPages = maxPagesArg ? parseInt(maxPagesArg.split('=')[1] || '20') : 20;
+  const maxPages = maxPagesArg ? parseInt(maxPagesArg.split('=')[1] || 'Infinity') : Infinity;
 
   try {
     if (isSinglePage && url) {
