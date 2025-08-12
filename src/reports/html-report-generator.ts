@@ -275,7 +275,7 @@ export class HTMLReportGenerator {
                     <div class="metric-label">Total de Violações</div>
                 </div>
                 <div class="metric">
-                    <div class="metric-value">${auditResult.checklistResults?.percentage || 0}%</div>
+                    <div class="metric-value">${(auditResult.checklistResults?.percentage || 0).toFixed(1)}%</div>
                     <div class="metric-label">Checklist Crítico</div>
                 </div>
             </div>
@@ -1474,7 +1474,7 @@ export class HTMLReportGenerator {
           <div class="stat-label">Violações</div>
         </div>
         <div class="stat-item">
-          <div class="stat-value">${checklistPercentage}%</div>
+          <div class="stat-value">${checklistPercentage.toFixed(1)}%</div>
           <div class="stat-label">Checklist 10 Critérios</div>
         </div>
         <div class="stat-item">

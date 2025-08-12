@@ -90,7 +90,7 @@ class AccessibilityAuditor {
     
     console.log(`✅ Single page audit completed`);
     console.log(`📊 WCAG Score: ${result.score}`);
-    console.log(`📋 Checklist: ${result.compliance.checklistPercentage}%`);
+    console.log(`📋 Checklist: ${result.compliance.checklistPercentage.toFixed(1)}%`);
     console.log(`🚨 Violations: ${result.violations.length}`);
     console.log(`📄 Report saved: ${reportPath}`);
     
