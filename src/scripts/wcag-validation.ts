@@ -116,7 +116,6 @@ async function main() {
       
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-').split('T')[0];
       const domainName = new URL(targetUrl).hostname.replace(/[^a-zA-Z0-9]/g, '-');
-      const auditTypeShort = isCompleteAudit ? 'complete' : 'simple';
       
       const fileExtension = {
         json: 'json',
@@ -124,7 +123,7 @@ async function main() {
         markdown: 'md'
       }[reportFormat];
       
-      const fileName = `accessibility-report-${domainName}-${auditTypeShort}-${timestamp}.${fileExtension}`;
+      const fileName = `single-page-${domainName}-${timestamp}.${fileExtension}`;
       const filePath = path.join(process.cwd(), 'reports', fileName);
       
       // Criar diretório de relatórios se não existir

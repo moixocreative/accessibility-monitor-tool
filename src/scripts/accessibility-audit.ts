@@ -77,7 +77,13 @@ class AccessibilityAuditor {
     
     // Generate individual report
     const htmlReport = this.reportGenerator.generateSinglePageHTML(auditResult);
-    const reportPath = path.join('reports', `single-page-${Date.now()}.html`);
+    
+    // Gerar nome de ficheiro descritivo para página individual
+    const urlObj = new URL(url);
+    const domainName = urlObj.hostname.replace(/[^a-zA-Z0-9]/g, '-');
+    const pathName = urlObj.pathname.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'home';
+    const timestamp = new Date().toISOString().split('T')[0];
+    const reportPath = path.join('reports', `single-page-${domainName}-${pathName}-${timestamp}.html`);
     
     fs.mkdirSync('reports', { recursive: true });
     fs.writeFileSync(reportPath, htmlReport);
@@ -238,7 +244,14 @@ class AccessibilityAuditor {
           };
           
           const htmlReport = this.reportGenerator.generateSinglePageHTML(auditResult);
-          const reportPath = path.join('reports', `page-${i + 1}-${Date.now()}.html`);
+          
+          // Gerar nome de ficheiro descritivo para página individual
+          const urlObj = new URL(pageUrl);
+          const domainName = urlObj.hostname.replace(/[^a-zA-Z0-9]/g, '-');
+          const pathName = urlObj.pathname.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'home';
+          const timestamp = new Date().toISOString().split('T')[0];
+          const reportPath = path.join('reports', `single-page-${domainName}-${pathName}-${timestamp}.html`);
+          
           fs.writeFileSync(reportPath, htmlReport);
           console.log(`📄 Individual report saved: ${reportPath}`);
         }
@@ -280,7 +293,12 @@ class AccessibilityAuditor {
 
     // Generate consolidated report
     const htmlReport = this.reportGenerator.generateMultiPageHTML(multiPageReportData);
-    const reportPath = path.join('reports', `full-site-${Date.now()}.html`);
+    
+    // Gerar nome de ficheiro descritivo para análise completa do site
+    const urlObj = new URL(baseUrl);
+    const domainName = urlObj.hostname.replace(/[^a-zA-Z0-9]/g, '-');
+    const timestamp = new Date().toISOString().split('T')[0];
+    const reportPath = path.join('reports', `full-site-${domainName}-${timestamp}.html`);
     
     fs.mkdirSync('reports', { recursive: true });
     fs.writeFileSync(reportPath, htmlReport);
@@ -441,17 +459,26 @@ async function main() {
   const maxPagesArg = args.find(arg => arg.startsWith('--max-pages='));
   const maxPages = maxPagesArg ? parseInt(maxPagesArg.split('=')[1] || 'Infinity') : Infinity;
 
+  // Determinar se é análise de página única baseado na URL
+  if (!url) {
+    console.error('❌ URL is required');
+    process.exit(1);
+  }
+
+  const urlObj = new URL(url);
+  const pathSegments = urlObj.pathname.split('/').filter(Boolean);
+  const isSpecificPage = pathSegments.length > 0 && pathSegments[0] !== '';
+
   try {
-    if (isSinglePage && url) {
+    if (isSinglePage || isSpecificPage) {
+      // Análise de página única
       await auditor.auditSinglePage(url);
-    } else if (url) {
+    } else {
+      // Análise completa do site
       await auditor.auditFullSite(url, {
         generateIndividualReports,
         maxPages
       });
-    } else {
-      console.error('❌ URL is required');
-      process.exit(1);
     }
   } catch (error) {
     console.error('❌ Audit failed:', error);
