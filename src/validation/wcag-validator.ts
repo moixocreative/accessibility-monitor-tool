@@ -90,7 +90,7 @@ export class WCAGValidator {
       let checklistResults = null;
       try {
         checklistResults = await this.checklist.runChecklist(page);
-        logger.info(`📋 Checklist: ${checklistResults.passedItems}/${checklistResults.totalItems} itens passaram (${checklistResults.percentage}%)`);
+        logger.info(`📋 Checklist: ${checklistResults.passedItems}/${checklistResults.totalItems} itens passaram (${checklistResults.percentage.toFixed(1)}%)`);
       } catch (error) {
         logger.warn('Erro ao executar checklist:', error);
       }
@@ -317,7 +317,7 @@ export class WCAGValidator {
         const page = await this.getPage();
         if (page) {
           checklistResults = await this.checklist.runChecklist(page);
-          logger.info(`📋 Checklist: ${checklistResults.passedItems}/${checklistResults.totalItems} itens passaram (${checklistResults.percentage}%)`);
+          logger.info(`📋 Checklist: ${checklistResults.passedItems}/${checklistResults.totalItems} itens passaram (${checklistResults.percentage.toFixed(1)}%)`);
         }
       } catch (error) {
         logger.warn('Erro ao executar checklist:', error);

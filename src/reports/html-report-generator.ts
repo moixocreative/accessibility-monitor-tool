@@ -77,7 +77,7 @@ export class HTMLReportGenerator {
   }
 
   /**
-   * Gerar HTML para página única
+   * Gerar HTML para página única com o mesmo estilo do relatório multi-página
    */
   public generateSinglePageHTML(auditResult: AuditResult): string {
     const violationsBySeverity = this.groupViolationsBySeverity(auditResult.violations);
@@ -85,132 +85,204 @@ export class HTMLReportGenerator {
 
     return `
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatório de Acessibilidade - ${auditResult.url}</title>
+    <title>Relatório de Auditoria de Acessibilidade - ${auditResult.url}</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
+        * {
             margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
+            padding: 0;
+            box-sizing: border-box;
         }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+        
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             overflow: hidden;
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
+        
+        /* Header */
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 30px;
+            padding: 40px;
             text-align: center;
         }
+        
         .header h1 {
-            margin: 0;
-            font-size: 2.5em;
-            font-weight: 300;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
         }
-        .header .url {
-            font-size: 1.2em;
-            opacity: 0.9;
-            margin-top: 10px;
+        
+        .meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
         }
+        
+        .meta-item {
+            text-align: center;
+        }
+        
+        .meta-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        
+        .meta-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        /* Summary */
         .summary {
-            padding: 30px;
-            border-bottom: 1px solid #eee;
-        }
-        .metrics {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
-            margin-bottom: 30px;
-        }
-        .metric {
-            text-align: center;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 40px;
             background: #f8f9fa;
         }
+        
+        .metric-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
         .metric-value {
-            font-size: 2.5em;
-            font-weight: bold;
-            margin-bottom: 5px;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
         }
+        
         .metric-label {
+            font-size: 1.1rem;
             color: #666;
-            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
+        
         .score-excellent { color: #28a745; }
         .score-good { color: #ffc107; }
         .score-poor { color: #dc3545; }
+        
+        /* Compliance Level */
         .compliance {
-            text-align: center;
-            padding: 20px;
-            border-radius: 8px;
-            font-size: 1.5em;
-            font-weight: bold;
-            margin: 20px 0;
-        }
-        .compliance-conforme { background: #d4edda; color: #155724; }
-        .compliance-parcial { background: #fff3cd; color: #856404; }
-        .compliance-nao-conforme { background: #f8d7da; color: #721c24; }
-        .violations-section {
+            grid-column: 1 / -1;
             padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            margin-top: 20px;
         }
-        .violations-section h2 {
+        
+        .compliance.plenamente-conforme { background: linear-gradient(135deg, #28a745, #20c997); }
+        .compliance.parcialmente-conforme { background: linear-gradient(135deg, #ffc107, #fd7e14); }
+        .compliance.não-conforme { background: linear-gradient(135deg, #dc3545, #e83e8c); }
+        
+        /* Violations Section */
+        .violations-section {
+            padding: 40px;
+        }
+        
+        .violations-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 30px;
             color: #333;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .severity-group {
             margin-bottom: 30px;
         }
-        .severity-group {
-            margin-bottom: 40px;
-        }
+        
         .severity-title {
-            font-size: 1.3em;
-            font-weight: bold;
+            font-size: 1.3rem;
+            font-weight: 600;
+            padding: 15px 20px;
+            border-radius: 8px;
             margin-bottom: 20px;
-            padding: 10px 15px;
-            border-radius: 5px;
+            color: white;
         }
-        .severity-critical { background: #f8d7da; color: #721c24; }
-        .severity-serious { background: #fff3cd; color: #856404; }
-        .severity-moderate { background: #d1ecf1; color: #0c5460; }
-        .severity-minor { background: #d4edda; color: #155724; }
+        
+        .severity-title.severity-critical { background: #dc3545; }
+        .severity-title.severity-serious { background: #fd7e14; }
+        .severity-title.severity-moderate { background: #ffc107; color: #333; }
+        .severity-title.severity-minor { background: #6c757d; }
+        
         .violation {
             background: #f8f9fa;
-            border-left: 4px solid #667eea;
-            margin-bottom: 20px;
-            border-radius: 0 5px 5px 0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid;
         }
+        
+        .violation.critical { border-left-color: #dc3545; }
+        .violation.serious { border-left-color: #fd7e14; }
+        .violation.moderate { border-left-color: #ffc107; }
+        .violation.minor { border-left-color: #6c757d; }
+        
         .violation-header {
-            padding: 15px;
-            background: #e9ecef;
-            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
         }
+        
         .violation-title {
-            font-weight: bold;
+            font-size: 1.1rem;
+            font-weight: 600;
             color: #333;
-            margin-bottom: 5px;
         }
+        
         .violation-rule {
             color: #666;
             font-size: 0.9em;
         }
+        
         .violation-detail {
             padding: 15px;
         }
+        
         .violation-desc {
             margin-bottom: 15px;
             color: #555;
         }
+        
         .violation-element {
             background: #f1f3f4;
             border: 1px solid #ddd;
@@ -221,28 +293,47 @@ export class HTMLReportGenerator {
             overflow-x: auto;
             margin-top: 10px;
         }
+        
+        /* Checklist Section */
         .checklist-section {
-            padding: 30px;
+            padding: 40px;
             background: #f8f9fa;
         }
+        
+        .checklist-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
         .checklist-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #dee2e6;
+            padding: 15px 20px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        .checklist-item:last-child {
-            border-bottom: none;
-        }
+        
         .checklist-status {
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.8em;
-            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
+        
         .status-pass { background: #d4edda; color: #155724; }
         .status-fail { background: #f8d7da; color: #721c24; }
+        
+        /* Footer */
         .footer {
             background: #343a40;
             color: white;
@@ -250,6 +341,7 @@ export class HTMLReportGenerator {
             padding: 20px;
             font-size: 0.9em;
         }
+        
         .timestamp {
             color: #999;
             font-size: 0.8em;
@@ -260,24 +352,37 @@ export class HTMLReportGenerator {
 <body>
     <div class="container">
         <div class="header">
-            <h1>Relatório de Acessibilidade</h1>
-            <div class="url">${auditResult.url}</div>
+            <h1>Relatório de Auditoria de Acessibilidade</h1>
+            <div class="meta">
+                <div class="meta-item">
+                    <div class="meta-label">Página</div>
+                    <div class="meta-value">${auditResult.url}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Data</div>
+                    <div class="meta-value">${new Date().toLocaleDateString('pt-PT')}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Tipo</div>
+                    <div class="meta-value">Página Individual</div>
+                </div>
+            </div>
         </div>
         
         <div class="summary">
-            <div class="metrics">
-                <div class="metric">
-                    <div class="metric-value score-${this.getScoreClass(auditResult.wcagScore)}">${auditResult.wcagScore.toFixed(1)}</div>
-                    <div class="metric-label">Pontuação WCAG</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-value">${auditResult.violations.length}</div>
-                    <div class="metric-label">Total de Violações</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-value">${auditResult.checklistResults?.percentage || 0}%</div>
-                    <div class="metric-label">Checklist Crítico</div>
-                </div>
+            <div class="metric-card score-${this.getScoreClass(auditResult.wcagScore)}">
+                <div class="metric-value">${auditResult.wcagScore.toFixed(1)}</div>
+                <div class="metric-label">Score WCAG</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-value">${auditResult.violations.length}</div>
+                <div class="metric-label">Total de Violações</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-value">${(auditResult.checklistResults?.percentage || 0).toFixed(1)}%</div>
+                <div class="metric-label">Checklist Crítico</div>
             </div>
             
             <div class="compliance compliance-${complianceLevel.toLowerCase().replace(' ', '-')}">
@@ -286,18 +391,18 @@ export class HTMLReportGenerator {
         </div>
         
         <div class="violations-section">
-            <h2>Detalhes das Violações</h2>
+            <div class="violations-title">🚨 Detalhes das Violações</div>
             ${this.generateViolationsHTML(violationsBySeverity)}
         </div>
         
         <div class="checklist-section">
-            <h2>Checklist dos 10 Aspetos Críticos</h2>
+            <div class="checklist-title">📋 Checklist dos 10 Aspetos Críticos</div>
             ${this.generateChecklistHTML(auditResult.checklistResults)}
         </div>
         
         <div class="footer">
-            <p>Relatório gerado pelo Accessibility Monitor Tool</p>
-            <div class="timestamp">Gerado em: ${new Date().toLocaleString('pt-PT')}</div>
+            <p>Relatório gerado automaticamente pela ferramenta de monitorização de acessibilidade UNTILE</p>
+            <p>Data: ${new Date().toLocaleString('pt-PT')}</p>
         </div>
     </div>
 </body>
@@ -324,21 +429,89 @@ export class HTMLReportGenerator {
       const violations = violationsBySeverity[severity] || [];
       if (violations.length === 0) return;
 
+      // Filtrar falsos positivos para violações menores
+      let filteredViolations = violations;
+      if (severity === 'minor') {
+        filteredViolations = violations.filter(violation => {
+          const rule = violation.rule || violation.id || '';
+          const description = violation.help || violation.description || '';
+          
+          // Lista de regras que são falsos positivos (sucessos disfarçados de violações)
+          const falsePositiveRules = [
+            'img_01a', // "Constatei que todas as imagens da página têm o necessário equivalente alternativo em texto"
+            'hx_03',   // "Constatei que a sequência hierárquica dos níveis de cabeçalho está correta"
+            'a_01b',   // Links que estão corretos
+            'color_02', // Cores que estão corretas
+            'lang_01', // "Verifiquei que o idioma principal da página está marcado"
+            'title_01', // Títulos que estão corretos
+            'form_01', // Formulários que estão corretos
+            'table_01', // Tabelas que estão corretas
+            'media_01', // Media que está correto
+            'landmark_01' // Landmarks que estão corretos
+          ];
+          
+          // Verificar se é um falso positivo baseado na regra ou descrição
+          if (falsePositiveRules.includes(rule)) {
+            return false;
+          }
+          
+          // Verificar se a descrição indica sucesso
+          const successIndicators = [
+            'constatei que',
+            'verifiquei que',
+            'está correto',
+            'está adequado',
+            'tem o necessário',
+            'está bem estruturado',
+            'passou no teste',
+            'está marcado como',
+            'está definido',
+            'está configurado',
+            'está implementado',
+            'está presente',
+            'está disponível',
+            'está funcionando',
+            'está operacional'
+          ];
+          
+          return !successIndicators.some(indicator => 
+            description.toLowerCase().includes(indicator.toLowerCase())
+          );
+        });
+      }
+
+      if (filteredViolations.length === 0) return;
+
       html += `
         <div class="severity-group">
-          <div class="severity-title severity-${severity}">${severityLabels[severity] || severity} (${violations.length})</div>
+          <div class="severity-title severity-${severity}">${severityLabels[severity] || severity} (${filteredViolations.length})</div>
       `;
 
-      violations.forEach(violation => {
+      filteredViolations.forEach(violation => {
+        // Usar os métodos existentes para obter nomes descritivos
+        const violationName = this.getViolationDisplayName(violation.rule || violation.id || '');
+        const violationDescription = violation.help || violation.description || violationName;
+        
+        // Obter sugestão de correção
+        const fixSuggestion = this.getFixSuggestion(violation.rule || violation.id || '');
+        
         html += `
           <div class="violation">
             <div class="violation-header">
-              <div class="violation-title">${violation.description || 'Violação de acessibilidade'}</div>
-              <div class="violation-rule">${violation.rule || 'Regra não especificada'}</div>
+              <div class="violation-title">${violationName}</div>
+              <div class="violation-rule">${violation.rule || violation.id || 'Regra não especificada'}</div>
             </div>
             <div class="violation-detail">
-              <div class="violation-desc">${violation.help || 'Descrição não disponível'}</div>
-              ${violation.element ? `<div class="violation-element">${this.escapeHtml(violation.element)}</div>` : ''}
+              <div class="violation-desc">${violationDescription}</div>
+              ${violation.element ? `
+                <div class="violation-element">
+                  <strong>🔍 Código HTML problemático:</strong>
+                  <pre>${this.escapeHtml(violation.element)}</pre>
+                </div>
+              ` : ''}
+              <div class="fix-suggestion">
+                <strong>💡 Como corrigir:</strong> ${fixSuggestion}
+              </div>
             </div>
           </div>
         `;
@@ -576,18 +749,14 @@ export class HTMLReportGenerator {
    * Gerar HTML para relatório multi-página usando o template preferido
    */
   public generateMultiPageHTML(reportData: MultiPageReport): string {
-    // Separar violações críticas (dos 10 critérios) das outras
+    console.log('🔍 Inside generateMultiPageHTML function');
+    console.log('📊 Page results count:', reportData.pageResults.length);
+    console.log('🔍 Report data keys:', Object.keys(reportData));
     const criticalViolations = this.extractCriticalViolations(reportData.pageResults);
     const otherViolations = this.extractOtherViolations(reportData.pageResults);
-    
-    // Calcular estatísticas
-    const complianceStats = {
-      plenamente: reportData.pageResults.filter(p => p.wcagScore > 9 && (p.checklistResults?.percentage || 0) >= 75).length,
-      parcialmente: reportData.pageResults.filter(p => p.wcagScore > 8 && (p.checklistResults?.percentage || 0) >= 50 && (p.checklistResults?.percentage || 0) < 75).length,
-      nao: reportData.pageResults.filter(p => p.wcagScore <= 8 || (p.checklistResults?.percentage || 0) < 50).length
-    };
 
-    return `<!DOCTYPE html>
+    return `
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -698,16 +867,28 @@ export class HTMLReportGenerator {
         .metric-label {
             font-size: 1.1rem;
             color: #666;
-            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
-        /* Tabs Navigation */
+        /* Compliance Level */
+        .compliance {
+            grid-column: 1 / -1;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            margin-top: 20px;
+        }
+        
+        .compliance.plenamente-conforme { background: linear-gradient(135deg, #28a745, #20c997); }
+        .compliance.parcialmente-conforme { background: linear-gradient(135deg, #ffc107, #fd7e14); }
+        .compliance.não-conforme { background: linear-gradient(135deg, #dc3545, #e83e8c); }
+        
+        /* Tabs */
         .tabs {
-            background: white;
-            border-bottom: 2px solid #e9ecef;
-        }
-        
-        .tab-nav {
             display: flex;
             background: #f8f9fa;
             border-bottom: 1px solid #dee2e6;
@@ -718,10 +899,10 @@ export class HTMLReportGenerator {
             padding: 20px;
             background: none;
             border: none;
-            cursor: pointer;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             color: #666;
+            cursor: pointer;
             transition: all 0.3s ease;
             border-bottom: 3px solid transparent;
         }
@@ -733,8 +914,8 @@ export class HTMLReportGenerator {
         
         .tab-button.active {
             background: white;
-            color: #0066cc;
-            border-bottom-color: #0066cc;
+            color: #007bff;
+            border-bottom-color: #007bff;
         }
         
         .tab-content {
@@ -746,54 +927,116 @@ export class HTMLReportGenerator {
             display: block;
         }
         
-        /* Common Issues */
-        .issue-card {
-            background: white;
+        /* Violations */
+        .violations-section {
+            margin-bottom: 40px;
+        }
+        
+        .violations-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .severity-group {
+            margin-bottom: 30px;
+        }
+        
+        .severity-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .severity-title.severity-critical { background: #dc3545; }
+        .severity-title.severity-serious { background: #fd7e14; }
+        .severity-title.severity-moderate { background: #ffc107; color: #333; }
+        .severity-title.severity-minor { background: #6c757d; }
+        
+        .violation {
+            background: #f8f9fa;
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 15px;
             border-left: 4px solid;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         
-        .issue-card.critical { border-left-color: #dc3545; background: #fff5f5; }
-        .issue-card.serious { border-left-color: #fd7e14; background: #fff8f0; }
-        .issue-card.moderate { border-left-color: #ffc107; background: #fffbeb; }
-        .issue-card.minor { border-left-color: #6c757d; background: #f8f9fa; }
+        .violation.critical { border-left-color: #dc3545; }
+        .violation.serious { border-left-color: #fd7e14; }
+        .violation.moderate { border-left-color: #ffc107; }
+        .violation.minor { border-left-color: #6c757d; }
         
-        .issue-header {
+        .violation-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         
-        .issue-title {
-            font-size: 1.2rem;
+        .violation-title {
+            font-size: 1.1rem;
             font-weight: 600;
             color: #333;
         }
         
-        .issue-severity {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .violation-rule {
+            color: #666;
+            font-size: 0.9em;
         }
         
-        .issue-card.critical .issue-severity { background: #dc3545; color: white; }
-        .issue-card.serious .issue-severity { background: #fd7e14; color: white; }
-        .issue-card.moderate .issue-severity { background: #ffc107; color: #333; }
-        .issue-card.minor .issue-severity { background: #6c757d; color: white; }
+        .violation-detail {
+            padding: 15px;
+        }
         
-        /* Page Details */
+        .violation-desc {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        .violation-element {
+            background: #f1f3f4;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+        
+        .violation-pages {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #1976d2;
+        }
+        
+        /* Pages Section */
+        .pages-section {
+            padding: 40px;
+        }
+        
+        .pages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
         .page-card {
             background: white;
             border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 20px;
+            padding: 30px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             border: 2px solid transparent;
             transition: all 0.3s ease;
@@ -906,12 +1149,11 @@ export class HTMLReportGenerator {
         }
         
         .violation-severity {
-            padding: 4px 12px;
-            border-radius: 20px;
+            padding: 4px 8px;
+            border-radius: 4px;
             font-size: 0.8rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
         
         .violation-item.critical .violation-severity { background: #dc3545; color: white; }
@@ -920,133 +1162,123 @@ export class HTMLReportGenerator {
         .violation-item.minor .violation-severity { background: #6c757d; color: white; }
         
         .violation-desc {
-            color: #666;
-            margin-bottom: 10px;
+            color: #555;
+            line-height: 1.5;
         }
         
         .violation-element {
-            background: #e9ecef;
-            padding: 10px;
+            background: #f1f3f4;
+            border: 1px solid #ddd;
             border-radius: 4px;
+            padding: 10px;
             font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
+            font-size: 0.9em;
             overflow-x: auto;
             margin-top: 10px;
         }
         
-        .violation-pages {
-            background: #f8f9fa;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            color: #666;
-            margin-top: 10px;
-        }
-        
-        /* Footer */
         .footer {
-            background: #2c3e50;
+            background: #343a40;
             color: white;
             text-align: center;
-            padding: 30px;
-            font-size: 0.9rem;
+            padding: 20px;
+            font-size: 0.9em;
         }
         
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header .meta {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
-            .summary {
-                grid-template-columns: 1fr;
-            }
-            
-            .tab-nav {
-                flex-direction: column;
-            }
-            
-            .page-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+        .timestamp {
+            color: #999;
+            font-size: 0.8em;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🌐 Relatório de Auditoria de Acessibilidade</h1>
+            <h1>Relatório de Auditoria de Acessibilidade</h1>
             <div class="meta">
                 <div class="meta-item">
-                    <div class="meta-label">URL Base</div>
+                    <div class="meta-label">Site</div>
                     <div class="meta-value">${reportData.baseUrl}</div>
-                </div>
-                <div class="meta-item">
-                    <div class="meta-label">Data</div>
-                    <div class="meta-value">${new Date().toLocaleString('pt-PT')}</div>
                 </div>
                 <div class="meta-item">
                     <div class="meta-label">Páginas Auditadas</div>
                     <div class="meta-value">${reportData.totalPages}</div>
                 </div>
                 <div class="meta-item">
-                    <div class="meta-label">Nível de Conformidade</div>
-                    <div class="meta-value">${reportData.complianceLevel}</div>
+                    <div class="meta-label">Data</div>
+                    <div class="meta-value">${new Date(reportData.timestamp).toLocaleDateString('pt-PT')}</div>
                 </div>
             </div>
         </div>
-
+        
         <div class="summary">
             <div class="metric-card score-${this.getScoreClass(reportData.averageScore)}">
                 <div class="metric-value">${reportData.averageScore.toFixed(1)}</div>
-                <div class="metric-label">Score Médio WCAG</div>
+                <div class="metric-label">Score WCAG Médio</div>
             </div>
+            
             <div class="metric-card">
                 <div class="metric-value">${reportData.totalViolations}</div>
                 <div class="metric-label">Total de Violações</div>
             </div>
+            
             <div class="metric-card">
-                <div class="metric-value">${complianceStats.plenamente}</div>
-                <div class="metric-label">Páginas Plenamente Conformes</div>
+                <div class="metric-value">${reportData.violationsBySeverity.critical || 0}</div>
+                <div class="metric-label">Violações Críticas</div>
             </div>
+            
             <div class="metric-card">
-                <div class="metric-value">${complianceStats.parcialmente}</div>
-                <div class="metric-label">Páginas Parcialmente Conformes</div>
+                <div class="metric-value">${reportData.violationsBySeverity.serious || 0}</div>
+                <div class="metric-label">Violações Sérias</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-value">${complianceStats.nao}</div>
-                <div class="metric-label">Páginas Não Conformes</div>
+            
+            <div class="compliance compliance-${reportData.complianceLevel.toLowerCase().replace(' ', '-')}">
+                Nível de Conformidade: ${reportData.complianceLevel}
             </div>
         </div>
-
+        
         <div class="tabs">
-            <div class="tab-nav">
-                <button class="tab-button active" onclick="showTab('critical')">🚨 Violações Críticas</button>
-                <button class="tab-button" onclick="showTab('other')">📋 Outras Violações</button>
-                <button class="tab-button" onclick="showTab('pages')">📄 Páginas Auditadas</button>
-            </div>
-
-            <div id="critical" class="tab-content active">
-                <h2>🚨 Violações Críticas aos 10 Critérios de Conformidade</h2>
-                ${criticalViolations.length > 0 ? this.generateCriticalViolationsHTML(criticalViolations) : '<p style="text-align: center; color: #666; font-style: italic; padding: 40px;">Nenhuma violação crítica encontrada</p>'}
-            </div>
-
-            <div id="other" class="tab-content">
-                <h2>📋 Todas as Outras Violações</h2>
-                ${otherViolations.length > 0 ? this.generateOtherViolationsHTML(otherViolations) : '<p style="text-align: center; color: #666; font-style: italic; padding: 40px;">Nenhuma outra violação encontrada</p>'}
-            </div>
-
-            <div id="pages" class="tab-content">
-                <h2>📄 Páginas Auditadas</h2>
-                ${reportData.pageResults.map(page => this.generatePageCardHTML(page)).join('')}
+            <button class="tab-button active" onclick="showTab('critical-violations')">
+                🚨 Violações Críticas aos 10 Critérios
+            </button>
+            <button class="tab-button" onclick="showTab('other-violations')">
+                📋 Todas as Outras Violações
+            </button>
+            <button class="tab-button" onclick="showTab('pages-audited')">
+                📄 Páginas Auditadas
+            </button>
+        </div>
+        
+        <div id="critical-violations" class="tab-content active">
+            <div class="violations-section">
+                <div class="violations-title">🚨 Violações Críticas aos 10 Critérios de Conformidade</div>
+                ${this.generateCriticalViolationsHTML(criticalViolations)}
             </div>
         </div>
-
+        
+        <div id="other-violations" class="tab-content">
+            <div class="violations-section">
+                <div class="violations-title">📋 Todas as Outras Violações</div>
+                ${this.generateOtherViolationsHTML(otherViolations)}
+            </div>
+        </div>
+        
+        <div id="pages-audited" class="tab-content">
+            <div class="pages-section">
+                <div class="violations-title">📄 Páginas Auditadas</div>
+                <div class="pages-grid">
+                    ${reportData.pageResults.map(page => {
+                        console.log('🔍 Generating card for page:', page.url);
+                        return this.generatePageCardHTML(page);
+                    }).join('')}
+                </div>
+            </div>
+        </div>
+        
         <div class="footer">
             <p>Relatório gerado automaticamente pela ferramenta de monitorização de acessibilidade UNTILE</p>
-            <p>Data: ${new Date().toLocaleString('pt-PT')}</p>
+            <p>Data: ${new Date(reportData.timestamp).toLocaleString('pt-PT')}</p>
         </div>
     </div>
 
@@ -1167,94 +1399,190 @@ export class HTMLReportGenerator {
   private getViolationDisplayName(ruleId: string): string {
     const violationNames: Record<string, string> = {
       // Links e navegação
-      'a_01b': 'Links sem texto descritivo',
-      'a_10': 'Links com texto genérico',
-      'a_11': 'Links que abrem em nova janela sem aviso',
-      'a_12': 'Links com imagem sem texto alternativo',
-      'a_13': 'Links com cores inadequadas',
+      'a_01b': '❌ Links sem texto descritivo - Usuários não sabem para onde vão',
+      'a_10': '❌ Links com texto genérico - "Clique aqui" ou "Mais info" não são descritivos',
+      'a_11': '❌ Links abrem nova janela sem aviso - Usuários ficam confusos',
+      'a_12': '❌ Links com imagem sem texto alternativo - Leitores de ecrã não conseguem ler',
+      'a_13': '❌ Links identificados apenas por cor - Daltónicos não conseguem identificar',
       
       // Títulos e estrutura
-      'hx_01': 'Falta de título principal (H1)',
-      'hx_01b': 'Falta de título principal (H1)',
-      'hx_02': 'Hierarquia de títulos incorreta',
-      'hx_03': 'Títulos vazios ou sem sentido',
-      'hx_04': 'Uso excessivo de títulos',
-      'hx_05': 'Títulos com cores inadequadas',
-      'title_06': 'Título da página inadequado',
-      'heading_01': 'Falta de título principal (H1)',
-      'heading_03': 'Títulos vazios ou sem sentido',
+      'hx_01': '❌ Falta título principal (H1) - Página sem hierarquia clara',
+      'hx_01b': '❌ Falta título principal (H1) - Página sem hierarquia clara',
+      'hx_02': '❌ Hierarquia de títulos incorreta - H1 → H3 sem H2 (pula níveis)',
+      'hx_03': '❌ Títulos vazios ou sem sentido - Não ajudam na navegação',
+      'hx_04': '❌ Muitos títulos do mesmo nível - Confunde a estrutura',
+      'hx_05': '❌ Títulos identificados apenas por cor - Daltónicos não conseguem identificar',
+      'title_06': '❌ Título da página genérico - Não descreve o conteúdo',
+      'heading_01': '❌ Falta título principal (H1) - Página sem hierarquia clara',
+      'heading_03': '❌ Títulos vazios ou sem sentido - Não ajudam na navegação',
       
       // Tabelas
-      'table_01': 'Tabela sem cabeçalhos',
-      'table_02': 'Tabela sem resumo',
-      'table_03': 'Células de tabela sem associação',
-      'table_04': 'Tabela de layout sem marcação',
-      'table_05': 'Tabela complexa sem descrição',
+      'table_01': '❌ Tabela sem cabeçalhos - Leitores de ecrã não conseguem navegar',
+      'table_02': '❌ Tabela complexa sem resumo - Usuários não entendem o propósito',
+      'table_03': '❌ Células sem associação aos cabeçalhos - Informação perdida',
+      'table_04': '❌ Tabela de layout mal marcada - Confunde leitores de ecrã',
+      'table_05': '❌ Tabela complexa sem descrição - Usuários não entendem os dados',
       
       // Formulários
-      'form_01a': 'Campo sem label associado',
-      'form_02': 'Formulário sem agrupamento lógico',
-      'form_03': 'Campo obrigatório sem indicação',
-      'form_04': 'Mensagem de erro inadequada',
-      'form_05': 'Validação client-side sem fallback',
-      'label_03': 'Label não associado ao campo',
+      'form_01a': '❌ Campo sem label - Usuários não sabem o que preencher',
+      'form_02': '❌ Formulário sem agrupamento - Campos relacionados não estão juntos',
+      'form_03': '❌ Campo obrigatório sem indicação - Usuários não sabem o que é obrigatório',
+      'form_04': '❌ Mensagem de erro confusa - Usuários não sabem como corrigir',
+      'form_05': '❌ Validação apenas no browser - Usuários sem JavaScript ficam sem validação',
+      'label_03': '❌ Label não associado ao campo - Leitores de ecrã não conseguem ler',
       
       // Imagens
-      'img_01': 'Imagem sem texto alternativo',
-      'img_01a': 'Imagem sem texto alternativo',
-      'img_02': 'Imagem decorativa com alt desnecessário',
-      'img_03': 'Imagem complexa sem descrição',
-      'img_04': 'Imagem com texto inadequado',
-      'img_05': 'Imagem com cores inadequadas',
+      'img_01': '❌ Imagem sem texto alternativo - Conteúdo perdido para leitores de ecrã',
+      'img_01a': '❌ Imagem sem texto alternativo - Conteúdo perdido para leitores de ecrã',
+      'img_02': '❌ Imagem decorativa com alt desnecessário - Polui a leitura',
+      'img_03': '❌ Imagem complexa sem descrição - Gráficos e diagramas não são acessíveis',
+      'img_04': '❌ Texto alternativo inadequado - Não descreve o conteúdo da imagem',
+      'img_05': '❌ Imagem com contraste inadequado - Daltónicos não conseguem ver',
       
       // Contraste e cores
-      'color_01': 'Contraste de cores inadequado',
-      'color_02': 'Informação transmitida apenas por cor',
-      'color_03': 'Cores que causam problemas de daltonismo',
-      'color_04': 'Texto com contraste insuficiente',
-      'color_05': 'Elementos interativos sem contraste adequado',
+      'color_01': '❌ Contraste inadequado - Texto difícil de ler',
+      'color_02': '❌ Informação apenas por cor - Daltónicos não conseguem entender',
+      'color_03': '❌ Cores problemáticas para daltónicos - Vermelho/verde confundem',
+      'color_04': '❌ Texto com contraste insuficiente - Fundo muito claro/escuro',
+      'color_05': '❌ Botões sem contraste adequado - Usuários não conseguem clicar',
       
       // Media
-      'media_01': 'Vídeo sem legendas',
-      'media_02': 'Áudio sem transcrição',
-      'media_03': 'Player sem controles acessíveis',
-      'media_04': 'Media sem descrição',
-      'media_05': 'Media com autoplay',
+      'media_01': '❌ Vídeo sem legendas - Surdos não conseguem entender',
+      'media_02': '❌ Áudio sem transcrição - Surdos não conseguem entender',
+      'media_03': '❌ Player sem controles acessíveis - Usuários não conseguem controlar',
+      'media_04': '❌ Media sem descrição - Conteúdo perdido para leitores de ecrã',
+      'media_05': '❌ Media com autoplay - Reproduz automaticamente sem controlo',
       
       // Landmarks e estrutura
-      'landmark_01': 'Falta de landmark principal',
-      'landmark_02': 'Landmarks duplicados',
-      'landmark_03': 'Navegação sem landmark',
-      'landmark_04': 'Conteúdo principal sem landmark',
-      'landmark_05': 'Rodapé sem landmark',
-      'landmark_06': 'Landmarks mal estruturados',
-      'landmark_07': 'Landmarks mal estruturados',
+      'landmark_01': '❌ Falta landmark principal (main) - Leitores de ecrã não encontram conteúdo',
+      'landmark_02': '❌ Landmarks duplicados - Confunde a navegação',
+      'landmark_03': '❌ Navegação sem landmark - Leitores de ecrã não identificam menu',
+      'landmark_04': '❌ Conteúdo sem landmark main - Estrutura da página confusa',
+      'landmark_05': '❌ Rodapé sem landmark - Leitores de ecrã não identificam footer',
+      'landmark_06': '❌ Landmarks mal estruturados - Navegação confusa',
+      'landmark_07': '❌ Landmarks mal estruturados - Navegação confusa',
       
       // Modais e interativos
-      'modal_01': 'Modal sem foco adequado',
-      'modal_02': 'Modal sem escape',
-      'modal_03': 'Modal sem título',
-      'modal_04': 'Modal sem descrição',
-      'modal_05': 'Modal com overlay inadequado',
+      'modal_01': '❌ Modal sem gestão do foco - Usuários ficam presos no modal',
+      'modal_02': '❌ Modal sem tecla escape - Usuários não conseguem fechar',
+      'modal_03': '❌ Modal sem título - Usuários não sabem o que é o modal',
+      'modal_04': '❌ Modal sem descrição - Conteúdo não é acessível',
+      'modal_05': '❌ Modal com overlay confuso - Usuários não conseguem navegar',
       
       // Elementos estruturais
-      'id_01': 'IDs duplicados',
-      'id_02': 'IDs inadequados',
-      'br_01': 'Uso inadequado de <br>',
-      'scrollable_01': 'Elemento scrollable sem indicação',
-      'scrollable_02': 'Scroll horizontal inadequado',
+      'id_01': '❌ IDs duplicados - Causa conflitos e comportamentos inesperados',
+      'id_02': '❌ IDs inadequados - Não ajudam na identificação',
+      'br_01': '❌ Uso inadequado de <br> - Deve usar CSS para formatação',
+      'scrollable_01': '❌ Elemento scrollable sem indicação - Usuários não sabem que pode rolar',
+      'scrollable_02': '❌ Scroll horizontal forçado - Quebra o layout responsivo',
       
       // ARIA
-      'aria_01': 'Atributos ARIA inadequados',
+      'aria_01': '❌ Atributos ARIA incorretos - Confunde leitores de ecrã',
       
       // Botões
-      'button_01': 'Botão sem texto descritivo',
+      'button_01': '❌ Botão sem texto descritivo - Usuários não sabem o que faz',
       
       // Elementos gerais
-      'element_02': 'Elemento sem identificação adequada'
+      'element_02': '❌ Elemento sem identificação - Leitores de ecrã não conseguem descrever'
     };
     
-    return violationNames[ruleId] || `Violação de acessibilidade: ${ruleId}`;
+    return violationNames[ruleId] || `❌ Violação de acessibilidade: ${ruleId}`;
+  }
+
+  /**
+   * Obter sugestão de correção para uma violação
+   */
+  private getFixSuggestion(ruleId: string): string {
+    const fixSuggestions: Record<string, string> = {
+      // Links e navegação
+      'a_01b': 'Adicione texto descritivo ao link. Exemplo: <a href="...">Descrição clara do destino</a>',
+      'a_10': 'Substitua "Clique aqui" por texto descritivo. Exemplo: <a href="...">Baixar relatório PDF</a>',
+      'a_11': 'Adicione aviso de nova janela. Exemplo: <a href="..." target="_blank" aria-label="Abre em nova janela">Link</a>',
+      'a_12': 'Adicione alt à imagem no link. Exemplo: <a href="..."><img src="..." alt="Descrição da imagem"></a>',
+      'a_13': 'Adicione sublinhado ou ícone além da cor. Exemplo: <a href="..." style="text-decoration: underline;">Link</a>',
+      
+      // Títulos e estrutura
+      'hx_01': 'Adicione um H1 principal à página. Exemplo: <h1>Título Principal da Página</h1>',
+      'hx_01b': 'Adicione um H1 principal à página. Exemplo: <h1>Título Principal da Página</h1>',
+      'hx_02': 'Corrija a hierarquia: H1 → H2 → H3. Não pule níveis.',
+      'hx_03': 'Adicione texto significativo ao título. Exemplo: <h2>Seção de Produtos</h2>',
+      'hx_04': 'Use apenas um H1 por página e organize H2, H3 logicamente.',
+      'hx_05': 'Adicione sublinhado ou negrito além da cor.',
+      'title_06': 'Use título descritivo. Exemplo: <title>Nome da Empresa - Página Específica</title>',
+      'heading_01': 'Adicione um H1 principal à página. Exemplo: <h1>Título Principal da Página</h1>',
+      'heading_03': 'Adicione texto significativo ao título. Exemplo: <h2>Seção de Produtos</h2>',
+      
+      // Tabelas
+      'table_01': 'Adicione cabeçalhos. Exemplo: <th>Nome da Coluna</th>',
+      'table_02': 'Adicione resumo. Exemplo: <table summary="Tabela de produtos com preços">',
+      'table_03': 'Associe células aos cabeçalhos. Exemplo: <td headers="col1">Dados</td>',
+      'table_04': 'Use CSS para layout, não tabelas. Exemplo: <div class="layout-grid">',
+      'table_05': 'Adicione descrição detalhada para tabelas complexas.',
+      
+      // Formulários
+      'form_01a': 'Adicione label. Exemplo: <label for="email">Email:</label><input id="email" type="email">',
+      'form_02': 'Agrupe campos relacionados. Exemplo: <fieldset><legend>Dados Pessoais</legend>',
+      'form_03': 'Indique campos obrigatórios. Exemplo: <label>Nome *</label> ou use required',
+      'form_04': 'Escreva mensagens claras. Exemplo: "Por favor, insira um email válido"',
+      'form_05': 'Adicione validação server-side além da client-side.',
+      'label_03': 'Associe label ao campo. Exemplo: <label for="campo">Label</label><input id="campo">',
+      
+      // Imagens
+      'img_01': 'Adicione alt descritivo. Exemplo: <img src="..." alt="Descrição da imagem">',
+      'img_01a': 'Adicione alt descritivo. Exemplo: <img src="..." alt="Descrição da imagem">',
+      'img_02': 'Use alt="" para imagens decorativas. Exemplo: <img src="..." alt="">',
+      'img_03': 'Adicione descrição longa para imagens complexas.',
+      'img_04': 'Escreva alt que descreva o conteúdo da imagem.',
+      'img_05': 'Melhore o contraste da imagem ou adicione texto alternativo.',
+      
+      // Contraste e cores
+      'color_01': 'Aumente o contraste. Use ferramentas como WebAIM Contrast Checker.',
+      'color_02': 'Adicione texto ou ícone além da cor. Exemplo: "Erro" + ícone vermelho',
+      'color_03': 'Evite combinações vermelho/verde. Use azul/amarelo ou adicione texto.',
+      'color_04': 'Aumente o contraste texto/fundo. Mínimo 4.5:1 para texto normal.',
+      'color_05': 'Melhore o contraste de botões. Mínimo 3:1 para elementos grandes.',
+      
+      // Media
+      'media_01': 'Adicione legendas ao vídeo. Exemplo: <track kind="subtitles" src="...">',
+      'media_02': 'Adicione transcrição do áudio ou legendas.',
+      'media_03': 'Adicione controles acessíveis ao player.',
+      'media_04': 'Adicione descrição do conteúdo media.',
+      'media_05': 'Remova autoplay ou adicione controlo para parar.',
+      
+      // Landmarks e estrutura
+      'landmark_01': 'Adicione landmark main. Exemplo: <main role="main">',
+      'landmark_02': 'Remova landmarks duplicados ou use roles diferentes.',
+      'landmark_03': 'Adicione landmark nav. Exemplo: <nav role="navigation">',
+      'landmark_04': 'Adicione landmark main. Exemplo: <main role="main">',
+      'landmark_05': 'Adicione landmark contentinfo. Exemplo: <footer role="contentinfo">',
+      'landmark_06': 'Organize landmarks corretamente. Main deve conter o conteúdo principal.',
+      'landmark_07': 'Organize landmarks corretamente. Main deve conter o conteúdo principal.',
+      
+      // Modais e interativos
+      'modal_01': 'Gerencie o foco. Mova foco para modal e mantenha-o lá.',
+      'modal_02': 'Adicione tecla escape. Exemplo: onKeyDown={handleEscape}',
+      'modal_03': 'Adicione título ao modal. Exemplo: <h2>Confirmação</h2>',
+      'modal_04': 'Adicione descrição do modal. Exemplo: aria-describedby="modal-desc"',
+      'modal_05': 'Melhore o overlay. Torne-o mais visível e acessível.',
+      
+      // Elementos estruturais
+      'id_01': 'Remova IDs duplicados. Cada ID deve ser único na página.',
+      'id_02': 'Use IDs descritivos. Exemplo: id="header-navigation"',
+      'br_01': 'Use CSS para formatação. Exemplo: margin-bottom: 10px;',
+      'scrollable_01': 'Adicione indicação visual de scroll. Exemplo: border ou sombra.',
+      'scrollable_02': 'Evite scroll horizontal. Use layout responsivo.',
+      
+      // ARIA
+      'aria_01': 'Corrija atributos ARIA. Use valores válidos e apropriados.',
+      
+      // Botões
+      'button_01': 'Adicione texto descritivo ao botão. Exemplo: <button>Salvar Alterações</button>',
+      
+      // Elementos gerais
+      'element_02': 'Adicione identificação. Use aria-label ou role apropriado.'
+    };
+    
+    return fixSuggestions[ruleId] || 'Consulte as WCAG 2.1 para orientações específicas sobre esta violação.';
   }
 
   /**
@@ -1474,7 +1802,7 @@ export class HTMLReportGenerator {
           <div class="stat-label">Violações</div>
         </div>
         <div class="stat-item">
-          <div class="stat-value">${checklistPercentage}%</div>
+          <div class="stat-value">${checklistPercentage.toFixed(1)}%</div>
           <div class="stat-label">Checklist 10 Critérios</div>
         </div>
         <div class="stat-item">
