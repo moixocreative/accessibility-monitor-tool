@@ -90,7 +90,7 @@ class AccessibilityAuditor {
     
     console.log(`✅ Single page audit completed`);
     console.log(`📊 WCAG Score: ${result.score}`);
-    console.log(`📋 Checklist: ${result.compliance.checklistPercentage}%`);
+    console.log(`📋 Checklist: ${result.compliance.checklistPercentage.toFixed(1)}%`);
     console.log(`🚨 Violations: ${result.violations.length}`);
     console.log(`📄 Report saved: ${reportPath}`);
     
@@ -292,7 +292,9 @@ class AccessibilityAuditor {
     };
 
     // Generate consolidated report
+    console.log('🔍 Generating multi-page HTML report...');
     const htmlReport = this.reportGenerator.generateMultiPageHTML(multiPageReportData);
+    console.log('✅ Multi-page HTML report generated successfully');
     
     // Gerar nome de ficheiro descritivo para análise completa do site
     const urlObj = new URL(baseUrl);
@@ -394,7 +396,13 @@ class AccessibilityAuditor {
             
             // Normalizar URL (remover parâmetros de query e fragmentos)
             const urlObj = new URL(fullUrl);
-            const normalizedUrl = `${urlObj.origin}${urlObj.pathname}`;
+            let normalizedUrl = `${urlObj.origin}${urlObj.pathname}`;
+            
+            // Normalizar homepage para evitar duplicações
+            if (normalizedUrl === urlObj.origin + '/') {
+              normalizedUrl = urlObj.origin;
+            }
+            
             urls.add(normalizedUrl);
           }
         }
@@ -453,23 +461,24 @@ async function main() {
   }
 
   const auditor = new AccessibilityAuditor();
-  const url = args[0];
   const isSinglePage = args.includes('--single') || (process.argv[1] && process.argv[1].includes('single'));
   const generateIndividualReports = args.includes('--individual-reports');
   const maxPagesArg = args.find(arg => arg.startsWith('--max-pages='));
   const maxPages = maxPagesArg ? parseInt(maxPagesArg.split('=')[1] || 'Infinity') : Infinity;
 
-  // Determinar se é análise de página única baseado na URL
+  // Encontrar a URL (primeiro argumento que não é uma flag)
+  const url = args.find(arg => !arg.startsWith('--'));
+  
   if (!url) {
     console.error('❌ URL is required');
     process.exit(1);
   }
 
-  const urlObj = new URL(url);
-  const pathSegments = urlObj.pathname.split('/').filter(Boolean);
-  const isSpecificPage = pathSegments.length > 0 && pathSegments[0] !== '';
-
   try {
+    const urlObj = new URL(url);
+    const pathSegments = urlObj.pathname.split('/').filter(Boolean);
+    const isSpecificPage = pathSegments.length > 0 && pathSegments[0] !== '';
+
     if (isSinglePage || isSpecificPage) {
       // Análise de página única
       await auditor.auditSinglePage(url);
