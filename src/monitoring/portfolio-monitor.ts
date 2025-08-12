@@ -155,7 +155,7 @@ export class PortfolioMonitor {
         logAudit(`Auditoria iniciada para ${site.name}`, { url: site.url });
         
         // Usar análise completa para monitorização periódica
-        const auditResult = await this.validator.auditSite(site.url, site.id, true);
+        const auditResult = await this.validator.auditSite(site.url, site.id, true, false, 'untile', undefined, false, true);
         auditResults.push(auditResult);
 
         // Atualizar dados do site

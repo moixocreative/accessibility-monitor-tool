@@ -158,6 +158,16 @@ export class SimpleAudit {
     logger.info(`📄 Relatório JSON gerado: ${filePath}`);
   }
 
+  private calculateCompliance(score: number, checklistPercentage: number): string {
+    if (score > 9 && checklistPercentage >= 75) {
+      return 'PLENAMENTE CONFORME';
+    } else if (score > 8 && checklistPercentage >= 50 && checklistPercentage < 75) {
+      return 'PARCIALMENTE CONFORME';
+    } else {
+      return 'NÃO CONFORME';
+    }
+  }
+
   private generateHtmlContent(result: any): string {
     return `
 <!DOCTYPE html>
@@ -203,8 +213,8 @@ export class SimpleAudit {
     ${result.pageResults.map((page: any) => `
         <div class="page-result">
             <strong>${page.url}</strong><br>
-            Pontuação: ${page.score}/10<br>
-            Conformidade: ${page.compliance.level}
+            Pontuação: ${page.wcagScore || 0}/10<br>
+            Conformidade: ${this.calculateCompliance(page.wcagScore || 0, page.checklistResults?.percentage || 0)}
         </div>
     `).join('')}
 </body>

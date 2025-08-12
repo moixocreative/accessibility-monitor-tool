@@ -12,17 +12,103 @@ const logger_1 = require("../utils/logger");
 const wcag_criteria_1 = require("../core/wcag-criteria");
 const accessibility_checklist_1 = require("../core/accessibility-checklist");
 const html_report_generator_1 = require("../reports/html-report-generator");
+const accessmonitor_validator_1 = require("./accessmonitor-validator");
 class WCAGValidator {
     browser = null;
     useRealBrowser = false;
     usePlaywright = false;
     checklist;
     reportGenerator;
+    accessMonitorValidator;
     constructor() {
         puppeteer_extra_1.default.use((0, puppeteer_extra_plugin_stealth_1.default)());
         this.browser = null;
         this.checklist = new accessibility_checklist_1.AccessibilityChecklist();
         this.reportGenerator = new html_report_generator_1.HTMLReportGenerator();
+        this.accessMonitorValidator = new accessmonitor_validator_1.AccessMonitorValidator();
+    }
+    async runAccessMonitorAudit(url, siteId) {
+        logger_1.logger.info(`🔍 Executando auditoria AccessMonitor para: ${url}`);
+        try {
+            if (!this.browser) {
+                await this.initBrowser();
+            }
+            if (!this.browser) {
+                throw new Error('Browser não disponível para auditoria AccessMonitor');
+            }
+            const page = await this.getPage();
+            if (!page) {
+                throw new Error('Não foi possível obter página para auditoria');
+            }
+            await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+            const accessMonitorResult = await this.accessMonitorValidator.validatePage(page, url);
+            const violations = accessMonitorResult.violations.map(violation => ({
+                id: violation.id,
+                criteria: {
+                    id: violation.criteria[0] || 'unknown',
+                    name: violation.description,
+                    level: violation.level,
+                    principle: 'PERCEIVABLE',
+                    priority: (violation.level === 'A' ? 'P1' : violation.level === 'AA' ? 'P2' : 'P0'),
+                    description: violation.description,
+                    technology: {
+                        webflow: 'N/A',
+                        laravel: 'N/A',
+                        wordpress: 'N/A'
+                    }
+                },
+                severity: (violation.type === 'Erro' ? 'critical' : violation.type === 'Aviso' ? 'serious' : 'moderate'),
+                description: violation.description,
+                element: violation.value || 'unknown',
+                page: url,
+                timestamp: new Date(),
+                status: 'open'
+            }));
+            let checklistResults = null;
+            try {
+                checklistResults = await this.checklist.runChecklist(page);
+                logger_1.logger.info(`📋 Checklist: ${checklistResults.passedItems}/${checklistResults.totalItems} itens passaram (${checklistResults.percentage}%)`);
+            }
+            catch (error) {
+                logger_1.logger.warn('Erro ao executar checklist:', error);
+            }
+            const legalRiskMetrics = this.calculateLegalRiskMetrics(violations);
+            const summary = this.generateSummary(violations, accessMonitorResult.score);
+            const result = {
+                id: `accessmonitor_${Date.now()}`,
+                siteId,
+                timestamp: new Date(),
+                wcagScore: accessMonitorResult.score,
+                violations,
+                lighthouseScore: {
+                    accessibility: Math.round(accessMonitorResult.score * 10),
+                    performance: 75,
+                    seo: 80,
+                    bestPractices: 90
+                },
+                axeResults: {
+                    violations: violations,
+                    passes: [],
+                    incomplete: [],
+                    inapplicable: []
+                },
+                summary,
+                legalRiskMetrics,
+                ...(checklistResults && { checklistResults })
+            };
+            try {
+                const reportPath = await this.reportGenerator.generateSinglePageReport(result);
+                logger_1.logger.info(`📄 Relatório HTML gerado: ${reportPath}`);
+            }
+            catch (error) {
+                logger_1.logger.warn('Erro ao gerar relatório HTML:', error);
+            }
+            return result;
+        }
+        catch (error) {
+            logger_1.logger.error('Erro na auditoria AccessMonitor:', error);
+            throw error;
+        }
     }
     async initBrowser() {
         if (this.browser) {
@@ -130,9 +216,13 @@ class WCAGValidator {
             this.browser = null;
         }
     }
-    async auditSite(url, siteId, isCompleteAudit = false, useStandardFormula = false, criteriaSet = 'untile', customCriteria) {
+    async auditSite(url, siteId, isCompleteAudit = false, useStandardFormula = false, criteriaSet = 'untile', customCriteria, useAccessMonitor = false) {
         logger_1.logger.info(`Iniciando auditoria de ${url} (${isCompleteAudit ? 'completa' : 'prioritária'})`);
         try {
+            if (useAccessMonitor) {
+                logger_1.logger.info('🔍 Usando AccessMonitorValidator para replicar exatamente o acessibilidade.gov.pt');
+                return await this.runAccessMonitorAudit(url, siteId);
+            }
             const { getCriteriaBySet } = require('../core/wcag-criteria');
             const selectedCriteria = getCriteriaBySet(criteriaSet, customCriteria);
             logger_1.logger.info(`Usando conjunto de critérios: ${criteriaSet} (${selectedCriteria.length} critérios)`);

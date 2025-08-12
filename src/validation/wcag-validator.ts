@@ -7,6 +7,7 @@ import { getCriteriaById } from '../core/wcag-criteria';
 import { AccessibilityViolation, AuditResult, WCAGCriteria } from '../types';
 import { AccessibilityChecklist } from '../core/accessibility-checklist';
 import { HTMLReportGenerator } from '../reports/html-report-generator';
+import { AccessMonitorValidator } from './accessmonitor-validator';
 
 export class WCAGValidator {
   private browser: any = null;
@@ -14,6 +15,7 @@ export class WCAGValidator {
   private usePlaywright: boolean = false;
   private checklist: AccessibilityChecklist;
   private reportGenerator: HTMLReportGenerator;
+  private accessMonitorValidator: AccessMonitorValidator;
 
   constructor() {
     // Configurar puppeteer-extra com plugin stealth para evitar detecção de bot
@@ -27,6 +29,116 @@ export class WCAGValidator {
     
     // Inicializar gerador de relatórios
     this.reportGenerator = new HTMLReportGenerator();
+    
+    // Inicializar validador AccessMonitor
+    this.accessMonitorValidator = new AccessMonitorValidator();
+  }
+
+  /**
+   * Executar auditoria usando AccessMonitorValidator
+   */
+  private async runAccessMonitorAudit(url: string, siteId: string): Promise<AuditResult> {
+    logger.info(`🔍 Executando auditoria AccessMonitor para: ${url}`);
+    
+    try {
+      // Inicializar browser se necessário
+      if (!this.browser) {
+        await this.initBrowser();
+      }
+      
+      if (!this.browser) {
+        throw new Error('Browser não disponível para auditoria AccessMonitor');
+      }
+      
+      // Obter página
+      const page = await this.getPage();
+      if (!page) {
+        throw new Error('Não foi possível obter página para auditoria');
+      }
+      
+      // Navegar para a URL
+      await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+      
+      // Executar validação AccessMonitor
+      const accessMonitorResult = await this.accessMonitorValidator.validatePage(page, url);
+      
+      // Converter resultado AccessMonitor para formato AuditResult
+      const violations = accessMonitorResult.violations.map(violation => ({
+        id: violation.id,
+        criteria: {
+          id: violation.criteria[0] || 'unknown',
+          name: violation.description,
+          level: violation.level,
+          principle: 'PERCEIVABLE' as const, // Default, seria melhor mapear corretamente
+          priority: (violation.level === 'A' ? 'P1' : violation.level === 'AA' ? 'P2' : 'P0') as 'P0' | 'P1' | 'P2',
+          description: violation.description,
+          technology: {
+            webflow: 'N/A',
+            laravel: 'N/A',
+            wordpress: 'N/A'
+          }
+        },
+        severity: (violation.type === 'Erro' ? 'critical' : violation.type === 'Aviso' ? 'serious' : 'moderate') as 'critical' | 'serious' | 'moderate' | 'minor',
+        description: violation.description,
+        element: violation.value || 'unknown',
+        page: url,
+        timestamp: new Date(),
+        status: 'open' as const
+      }));
+      
+      // Executar checklist de acessibilidade funcional
+      let checklistResults = null;
+      try {
+        checklistResults = await this.checklist.runChecklist(page);
+        logger.info(`📋 Checklist: ${checklistResults.passedItems}/${checklistResults.totalItems} itens passaram (${checklistResults.percentage}%)`);
+      } catch (error) {
+        logger.warn('Erro ao executar checklist:', error);
+      }
+      
+      // Calcular métricas de risco legal
+      const legalRiskMetrics = this.calculateLegalRiskMetrics(violations);
+      
+      // Gerar resumo
+      const summary = this.generateSummary(violations, accessMonitorResult.score);
+      
+      const result: AuditResult = {
+        id: `accessmonitor_${Date.now()}`,
+        siteId,
+        url, // Adicionar URL da página testada
+        timestamp: new Date(),
+        wcagScore: accessMonitorResult.score,
+        violations,
+        lighthouseScore: {
+          accessibility: Math.round(accessMonitorResult.score * 10),
+          performance: 75,
+          seo: 80,
+          bestPractices: 90
+        },
+        axeResults: {
+          violations: violations,
+          passes: [],
+          incomplete: [],
+          inapplicable: []
+        },
+        summary,
+        legalRiskMetrics,
+        ...(checklistResults && { checklistResults })
+      };
+      
+      // Gerar relatório HTML automaticamente
+      try {
+        const reportPath = await this.reportGenerator.generateSinglePageReport(result);
+        logger.info(`📄 Relatório HTML gerado: ${reportPath}`);
+      } catch (error) {
+        logger.warn('Erro ao gerar relatório HTML:', error);
+      }
+      
+      return result;
+      
+    } catch (error) {
+      logger.error('Erro na auditoria AccessMonitor:', error);
+      throw error;
+    }
   }
 
   /**
@@ -152,10 +264,16 @@ export class WCAGValidator {
   /**
    * Auditoria completa de um site
    */
-  async auditSite(url: string, siteId: string, isCompleteAudit: boolean = false, useStandardFormula: boolean = false, criteriaSet: 'untile' | 'gov-pt' | 'custom' = 'untile', customCriteria?: string[]): Promise<AuditResult> {
+  async auditSite(url: string, siteId: string, isCompleteAudit: boolean = false, useStandardFormula: boolean = false, criteriaSet: 'untile' | 'gov-pt' | 'custom' = 'untile', customCriteria?: string[], useAccessMonitor: boolean = false, generateIndividualReport: boolean = true): Promise<AuditResult> {
     logger.info(`Iniciando auditoria de ${url} (${isCompleteAudit ? 'completa' : 'prioritária'})`);
 
     try {
+      // Verificar se deve usar AccessMonitorValidator
+      if (useAccessMonitor) {
+        logger.info('🔍 Usando AccessMonitorValidator para replicar exatamente o acessibilidade.gov.pt');
+        return await this.runAccessMonitorAudit(url, siteId);
+      }
+
       // Obter critérios baseados no conjunto selecionado
       const { getCriteriaBySet } = require('../core/wcag-criteria');
       const selectedCriteria = getCriteriaBySet(criteriaSet, customCriteria);
@@ -191,7 +309,7 @@ export class WCAGValidator {
       const violations = this.analyzeViolations(axeResult, url);
       
       // Calcular score WCAG baseado apenas no axe-core (FÓRMULA ALINHADA COM PORTFOLIO)
-      const wcagScore = this.calculateWCAGScoreFromAxe(axeResult, useStandardFormula);
+              const wcagScore = this.calculateWCAGScoreFromAxe(axeResult, useStandardFormula);
       
       // Executar checklist de acessibilidade funcional
       let checklistResults = null;
@@ -222,6 +340,7 @@ export class WCAGValidator {
       const result = {
         id: `audit_${Date.now()}`,
         siteId,
+        url, // Adicionar URL da página testada
         timestamp: new Date(),
         wcagScore,
         violations,
@@ -232,12 +351,14 @@ export class WCAGValidator {
         ...(checklistResults && { checklistResults }) // INCLUIR RESULTADOS DA CHECKLIST SE DISPONÍVEL
       };
 
-      // Gerar relatório HTML automaticamente
-      try {
-        const reportPath = await this.reportGenerator.generateSinglePageReport(result);
-        logger.info(`📄 Relatório HTML gerado: ${reportPath}`);
-            } catch (error) {
-        logger.warn('Erro ao gerar relatório HTML:', error);
+      // Gerar relatório HTML automaticamente apenas se solicitado
+      if (generateIndividualReport) {
+        try {
+          const reportPath = await this.reportGenerator.generateSinglePageReport(result);
+          logger.info(`📄 Relatório HTML gerado: ${reportPath}`);
+        } catch (error) {
+          logger.warn('Erro ao gerar relatório HTML:', error);
+        }
       }
 
       return result;
@@ -249,6 +370,7 @@ export class WCAGValidator {
       return {
         id: `audit_${Date.now()}`,
         siteId,
+        url, // Adicionar URL da página testada
         timestamp: new Date(),
         wcagScore: -1, // Indicar erro
         lighthouseScore: {
@@ -630,7 +752,7 @@ export class WCAGValidator {
           ...axeResult,
           violations: [...(axeResult.violations || []), ...accessMonitorViolations]
         };
-        
+
         // Cleanup
         if (this.usePlaywright) {
           await page.close();

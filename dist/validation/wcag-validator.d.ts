@@ -5,9 +5,11 @@ export declare class WCAGValidator {
     private usePlaywright;
     private checklist;
     private reportGenerator;
+    private accessMonitorValidator;
     constructor();
+    private runAccessMonitorAudit;
     private initBrowser;
-    auditSite(url: string, siteId: string, isCompleteAudit?: boolean, useStandardFormula?: boolean, criteriaSet?: 'untile' | 'gov-pt' | 'custom', customCriteria?: string[]): Promise<AuditResult>;
+    auditSite(url: string, siteId: string, isCompleteAudit?: boolean, useStandardFormula?: boolean, criteriaSet?: 'untile' | 'gov-pt' | 'custom', customCriteria?: string[], useAccessMonitor?: boolean): Promise<AuditResult>;
     private runLighthouse;
     private runAxeCore;
     private runAxeCoreComplete;

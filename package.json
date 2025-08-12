@@ -4,8 +4,8 @@
   "description": "Ferramenta de monitorização de acessibilidade web alinhada com o AccessMonitor (acessibilidade.gov.pt)",
   "main": "src/index.ts",
   "scripts": {
-    "start": "yarn monitor:start",
-    "dev": "yarn monitor:test",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
     "build": "tsc",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
@@ -14,7 +14,14 @@
     "monitor:test": "ts-node src/monitoring/portfolio-monitor.ts --test",
     "audit": "ts-node src/scripts/simple-audit.ts",
     "audit:multi": "ts-node src/scripts/multi-page-audit.ts",
-    "audit:batch": "ts-node src/scripts/batch-audit.ts"
+    "audit:batch": "ts-node src/scripts/batch-audit.ts",
+    "test:accessmonitor": "ts-node src/scripts/test-accessmonitor.ts",
+    "test:accessmonitor-simple": "ts-node src/scripts/test-accessmonitor-simple.ts",
+    "audit:single": "ts-node src/scripts/accessibility-audit.ts --single",
+    "audit:site": "ts-node src/scripts/accessibility-audit.ts",
+    "quick-test": "ts-node src/scripts/quick-test.ts",
+    "generate-report": "ts-node src/scripts/generate-correct-report.ts",
+    "test:enhanced": "ts-node src/scripts/test-enhanced-auditor.ts"
   },
   "keywords": [
     "accessibility",

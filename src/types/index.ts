@@ -40,6 +40,7 @@ export interface PortfolioSite {
 export interface AuditResult {
   id: string;
   siteId: string;
+  url: string; // URL da página testada
   timestamp: Date;
   wcagScore: number;
   violations: AccessibilityViolation[];
@@ -150,6 +151,31 @@ export interface ReportData {
     averageResponseTime: number;
   };
   recommendations: string[];
+}
+
+export interface PageResult {
+  url: string;
+  wcagScore: number;
+  violations: any[];
+  checklistResults?: {
+    percentage: number;
+    passed: number;
+    total: number;
+  };
+  timestamp: string;
+  error?: string;
+}
+
+export interface MultiPageReport {
+  baseUrl: string;
+  pageResults: PageResult[];
+  averageScore: number;
+  totalViolations: number;
+  complianceLevel: string;
+  violationsBySeverity: Record<string, number>;
+  violationsByType: Record<string, number>;
+  timestamp: string;
+  totalPages: number;
 }
 
 // Removed unused enums to fix linting errors 
