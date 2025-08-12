@@ -35,7 +35,7 @@ export class PageCrawler {
     options: Partial<CrawlOptions> = {}
   ): Promise<CrawlResult[]> {
     const defaultOptions: CrawlOptions = {
-      maxPages: 20,
+      maxPages: Infinity, // Sem limite de páginas para análise completa
       maxDepth: 2,
       includeExternal: false,
       excludePatterns: [

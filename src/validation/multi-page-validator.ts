@@ -75,7 +75,7 @@ export class MultiPageValidator {
       ...options,
       crawlStrategy: options.crawlStrategy || 'comprehensive',
       crawlOptions: {
-        maxPages: 50,
+        maxPages: Infinity, // Sem limite de páginas para análise completa
         maxDepth: 3,
         includeExternal: false,
         ...options.crawlOptions

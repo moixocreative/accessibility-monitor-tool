@@ -21,7 +21,7 @@ async function main() {
   console.log('🌐 Testando site completo (limitado a 20 páginas)...');
   try {
     await auditor.auditFullSite('https://www.casadeinvestimentos.pt', {
-      maxPages: 20,
+      maxPages: Infinity, // Sem limite de páginas para análise completa
       generateIndividualReports: true
     });
     console.log('✅ Teste de site completo concluído\n');

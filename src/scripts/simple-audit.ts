@@ -32,7 +32,7 @@ export class SimpleAudit {
       const auditOptions = {
         useStandardFormula: true, // Fórmula padrão do axe-core (2 pontos por violação)
         criteriaSet: 'gov-pt' as const, // 10 aspetos críticos
-        maxPages: options.maxPages || 20,
+        maxPages: options.maxPages || Infinity, // Sem limite de páginas para análise completa
         crawlStrategy: options.strategy
       };
 
@@ -243,7 +243,7 @@ PARÂMETROS:
                           - console (padrão)
                           - html
                           - json
-  [max-páginas]           Número máximo de páginas (padrão: 20)
+  [max-páginas]           Número máximo de páginas (padrão: sem limite)
 
 EXEMPLOS:
   yarn audit https://example.com
@@ -258,7 +258,7 @@ NOTA: Esta ferramenta reproduz exatamente os critérios e fórmula do AccessMoni
   const url = args[0] || '';
   const strategy = (args[1] as 'comprehensive' | 'auto' | 'sitemap' | 'manual') || 'comprehensive';
   const outputFormat = (args[2] as 'console' | 'html' | 'json') || 'console';
-  const maxPages = args[3] ? parseInt(args[3]) : 20;
+  const maxPages = args[3] ? parseInt(args[3]) : Infinity;
 
   // Validar URL
   try {
@@ -285,8 +285,8 @@ NOTA: Esta ferramenta reproduz exatamente os critérios e fórmula do AccessMoni
   }
 
   // Validar maxPages
-  if (maxPages < 1 || maxPages > 100) {
-    console.error('❌ Número máximo de páginas deve estar entre 1 e 100');
+  if (maxPages < 1) {
+    console.error('❌ Número máximo de páginas deve ser maior que 0');
     process.exit(1);
   }
 

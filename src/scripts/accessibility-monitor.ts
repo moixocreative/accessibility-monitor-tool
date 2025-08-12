@@ -26,7 +26,7 @@ class AccessibilityMonitor {
   async monitorSite(baseUrl: string, options: MonitorOptions = {}): Promise<void> {
     const {
       strategy = 'comprehensive',
-      maxPages = 50,
+      maxPages = Infinity, // Sem limite de páginas para análise completa
       generateIndividualReports = false,
       timeout = 30000
     } = options;
@@ -95,7 +95,7 @@ class AccessibilityMonitor {
       
       try {
         const result = await this.auditor.auditFullSite(site, {
-          maxPages: options.maxPages || 20,
+          maxPages: options.maxPages || Infinity, // Sem limite de páginas para análise completa
           timeout: options.timeout || 30000,
           generateIndividualReports: options.generateIndividualReports || false,
           strategy: options.strategy || 'auto'
@@ -265,7 +265,7 @@ async function main() {
     console.log('  manual - Apenas a URL fornecida');
     console.log('');
     console.log('⚙️ Opções:');
-    console.log('  --max-pages=N - Máximo de páginas a auditar');
+    console.log('  --max-pages=N - Máximo de páginas a auditar (padrão: sem limite)');
     console.log('  --individual-reports - Gerar relatórios individuais');
     console.log('  --timeout=N - Timeout em milissegundos');
     console.log('');
@@ -295,7 +295,7 @@ async function main() {
   // Parsear opções
   const options: MonitorOptions = {
     strategy,
-    maxPages: 50,
+    maxPages: Infinity, // Sem limite de páginas para análise completa
     generateIndividualReports: false,
     timeout: 30000
   };
