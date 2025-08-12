@@ -251,7 +251,7 @@ async function main() {
         'console': 'txt'
       }[reportFormat as 'html' | 'json' | 'markdown' | 'console'] || 'html';
       
-      const fileName = `multi-page-audit-${domainName}-${crawlStrategy}-${criteriaSet}-${timestamp}.${fileExtension}`;
+      const fileName = `full-site-${domainName}-${timestamp}.${fileExtension}`;
       const filePath = path.join(process.cwd(), 'reports', fileName);
       
       // Criar diretório de relatórios se não existir
